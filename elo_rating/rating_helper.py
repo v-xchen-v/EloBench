@@ -1,6 +1,7 @@
 from elo_rating.llm_player import LLMPlayer
 from elo_rating.pairwise_rating_entity import PairwiseBattleScore, PairwiseRatingEntity
 import pandas as pd
+import numpy as np
 
 MODEL_HEADER = "Model"
 ELO_RATING_HEADER = "Elo Rating"
@@ -9,9 +10,9 @@ MODEL_A_HEADER = "model_a"
 MODEL_B_HEADER = "model_b"
 BATTLE_RES_HEADER = "winner"
 
-def get_players_elo_result(llm_players: list[LLMPlayer]) -> pd.DataFrame:
+def get_players_elo_result(llm_players: list[LLMPlayer], rating_places=0) -> pd.DataFrame:
     """Get elo ranking and rating scores of players, after players completed battles."""
-    df = pd.DataFrame([[x.id, x.rating] for x in llm_players], columns=[MODEL_HEADER, ELO_RATING_HEADER]).sort_values(ELO_RATING_HEADER, ascending=False).reset_index(drop=True)
+    df = pd.DataFrame([[x.id, np.round(x.rating, rating_places)] for x in llm_players], columns=[MODEL_HEADER, ELO_RATING_HEADER]).sort_values(ELO_RATING_HEADER, ascending=False).reset_index(drop=True)
     df.index = df.index+1
     return df
 
