@@ -5,7 +5,7 @@ import os
 
 ARENA_BATTLE_20230717 = os.path.join(os.path.dirname(__file__),'clean_battle_20230717.json')
 
-def get_arena_battles_data() -> pd.DataFrame:
+def get_arena_battles_20230717_data() -> pd.DataFrame:
     raw_data = pd.read_json(ARENA_BATTLE_20230717).sort_values(ascending=True, by=["tstamp"])
     # print(raw_data)
 
@@ -14,14 +14,14 @@ def get_arena_battles_data() -> pd.DataFrame:
     # print(battles)
     return battles
 
-def get_arena_battles_models() -> list[str]:
+def list_arena_battles_20230717_models() -> list[str]:
     raw_data = pd.read_json(ARENA_BATTLE_20230717).sort_values(ascending=True, by=["tstamp"])
     battles = raw_data[raw_data['anony']].reset_index(drop=True)
     models = pd.concat([battles['model_a'], battles['model_b']]).unique()
     return models
 
-def get_arena_battle_res_dict() -> dict:
-    offcial_20230717result_dict = [
+def get_arena_elo_res_20230717() -> dict:
+    offcial_20230717_elo_dict = [
         {
             "Model": "claude-v1",
             "Elo rating": 1201,
@@ -111,7 +111,7 @@ def get_arena_battle_res_dict() -> dict:
             "Elo rating": 864,
         },
     ]
-    return offcial_20230717result_dict
+    return offcial_20230717_elo_dict
 
 if __name__ == '__main__':    
-    print(get_arena_battles_models())
+    print(list_arena_battles_20230717_models())

@@ -1,5 +1,5 @@
 import unittest
-from data import get_arena_battles_data, get_arena_battles_models, get_arena_battle_res_dict
+from data import get_arena_battles_20230717_data, list_arena_battles_20230717_models, get_arena_elo_res_20230717
 from llm_player import LLMPlayer
 from elo_rating import PairwiseBattleScore, PairwiseRatingEntity
 import pandas as pd
@@ -12,11 +12,11 @@ class TestEloRating(unittest.TestCase):
     @classmethod
     def setUpClass(cls) -> None:
         # shared test data
-        cls.arena_battles_data = get_arena_battles_data()
+        cls.arena_battles_data = get_arena_battles_20230717_data()
     
     # shared test logics
     def do_arena_battle(self, K):
-            llm_players = {x: LLMPlayer(x, K) for x in get_arena_battles_models()}
+            llm_players = {x: LLMPlayer(x, K) for x in list_arena_battles_20230717_models()}
             for rd, model_a, model_b, winner in self.arena_battles_data[['model_a', 'model_b', 'winner']].itertuples():
                 # print(rd, model_a, model_b, winner)
                 model_a_player = llm_players[model_a]
@@ -44,7 +44,7 @@ class TestEloRating(unittest.TestCase):
             
     def test_ismatch_witharenaoffical(self):
         our_res = self.do_arena_battle(K=4)
-        arena_res = pd.DataFrame.from_dict(get_arena_battle_res_dict())
+        arena_res = pd.DataFrame.from_dict(get_arena_elo_res_20230717())
         logging.info(our_res['Model'].tolist())
         logging.info(arena_res['Model'].tolist())
         
