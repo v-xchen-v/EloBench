@@ -1,10 +1,9 @@
 import unittest
-from data import get_arena_battles_20230717_data, list_arena_battles_20230717_models, get_arena_elo_res_20230717
-from llm_player import LLMPlayer
-from elo_rating import PairwiseBattleScore, PairwiseRatingEntity
+from data import get_arena_battles_20230717_data, get_arena_elo_res_20230717
 import pandas as pd
 import math
 import logging
+from elo_rating.rating_helper import get_elo_results_from_battles_data
 
 logging.basicConfig(level=logging.INFO)
 
@@ -16,26 +15,7 @@ class TestEloRating(unittest.TestCase):
     
     # shared test logics
     def do_arena_battle(self, K):
-            llm_players = {x: LLMPlayer(x, K) for x in list_arena_battles_20230717_models()}
-            for rd, model_a, model_b, winner in self.arena_battles_data[['model_a', 'model_b', 'winner']].itertuples():
-                # print(rd, model_a, model_b, winner)
-                model_a_player = llm_players[model_a]
-                model_b_player = llm_players[model_b]
-                
-                battle_winner = None
-                if winner == 'model_a':
-                    battle_winner = PairwiseBattleScore.WINNER_IS_A
-                elif winner == 'model_b':
-                    battle_winner = PairwiseBattleScore.WINNER_IS_B
-                else:
-                    battle_winner = PairwiseBattleScore.TIE
-                    
-                PairwiseRatingEntity(model_a_player, model_b_player).battle(winner=battle_winner)
-
-            df = pd.DataFrame([[n, llm_players[n].rating] for n in llm_players], columns=['Model', 'Elo Rating']).sort_values('Elo Rating', ascending=False).reset_index(drop=True)
-            df.index = df.index+1
-            
-            return df
+        return get_elo_results_from_battles_data(self.arena_battles_data, K)
     
     def assertListAlmostEqual(self, list1, list2, places=7):
         self.assertEqual(len(list1), len(list2), "Lists are of different lengths.")
@@ -43,7 +23,8 @@ class TestEloRating(unittest.TestCase):
             self.assertAlmostEqual(a, b, places=places)
             
     def test_ismatch_witharenaoffical(self):
-        our_res = self.do_arena_battle(K=4)
+        ARENA_K = 4
+        our_res = self.do_arena_battle(K=ARENA_K)
         arena_res = pd.DataFrame.from_dict(get_arena_elo_res_20230717())
         logging.info(our_res['Model'].tolist())
         logging.info(arena_res['Model'].tolist())
