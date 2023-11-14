@@ -1,7 +1,7 @@
 from elo_rating.rating_entity import RatingEntity
 from enum import Enum
 
-class PairwiseBattleScore(Enum):
+class PairwiseBattleWinner(Enum):
     WINNER_IS_A = 1 
     TIE = 2
     WINNER_IS_B = 3
@@ -12,20 +12,20 @@ class PairwiseRatingEntity:
         self.entity_a = entity_a
         self.entity_b = entity_b
     
-    def battle(self, winner: PairwiseBattleScore):
+    def battle(self, winner: PairwiseBattleWinner):
         """Compute rating delta of pairwise and update rating."""
         # cache expected score of a and b before battle and updating rating.
         expected_score_a = self.entity_a.expected_score(self.entity_b)
         expected_score_b = self.entity_b.expected_score(self.entity_a)
         
         # get actual score of both sides by battle winner        
-        if winner == PairwiseBattleScore.WINNER_IS_A:
+        if winner == PairwiseBattleWinner.WINNER_IS_A:
             actual_score_a = 1
             actual_score_b = 0
-        elif winner == PairwiseBattleScore.TIE:
+        elif winner == PairwiseBattleWinner.TIE:
             actual_score_a = 0.5
             actual_score_b = 0.5
-        elif winner == PairwiseBattleScore.WINNER_IS_B:
+        elif winner == PairwiseBattleWinner.WINNER_IS_B:
             actual_score_a = 0
             actual_score_b = 1
         else:

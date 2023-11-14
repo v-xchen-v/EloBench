@@ -1,0 +1,4 @@
+QUESTION_COLUMN_NAME = 'question'
+MODEL_A_COLUMN_NAME = 'model_a'
+MODEL_B_COLUMN_NAME = 'model_b'
+WINNER_COLUMN_NAME = 'winner'

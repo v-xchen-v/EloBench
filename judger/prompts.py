@@ -1,0 +1,1 @@
+GPT4_PROMPT = "judger\gpt4_prompts\eval_and_score_better_ans_prompt_231113.txt"

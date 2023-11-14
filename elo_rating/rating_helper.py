@@ -1,5 +1,5 @@
 from elo_rating.llm_player import LLMPlayer
-from elo_rating.pairwise_rating_entity import PairwiseBattleScore, PairwiseRatingEntity
+from elo_rating.pairwise_rating_entity import PairwiseBattleWinner, PairwiseRatingEntity
 import pandas as pd
 import numpy as np
 
@@ -28,11 +28,11 @@ def get_elo_results_from_battles_data(battles_data: pd.DataFrame, K: int) -> pd.
         
         battle_winner = None
         if winner == 'model_a':
-            battle_winner = PairwiseBattleScore.WINNER_IS_A
+            battle_winner = PairwiseBattleWinner.WINNER_IS_A
         elif winner == 'model_b':
-            battle_winner = PairwiseBattleScore.WINNER_IS_B
+            battle_winner = PairwiseBattleWinner.WINNER_IS_B
         else:
-            battle_winner = PairwiseBattleScore.TIE
+            battle_winner = PairwiseBattleWinner.TIE
             
         PairwiseRatingEntity(model_a_player, model_b_player).battle(winner=battle_winner)
         

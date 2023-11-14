@@ -1,3 +1,3 @@
 from elo_rating.rating_entity import RatingEntity
-from elo_rating.pairwise_rating_entity import PairwiseBattleScore, PairwiseRatingEntity
+from elo_rating.pairwise_rating_entity import PairwiseBattleWinner, PairwiseRatingEntity
 from elo_rating.llm_player import LLMPlayer
