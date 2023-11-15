@@ -105,6 +105,9 @@ def gpt_4_completion(template_file_path, temperature=0.7, max_tokens=800, top_p=
         except openai.error.TryAgain or openai.error.Timeout as e:
             logging.warning(f"TryAgain/Timeout: {e}.")
             time.sleep(2)
+        except openai.error.APIConnectionError as e:
+            logging.warning(f"Connection aborted: {e}.")
+            time.sleep(2)
         except Exception as e:
             if response["choices"][0]["finish_reason"] == "content_filter":
                 print(prompt)
