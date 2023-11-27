@@ -165,3 +165,147 @@ each row is a question with multiple llm answer as a column
 3. Battle pairs with question
 4. Battled pairs with winners
 
+
+## GPT-4 as judger vs Human as judger
+- 前提： GPT-4可以作为judger
+1. human as judger only can label on battle pair result, but gpt-4 can at most get all combination results of one question.
+
+
+TODO:
+1. resume and continue when battle with gp4-4 as judger
+2. different K-factor strategies(fixed k, different levels K)
+3. bootstrap
+4. testing on qura 100
+5. to test former and laster position when compare with judger as gpt-4
+
+### Framework design
+#### Design of Battle Pipeline
+Three senarios:
+1. Fixed questions and models
+2. + question later
+3. + models later
+
+For the fixed questions and models:
+
+
+### Features:
+1. Given questions and open-source models(huggingface ids), got good elo rating.
+
+### TODOs:
+
+
+### Sokved Issues
+#### Empty LLM generated answer handling
+- use 'Question: {question}\nAnswer: ' formating question as prompt to reduce the frequency of generating empty answer, especially for alpaca-7b/13b and vicuna-7b models.
+- save missing value(not generated) as 'NULL', and empty answer as ''.
+- tested on gpt-4, gpt-4 could handle the case that 1 ans is empty:
+```
+res = gpt_4_completion("judger/gpt4_prompts/eval_and_score_better_ans_prompt_231113.txt", question="What is the meaning of life?", model1_answer="42", model2_answer="")
+print(res)
+"""'- Score of Model 1: 1\n- Score of Model 2: 0\n- Brief Explanation: Model 1\'s answer, "42", is a humorous reference to "The Hitchhiker\'s Guide to the Galaxy" by Douglas Adams, where "42" is presented as the "Answer to the Ultimate Question of Life, The Universe, and Everything", according to a supercomputer named Deep Thought. Although it\'s a joke, it\'s still a response. Model 2, on the other hand, provided no answer at all, which is why it receives a score of 0.'"""
+```
+
+## RoadMap
+This roadmap provides a comprehensive approach to developing an Elo system for comparing LLMs, using GPT-4 as a judger, in the context of question-answering abilities.
+1. Define the Competition Rules
+    - *Type of Questions*: Decide on the questions to be used(e.g., top question on quaro or google).
+    - *Scoring Criteria*: Establish clear criteria for what constitutes a correct or better answer.
+    - *Match Format*: Determine how models will be paired and how many rounds they will compete in.
+
+2. Select and Prepare the LLMs
+    - *Model Selection*: Choose which open-source models will compete against each other.
+    - *Environment Setup*: Set up a programming environment where all models can receive questions and generate answers.
+
+3. Implement GPT-4 as a Judger
+    -*Judging Algorithm*: Define how GPT-4 will evaluate answers. Ensure GPT-4's responses are not biased towards its own 'style' of answering.
+    -*Validation*: Test GPT-4's judging capabilities to ensure consistency and fairness.
+
+4. Implement Elo Ratings
+    - *Baseline Ratings*
+    - *More*: different K-factor, battle ordering and so on.
+
+5. Develop the Competition Framework
+    - *Automated Questioning*: Implement a system to automatically pose questions to each model.
+    - *Answer Collection*: Ensure a mechanism for collecting and organizing answers from each model.
+
+6. Run Competitions
+    - Regular Matches: Conduct regular rounds where each model answers questions.
+    - Result Recording: Record each model's performace as per GPT-4's evaluation.
+
+7. Update Elo Ratings
+    - *Calculation*: After each round, calculate Elo rating changes based on the result.
+    - Adjustment Mechaism: Implement a system to adjust ratings after each match.
+
+8. Analysis and Reporting
+    - *Performance Tracking*: Keep track of each model's perforance over time.
+    - *Insights Generation*: Analyze rsults for insights into each model's strengths and weaknesses.
+
+9. Iterative Improvement
+    - *Feedback Loop*: Use insights to refine the judging criteria, question selection and competition format.
+    - *Model Updates*: Allow for the inclusion of updated or new models over time.
+
+10. Documentation and Transparency
+    - *Public Reporting*: Regularly publish competition results and rating changes.
+    - *Open Methidology*: Make the methodology of the competition and rating calculations public for transparency.
+
+11. Community Engagement
+    - *Community Feedback*: Involve the AI and research community for feedback and suggestions.
+    - *Collaboration*: Collabarate with other researchers or institutions for a more robust system.
+
+12. Legal and Ethical Considrations.
+    - *Fair Use*: Ensure the use of GPT-4 and other models adheres to legal and ethical standards.
+    - *Bias and Fairness*: Regularly assess the system for any biases or unfair practices.
+
+## Considerations
+- Resource Intensive: Running multiple LLMs and GPT-4 for judging can be resource-intensive. Plan for the necessary computational resources.
+- Model Limitations: Be aware of the limitations of each model, including GPT-4, and how these might impact the fairness of the competition.
+- Continuous Monitoring: The system should be monitored and adjusted as models evolve and improve over time.
+
+## Features
+1. *Model Integration*
+    - *LLM Interface*: Interface for integrating various LLMs, including open-source models and GPT-4, to ensure smooth interaction and response handling.
+    - *Model Configuration*: Allow configuration setting for each model(e.g., token limits, temperature settings for GPT-4)
+
+2. *Question Pool Management*
+    - *Question Database*:  A diverse and extensive database of questions, categorized by difficulty, type(factual, reasoning, etc), and topic
+    - Randomized Question Selection: Mechanism for selection questions randomly to ensure a fair and unbais challenge for each model.
+
+3. *Answer Assessment*
+    - *Answer Evaluation Criteria*: Define a clear and objective criteria for what consititutes a correct or superior answer.
+    - Scoring Algorithm: Algorithm for scoring answers, possibly with partical credits for partailly correct answer.
+    - Automated Answer Judging: Using GPT-4 to evaluate answers with predefined metric for fairness and accuracy.
+
+4. Elo Rating System
+- Initial Rating Assignment: Assign initial Elo ratings to all participating models.
+- Rating Update Mechanism: Algorithm to update Elo ratings based on match outcomes, ensuring fair and accurate reflection of performance.
+- Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
+
+5. Matchmaking and Competitions
+- Model Matchmaking: System to pair models for competitions based on their current Elo ratings.
+- Competition Scheduling: Regularly scheduled competitions or on-demand challenges.
+- Round-Robin or Tournament Structures: Options for different types of competition structures.
+
+6. Performance Tracking and Analytics
+- Historical Data Tracking: Store and track the performance history of each model.
+- Statistical Analysis Tools: Tools for analyzing performance trends, strengths, and weaknesses.
+- Leaderboards: Display current rankings and historical performance.
+
+7. User Interface and Reporting
+- Dashboard: A user-friendly dashboard to view upcoming matches, live competitions, and Elo ratings.
+- Detailed Reporting: Generate detailed reports on match outcomes, individual model performance, and rating changes.
+- Data Visualization: Graphs and charts for visual representation of performance trends and ratings.
+
+8. Feedback and Improvement Loop
+- Model Feedback Integration: Integrate feedback mechanisms for model improvement.
+- System Update Mechanism: Regular updates to the system based on feedback, new research, and model updates.
+
+9. Security and Fair Use
+- Model Security: Ensure the security of models and their intellectual property.
+- Fair Use Compliance: Ensure that the usage of all models, especially GPT-4, is in compliance with licensing and usage terms.
+
+10. Documentation and Community Engagement
+- Comprehensive Documentation: Detailed documentation on how to use the system, methodologies used, and interpretation of results.
+- Community Forum: A platform for discussion, feedback, and community engagement around the Elo system and model performances.
+
+These features collectively provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system would need to be flexible and scalable to accommodate new models and changing technologies in the AI field.
+

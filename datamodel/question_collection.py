@@ -1,14 +1,15 @@
 from typing import List, Union
 import pandas as pd
 from .columns import QUESTION_COLUMN_NAME
+from logger import logger
 
 class QuestionCollection:
     def __init__(self, questions: Union[List[str], None] = None):
          # Initialize the question list to store unique strings
-        if questions is None:
-            self.questions = []
-        else:
-            self.questions = questions
+        self.questions = []
+        if questions is not None:
+            self.adds(questions)
+            logger.debug(f'Removed {len(questions)-len(self.questions)} repeat questions.')
     
     def add(self, question: str):
         # Add a string to the list if it's not already present

@@ -108,6 +108,9 @@ def gpt_4_completion(template_file_path, temperature=0.7, max_tokens=800, top_p=
         except openai.error.APIConnectionError as e:
             logging.warning(f"Connection aborted: {e}.")
             time.sleep(2)
+        except openai.error.Timeout as e:
+            logging.warning("Request timed out: {}".format(e))
+            time.sleep(2)
         except Exception as e:
             if response["choices"][0]["finish_reason"] == "content_filter":
                 print(prompt)
@@ -125,31 +128,44 @@ def gpt_4_completion(template_file_path, temperature=0.7, max_tokens=800, top_p=
     }
 
 if __name__ == '__main__':
-    # res = gpt_4_completion("prompt.txt", question="What is the meaning of life?", model1_answer="42", model2_answer="45")
+    # res = gpt_4_completion("judger/gpt4_prompts/eval_and_score_better_ans_prompt_231113.txt", question="What is the meaning of life?", model1_answer="42", model2_answer="")
     # print(res)
+    # """'- Score of Model 1: 1\n- Score of Model 2: 0\n- Brief Explanation: Model 1\'s answer, "42", is a humorous reference to "The Hitchhiker\'s Guide to the Galaxy" by Douglas Adams, where "42" is presented as the "Answer to the Ultimate Question of Life, The Universe, and Everything", according to a supercomputer named Deep Thought. Although it\'s a joke, it\'s still a response. Model 2, on the other hand, provided no answer at all, which is why it receives a score of 0.'"""
     # text = res['response']
-    import re
     
-    # Compile the regular expression
-    pattern = re.compile(r"- Score (?:of|for) Model 1:\s*([0-9.]+)")
-    score_2_pattern = re.compile(r"- Score for Model 2:\s*([0-9.]+)")
+    # import re
+    
+    # # Compile the regular expression
+    # pattern = re.compile(r"-? Score (?:of|for) Model 1:\s*([0-9.]+)")
+    # score_2_pattern = re.compile(r"-? Score for Model 2:\s*([0-9.]+)")
 
-    # Search the text
-    text = '- Score for Model 1: 0\n- Score for Model 2: 0\n\nBrief Explanation: \nBoth models failed to provide a complete and accurate answer to the question. Model 1 started to provide an answer but did not finish, while Model 2 did not provide any answer at all. Therefore, both models receive a score of 0.'
-    # text = "Model 1's Answer: The meaning of life is that we are living in a - Score: 1\nModel 2's Answer: (No response) - Score: 0\n\nJustification: Model 1, despite providing an incomplete answer, at least attempted to answer the question. Model 2 did not provide any response, therefore it scores lower."
-    match = pattern.search(text)
-    match2 = score_2_pattern.search(text)
+    # # Search the text
+    # text = 'Score for Model 1: 0\n- Score for Model 2: 0\n\nBrief Explanation: \nBoth models failed to provide a complete and accurate answer to the question. Model 1 started to provide an answer but did not finish, while Model 2 did not provide any answer at all. Therefore, both models receive a score of 0.'
+    # # text = "Model 1's Answer: The meaning of life is that we are living in a - Score: 1\nModel 2's Answer: (No response) - Score: 0\n\nJustification: Model 1, despite providing an incomplete answer, at least attempted to answer the question. Model 2 did not provide any response, therefore it scores lower."
+    # match = pattern.search(text)
+    # match2 = score_2_pattern.search(text)
 
-    # If a match is found, print the score
-    if match:
-        score = match.group(1)
-        print(f"Model 1's Score is: {score}")
-    else:
-        print("No score found for Model 1.")
+    # # If a match is found, print the score
+    # if match:
+    #     score = match.group(1)
+    #     print(f"Model 1's Score is: {score}")
+    # else:
+    #     print("No score found for Model 1.")
         
-    if match2:
-        score = match2.group(1)
-        print(f"Model 2's Score is: {score}")
-    else:
-        print("No score found for Model 2.")
+    # if match2:
+    #     score = match2.group(1)
+    #     print(f"Model 2's Score is: {score}")
+    # else:
+        # print("No score found for Model 2.")
         
+    import re
+
+    texts = ['Score of Model 1: 0', '- Score of Model 1: 0']
+    pattern = r"-? ?Score (?:of|for) Model 1:\s*([0-9.]+)"
+
+    for text in texts:
+        match = re.search(pattern, text)
+        if match:
+            print(f"Found score: {match.group(1)}")
+        else:
+            print("No match found")
