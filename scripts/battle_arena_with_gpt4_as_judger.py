@@ -1,7 +1,7 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname((__file__))))
 
-from battle_pipe import BattlePipeline
+from battle_pipe.battle_pipe import BattlePipeline
 from datamodel.question_and_answers_collection import QuestionAndAnswersCollection, LLMAnswer
 from datamodel import QuestionCollection, PairwiseBattleArrangement, ArrangementStrategy
 import pandas as pd

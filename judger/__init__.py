@@ -1,2 +1,2 @@
-from judger.prompts import GPT4_PROMPT
-from judger.gpt4_helper import gpt_4_eval_and_score
+from models.prompts import GPT4_EVAL_AND_SCORE_PROMPT
+from judger.gpt_helper import gpt_4_eval_and_score

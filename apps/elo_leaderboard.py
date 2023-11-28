@@ -255,7 +255,7 @@ def get_gpt4_judger_elo_on_arena(filepath=r'results/quora_100_test4/battle_recor
     data = df[columns_to_inclusive]
     
     # remove nan
-    data = data[data['winner'].isna()==False]
+    data = data[(data['winner'].isna()==False) & (data['winner']!='invalid')]
     
     # new_column_names = {"gpt_winner": 'winner'}
     # data.rename(columns=new_column_names, inplace=True)

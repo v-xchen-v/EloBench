@@ -6,9 +6,6 @@ import pandas as pd
 import re
 from pathlib import Path
 
-from judger import GPT4_PROMPT, gpt_4_eval_and_score
-from judger.gpt4 import gpt_4_completion
-
 battle_arrangement = pd.read_csv(Path('data')/'arena_data'/'chatbot_arena_conversations'/'battle_arrangement.csv')
 question_and_answers = pd.read_csv(Path('data')/'arena_data'/'chatbot_arena_conversations'/'q_and_as.csv')
 

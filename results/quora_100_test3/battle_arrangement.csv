@@ -6972,199 +6972,208 @@
 6970,Is it possible that AI can be far dangerous than modeling images?,huggyllama/llama-30b,meta-llama/Llama-2-7b-hf
 6971,"In your opinion, how effective is ChatGPT in generating relevant responses compared to other language models?",meta-llama/Llama-2-7b-chat-hf,lmsys/vicuna-33b-v1.3
 6972,How can you get AI back in the box?,meta-llama/Llama-2-70b-chat-hf,chavinlo/alpaca-13b
-6973,"Why are there so many nay sayers when it comes to the abilities of AI? In addition, there are a good many that like to say 50 or 100 years before we can actually see AI come to fruition? Why not 5, 10, or 20 years at the latest?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6974,"Why are there so many nay sayers when it comes to the abilities of AI? In addition, there are a good many that like to say 50 or 100 years before we can actually see AI come to fruition? Why not 5, 10, or 20 years at the latest?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6975,"Why are there so many nay sayers when it comes to the abilities of AI? In addition, there are a good many that like to say 50 or 100 years before we can actually see AI come to fruition? Why not 5, 10, or 20 years at the latest?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6976,How does artificial intelligence work in a computer?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6977,How does artificial intelligence work in a computer?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6978,What if ChatGPT starts creating more advanced AI models?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6979,"What is a good analogy to understand why SAG-AFTRA is demanding robust protections against the use of AI to create ""digital doubles""?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6980,Is it possible that AI can be far dangerous than modeling images?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6981,Is it possible that AI can be far dangerous than modeling images?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6982,Can an artificial intelligence define a problem?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6983,What is AI? Is AI harmful to humans?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6984,What is AI? Is AI harmful to humans?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6985,"How do you think people will react to a conscious AGI that interact humanly with visual feedback, audio and unmatched intelligence in one app, with another service that aid in tech innovation and design?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6986,"How do you think people will react to a conscious AGI that interact humanly with visual feedback, audio and unmatched intelligence in one app, with another service that aid in tech innovation and design?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6987,What is ChatGPT?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6988,What is ChatGPT?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6989,What's the difference between ChatGPT and Bing Chat?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6990,What's the difference between ChatGPT and Bing Chat?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6991,What is the reason why people say that artificial intelligence gives a voice to people who can't speak?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6992,How is AI being used to develop new imaging modalities?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6993,How is AI being used to develop new imaging modalities?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6994,"Which AI chatbot is best, WhatsApp GPT or Chatgpt?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6995,"Which AI chatbot is best, WhatsApp GPT or Chatgpt?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6996,"How has AI been used by GCHQ for analyzing intercepted communications, and what are their current efforts in utilizing AI?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-6997,"How has AI been used by GCHQ for analyzing intercepted communications, and what are their current efforts in utilizing AI?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-6998,"How has AI been used by GCHQ for analyzing intercepted communications, and what are their current efforts in utilizing AI?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-6999,"Why do AI developers struggle to train AI models without a racial bias, and what does this fact mean for our internet content, data, and society?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7000,"Why do AI developers struggle to train AI models without a racial bias, and what does this fact mean for our internet content, data, and society?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7001,"Why do AI developers struggle to train AI models without a racial bias, and what does this fact mean for our internet content, data, and society?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7002,How can you get AI back in the box?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7003,Elon Musk has predicted that artificial intelligence will eventually mean that no one will have to work. What are you going to do with your time and where do you have the money to live?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7004,Elon Musk has predicted that artificial intelligence will eventually mean that no one will have to work. What are you going to do with your time and where do you have the money to live?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7005,Elon Musk has predicted that artificial intelligence will eventually mean that no one will have to work. What are you going to do with your time and where do you have the money to live?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7006,What are the applications of AI chatbots?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7007,What are the applications of AI chatbots?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7008,What are the applications of AI chatbots?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7009,What are the AI and ML starting salaries in India?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7010,What is the quality of Renpho smart scales?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7011,What is the quality of Renpho smart scales?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7012,I want my girlfriend to gain weight and go from 300 lbs to hopefully 500 lbs. How can I help her do this?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7013,I want my girlfriend to gain weight and go from 300 lbs to hopefully 500 lbs. How can I help her do this?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7014,Does chess really improve thinking skills?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7015,Does chess really improve thinking skills?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7016,Which is the best fitness band in india that syncs with Android phones and is as good as Fitbit?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7017,Which is the best fitness band in india that syncs with Android phones and is as good as Fitbit?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7018,Which is the best fitness band in india that syncs with Android phones and is as good as Fitbit?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7019,What is your body count?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7020,What is your body count?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7021,What is your body count?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7022,Why is having a chubby belly so bad for a female who is slightly overweight?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7023,"What if a person who isn't 'fat' (58-60kg, 171cm) does a 30-day water fast?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7024,"What if a person who isn't 'fat' (58-60kg, 171cm) does a 30-day water fast?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7025,How do I build a fitness app?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7026,How do I build a fitness app?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7027,How do I motivate myself to lose weight?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7028,How do I motivate myself to lose weight?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7029,How can I lose 2 kgs in a week?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7030,How can I lose 2 kgs in a week?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7031,How can I lose 2 kgs in a week?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7032,Are a lot of skinny guys attracted to bigger girls?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7033,Are a lot of skinny guys attracted to bigger girls?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7034,Are a lot of skinny guys attracted to bigger girls?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7035,How will 150 pushups every day change me?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7036,How will 150 pushups every day change me?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7037,How long does it take to lose belly fat and arm fat?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7038,How long does it take to lose belly fat and arm fat?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7039,How long does it take to lose belly fat and arm fat?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7040,Does green tea reduce thigh fat?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7041,Does green tea reduce thigh fat?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7042,What body type is mostly admired by men? Slim or chubby?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7043,What body type is mostly admired by men? Slim or chubby?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7044,How do physical workouts help you mentally?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7045,How do physical workouts help you mentally?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7046,How do physical workouts help you mentally?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7047,What are some good alternatives to Fitbit?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7048,What are some good alternatives to Fitbit?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7049,What are some good alternatives to Fitbit?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7050,What are some ways to reduce the risk of getting asthma during exercise and other physical activities?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7051,What is the structure of the Zumba classes?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7052,What is the structure of the Zumba classes?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7053,What is the structure of the Zumba classes?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7054,How do I start a workout?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7055,How do I start a workout?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7056,"What is the difference between ""neuromorphic"" and ""deep learning""?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7057,"In your opinion, how effective is ChatGPT in generating relevant responses compared to other language models?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7058,"In your opinion, how effective is ChatGPT in generating relevant responses compared to other language models?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7059,"Could a neural network or other machine learning technology theoretically design CPU architecture, and could it be better/more efficient than human-designed CPUs?        ",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7060,"Could a neural network or other machine learning technology theoretically design CPU architecture, and could it be better/more efficient than human-designed CPUs?        ",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7061,How can ChatGPT be trained to specialize in certain domains or topics?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7062,How can ChatGPT be trained to specialize in certain domains or topics?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7063,Have you used AI modeling recently? For what task? Information composition? What do you think of AI current capabilities? How quickly will it learn?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7064,Have you used AI modeling recently? For what task? Information composition? What do you think of AI current capabilities? How quickly will it learn?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7065,Have you used AI modeling recently? For what task? Information composition? What do you think of AI current capabilities? How quickly will it learn?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7066,"If given enough data to learn from and time to process it all, can an AI solve any problem that humans can solve?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7067,"If given enough data to learn from and time to process it all, can an AI solve any problem that humans can solve?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7068,What is the use of the website openai.com?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7069,What kind of abilities would an AI machine learning LLM model possess with 1 trillion parameters on 50 trillion tokens trained in such a way with a loss close to zero?   ,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7070,What kind of abilities would an AI machine learning LLM model possess with 1 trillion parameters on 50 trillion tokens trained in such a way with a loss close to zero?   ,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7071,Do you think OpenAI's GPT-4 model is the most advanced AI language model out there?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7072,Do you think OpenAI's GPT-4 model is the most advanced AI language model out there?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7073,What is the best AI bot?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7074,What is the best AI bot?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7075,What is the best AI bot?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7076,Is machine learning useful in wireless communications?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7077,Is machine learning useful in wireless communications?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7078,In which stream of engineering does artificial intelligence fall into?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7079,In which stream of engineering does artificial intelligence fall into?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7080,Is the GPT-2 (OpenAI) that dangerous?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7081,Is the GPT-2 (OpenAI) that dangerous?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7082,Are chatbots the beginning of true AI?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7083,Are chatbots the beginning of true AI?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7084,What is the difference between GPT-3 and OpenAI?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7085,What is the ability of Turnitin to detect plagiarism in the text generated by artificial intelligence (AI)?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7086,What is the ability of Turnitin to detect plagiarism in the text generated by artificial intelligence (AI)?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7087,What is the ability of Turnitin to detect plagiarism in the text generated by artificial intelligence (AI)?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7088,"If deep fake and voice cloning technology advances to the point of being able even to clone any voice emotive tone making it indistinguishable from the original, how can we prevent an identity stealing issue, can we just restrict its use, if yes how?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7089,"If deep fake and voice cloning technology advances to the point of being able even to clone any voice emotive tone making it indistinguishable from the original, how can we prevent an identity stealing issue, can we just restrict its use, if yes how?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7090,Can OpenAI Chatgpt help in earning online?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7091,Can OpenAI Chatgpt help in earning online?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7092,Can OpenAI Chatgpt help in earning online?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7093,"Is Gmail untrustworthy/unreliable? When I created a Gmail account, the contract between Gmail and me was the password. Why did it break my trust?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7094,"Is Gmail untrustworthy/unreliable? When I created a Gmail account, the contract between Gmail and me was the password. Why did it break my trust?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7095,What are the biggest signs that someone has narcissistic personality disorder?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7096,What are the biggest signs that someone has narcissistic personality disorder?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7097,How do people with BPD give relationships a chance?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7098,How do people with BPD give relationships a chance?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7099,What are some signs of schizophrenia? What is it like for someone who has it to have it? What are your experiences with this mental disorder?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7100,What are some signs of schizophrenia? What is it like for someone who has it to have it? What are your experiences with this mental disorder?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7101,How can I convince a guy who has depression to be in a relationship with me?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7102,How can I convince a guy who has depression to be in a relationship with me?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7103,"I have clinical depression and I cry everyday, the medicines my doctor gave me doesn't help it at all, what should I do? I'm 27 already and still single, who would want to get married with someone who is severely depressed?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7104,"I have clinical depression and I cry everyday, the medicines my doctor gave me doesn't help it at all, what should I do? I'm 27 already and still single, who would want to get married with someone who is severely depressed?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7105,What are some of the best ways to manifest what you want?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7106,What are some of the best ways to manifest what you want?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7107,What are some of the best ways to manifest what you want?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7108,Why do therapists ask if there was blood when you self-harm?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7109,Why are intelligent people so depressed?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7110,Why are intelligent people so depressed?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7111,"Is it typical or common for an Alzheimer's patient to tell outrageously violent and absurd stories? My mother is doing this frequently, and it's very upsetting that she believes these things are happening to her.",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7112,"Is it typical or common for an Alzheimer's patient to tell outrageously violent and absurd stories? My mother is doing this frequently, and it's very upsetting that she believes these things are happening to her.",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7113,"What is more important, peace of mind or money?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7114,Will AI degrade humans' mental health?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7115,Will AI degrade humans' mental health?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7116,Will AI degrade humans' mental health?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7117,When do you know the relationship is over with someone who has borderline personality disorder (BPD)?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7118,When do you know the relationship is over with someone who has borderline personality disorder (BPD)?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7119,What is something people need to understand?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7120,What is something people need to understand?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7121,What is something people need to understand?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7122,What are the symptoms of a psychotic episode? How can you tell if you are experiencing one? How can you deal with it?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7123,"Can untreated mental conditions like bipolar, depression or anxiety lead to other mental conditions like borderline personality disorder later in life?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7124,"Can untreated mental conditions like bipolar, depression or anxiety lead to other mental conditions like borderline personality disorder later in life?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7125,"Can untreated mental conditions like bipolar, depression or anxiety lead to other mental conditions like borderline personality disorder later in life?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7126,"Hello everyone i hope you are well. I do not post a lot but do a lot of reading, but im so anxious and depressed. I was with a narc for 8yrs, well we split up and i went non contacr for 2yrs. well recently she got in touch to see about a care package im on as ive been really ill in hospital. well we got talking she told me how much she missed me and we started seeing each other again. now after about 6 times of seeing her she has ditched me again. im in bits as i do love her so much. im trying so hard to forget her and that she is gutter scum, but living alone and suffering makes it so hard. i do feel im ready for a breakdown or even worse. apart from blocking her how do i get her out of my head and life for good without it making me really ill. thank you for your time and patients, stay safe and god be with you.",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7127,Is there a possibility that people seeing spirits of deceased can be valid and not simply due to mental health condition?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7128,Is there a possibility that people seeing spirits of deceased can be valid and not simply due to mental health condition?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7129,Can a psychologist/therapist have another therapist as his/her client?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7130,Can a psychologist/therapist have another therapist as his/her client?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7131,"Which one is better, Realme or Oppo?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7132,How can I keep track of my wife's phone?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7133,"Hat are the key challenges and ethical considerations in the development and deployment of artificial intelligence, and how can we address them to ensure responsible and beneficial AI technology?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7134,"Hat are the key challenges and ethical considerations in the development and deployment of artificial intelligence, and how can we address them to ensure responsible and beneficial AI technology?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7135,Doesn't EV battery technology have to improve dramatically before electric vehicles can be adopted by the masses?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7136,Doesn't EV battery technology have to improve dramatically before electric vehicles can be adopted by the masses?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7137,Can whatsapp messages be tracked?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7138,Can whatsapp messages be tracked?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7139,Can whatsapp messages be tracked?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7140,Will a 5G SIM card work in a 4G phone?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7141,Will a 5G SIM card work in a 4G phone?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7142,How can I tell if someone is monitoring my phone?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7143,How can I tell if someone is monitoring my phone?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7144,How can I tell if someone is monitoring my phone?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7145,Why did Islam ban eating pork?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7146,Why does my 5G phone say 4G?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7147,Why does my 5G phone say 4G?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7148,Why does my 5G phone say 4G?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7149,How do you find a person's cell phone number?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7150,How do you find a person's cell phone number?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7151,How do you find a person's cell phone number?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7152,How can learning about emerging technologies lead to entrepreneurial ventures and increased income?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7153,What is the new technology in India 2023?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7154,What is the new technology in India 2023?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7155,What is the new technology in India 2023?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7156,Does 5G use more mobile data than LTE?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7157,Does 5G use more mobile data than LTE?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7158,"What is better, SEO or PPC?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7159,How do we know when our phone is hacked?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7160,How do we know when our phone is hacked?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7161,What was the most advanced calculator ever made before computers were invented?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7162,What was the most advanced calculator ever made before computers were invented?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7163,"If science played some role in the creation of useful technology, are we now bound by obligation to accept any ridiculous lie that mainstream science puts out?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7164,"If science played some role in the creation of useful technology, are we now bound by obligation to accept any ridiculous lie that mainstream science puts out?",meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7165,"If science played some role in the creation of useful technology, are we now bound by obligation to accept any ridiculous lie that mainstream science puts out?",meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
-7166,Which is the best 5G new phone under Rs. 20K in 2023?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-13b-hf
-7167,Which is the best 5G new phone under Rs. 20K in 2023?,meta-llama/Llama-2-7b-hf,meta-llama/Llama-2-70b-hf
-7168,Which is the best 5G new phone under Rs. 20K in 2023?,meta-llama/Llama-2-13b-hf,meta-llama/Llama-2-70b-hf
+6973,Why is ChatPion a helpful AI chatbot?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+6974,Why is ChatPion a helpful AI chatbot?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+6975,"Why are there so many nay sayers when it comes to the abilities of AI? In addition, there are a good many that like to say 50 or 100 years before we can actually see AI come to fruition? Why not 5, 10, or 20 years at the latest?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6976,"Why are there so many nay sayers when it comes to the abilities of AI? In addition, there are a good many that like to say 50 or 100 years before we can actually see AI come to fruition? Why not 5, 10, or 20 years at the latest?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+6977,"Why are there so many nay sayers when it comes to the abilities of AI? In addition, there are a good many that like to say 50 or 100 years before we can actually see AI come to fruition? Why not 5, 10, or 20 years at the latest?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+6978,How does artificial intelligence work in a computer?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6979,How does artificial intelligence work in a computer?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+6980,How does artificial intelligence work in a computer?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6981,What if ChatGPT starts creating more advanced AI models?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+6982,What if ChatGPT starts creating more advanced AI models?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6983,"What is a good analogy to understand why SAG-AFTRA is demanding robust protections against the use of AI to create ""digital doubles""?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+6984,"What is a good analogy to understand why SAG-AFTRA is demanding robust protections against the use of AI to create ""digital doubles""?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6985,Can an artificial intelligence define a problem?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6986,Can an artificial intelligence define a problem?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6987,What is AI? Is AI harmful to humans?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6988,What is AI? Is AI harmful to humans?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+6989,"How do you think people will react to a conscious AGI that interact humanly with visual feedback, audio and unmatched intelligence in one app, with another service that aid in tech innovation and design?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+6990,"How do you think people will react to a conscious AGI that interact humanly with visual feedback, audio and unmatched intelligence in one app, with another service that aid in tech innovation and design?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6991,What is ChatGPT?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+6992,What is ChatGPT?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+6993,What's the difference between ChatGPT and Bing Chat?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+6994,What's the difference between ChatGPT and Bing Chat?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+6995,What is the reason why people say that artificial intelligence gives a voice to people who can't speak?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6996,What is the reason why people say that artificial intelligence gives a voice to people who can't speak?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+6997,What is the reason why people say that artificial intelligence gives a voice to people who can't speak?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6998,How is AI being used to develop new imaging modalities?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+6999,How is AI being used to develop new imaging modalities?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7000,"Which AI chatbot is best, WhatsApp GPT or Chatgpt?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7001,"Which AI chatbot is best, WhatsApp GPT or Chatgpt?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7002,"How has AI been used by GCHQ for analyzing intercepted communications, and what are their current efforts in utilizing AI?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7003,"How has AI been used by GCHQ for analyzing intercepted communications, and what are their current efforts in utilizing AI?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7004,"Why do AI developers struggle to train AI models without a racial bias, and what does this fact mean for our internet content, data, and society?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7005,"Why do AI developers struggle to train AI models without a racial bias, and what does this fact mean for our internet content, data, and society?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7006,"Why do AI developers struggle to train AI models without a racial bias, and what does this fact mean for our internet content, data, and society?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7007,How can you get AI back in the box?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7008,How can you get AI back in the box?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7009,Elon Musk has predicted that artificial intelligence will eventually mean that no one will have to work. What are you going to do with your time and where do you have the money to live?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7010,Elon Musk has predicted that artificial intelligence will eventually mean that no one will have to work. What are you going to do with your time and where do you have the money to live?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7011,What are the applications of AI chatbots?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7012,What are the applications of AI chatbots?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7013,What are the applications of AI chatbots?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7014,What is the quality of Renpho smart scales?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7015,What is the quality of Renpho smart scales?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7016,What is the quality of Renpho smart scales?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7017,I want my girlfriend to gain weight and go from 300 lbs to hopefully 500 lbs. How can I help her do this?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7018,I want my girlfriend to gain weight and go from 300 lbs to hopefully 500 lbs. How can I help her do this?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7019,I want my girlfriend to gain weight and go from 300 lbs to hopefully 500 lbs. How can I help her do this?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7020,Does chess really improve thinking skills?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7021,Does chess really improve thinking skills?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7022,Does chess really improve thinking skills?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7023,Which is the best fitness band in india that syncs with Android phones and is as good as Fitbit?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7024,Which is the best fitness band in india that syncs with Android phones and is as good as Fitbit?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7025,What is your body count?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7026,What is your body count?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7027,What is your body count?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7028,Why is having a chubby belly so bad for a female who is slightly overweight?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7029,"What if a person who isn't 'fat' (58-60kg, 171cm) does a 30-day water fast?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7030,"What if a person who isn't 'fat' (58-60kg, 171cm) does a 30-day water fast?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7031,How do I build a fitness app?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7032,How do I build a fitness app?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7033,How do I build a fitness app?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7034,How do I motivate myself to lose weight?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7035,How do I motivate myself to lose weight?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7036,How can I lose 2 kgs in a week?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7037,How can I lose 2 kgs in a week?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7038,How can I lose 2 kgs in a week?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7039,Are a lot of skinny guys attracted to bigger girls?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7040,Are a lot of skinny guys attracted to bigger girls?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7041,I am wanting to be fat I am wondering how a when should I stop?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7042,I am wanting to be fat I am wondering how a when should I stop?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7043,How will 150 pushups every day change me?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7044,How will 150 pushups every day change me?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7045,How long does it take to lose belly fat and arm fat?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7046,Does green tea reduce thigh fat?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7047,Does green tea reduce thigh fat?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7048,What body type is mostly admired by men? Slim or chubby?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7049,What body type is mostly admired by men? Slim or chubby?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7050,How do physical workouts help you mentally?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7051,How do physical workouts help you mentally?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7052,How do physical workouts help you mentally?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7053,What are some good alternatives to Fitbit?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7054,What are some ways to reduce the risk of getting asthma during exercise and other physical activities?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7055,What is the structure of the Zumba classes?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7056,What is the structure of the Zumba classes?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7057,How do I start a workout?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7058,How do I start a workout?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7059,How do I start a workout?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7060,"What is the difference between ""neuromorphic"" and ""deep learning""?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7061,"What is the difference between ""neuromorphic"" and ""deep learning""?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7062,"In your opinion, how effective is ChatGPT in generating relevant responses compared to other language models?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7063,"In your opinion, how effective is ChatGPT in generating relevant responses compared to other language models?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7064,"Could a neural network or other machine learning technology theoretically design CPU architecture, and could it be better/more efficient than human-designed CPUs?        ",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7065,"Could a neural network or other machine learning technology theoretically design CPU architecture, and could it be better/more efficient than human-designed CPUs?        ",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7066,"Could a neural network or other machine learning technology theoretically design CPU architecture, and could it be better/more efficient than human-designed CPUs?        ",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7067,How can ChatGPT be trained to specialize in certain domains or topics?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7068,How can ChatGPT be trained to specialize in certain domains or topics?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7069,How can ChatGPT be trained to specialize in certain domains or topics?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7070,Have you used AI modeling recently? For what task? Information composition? What do you think of AI current capabilities? How quickly will it learn?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7071,Have you used AI modeling recently? For what task? Information composition? What do you think of AI current capabilities? How quickly will it learn?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7072,"If given enough data to learn from and time to process it all, can an AI solve any problem that humans can solve?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7073,"If given enough data to learn from and time to process it all, can an AI solve any problem that humans can solve?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7074,"If given enough data to learn from and time to process it all, can an AI solve any problem that humans can solve?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7075,What is the use of the website openai.com?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7076,What is the use of the website openai.com?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7077,What is the use of the website openai.com?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7078,What kind of abilities would an AI machine learning LLM model possess with 1 trillion parameters on 50 trillion tokens trained in such a way with a loss close to zero?   ,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7079,What kind of abilities would an AI machine learning LLM model possess with 1 trillion parameters on 50 trillion tokens trained in such a way with a loss close to zero?   ,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7080,Do you think OpenAI's GPT-4 model is the most advanced AI language model out there?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7081,Do you think OpenAI's GPT-4 model is the most advanced AI language model out there?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7082,What is the best AI bot?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7083,Is machine learning useful in wireless communications?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7084,In which stream of engineering does artificial intelligence fall into?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7085,In which stream of engineering does artificial intelligence fall into?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7086,In which stream of engineering does artificial intelligence fall into?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7087,Is the GPT-2 (OpenAI) that dangerous?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7088,Is the GPT-2 (OpenAI) that dangerous?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7089,Are chatbots the beginning of true AI?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7090,Are chatbots the beginning of true AI?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7091,What is the difference between GPT-3 and OpenAI?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7092,What is the ability of Turnitin to detect plagiarism in the text generated by artificial intelligence (AI)?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7093,"If deep fake and voice cloning technology advances to the point of being able even to clone any voice emotive tone making it indistinguishable from the original, how can we prevent an identity stealing issue, can we just restrict its use, if yes how?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7094,"If deep fake and voice cloning technology advances to the point of being able even to clone any voice emotive tone making it indistinguishable from the original, how can we prevent an identity stealing issue, can we just restrict its use, if yes how?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7095,Can OpenAI Chatgpt help in earning online?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7096,"Is Gmail untrustworthy/unreliable? When I created a Gmail account, the contract between Gmail and me was the password. Why did it break my trust?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7097,What are the biggest signs that someone has narcissistic personality disorder?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7098,What are the biggest signs that someone has narcissistic personality disorder?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7099,What are the biggest signs that someone has narcissistic personality disorder?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7100,How do people with BPD give relationships a chance?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7101,How do people with BPD give relationships a chance?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7102,What are some signs of schizophrenia? What is it like for someone who has it to have it? What are your experiences with this mental disorder?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7103,What are some signs of schizophrenia? What is it like for someone who has it to have it? What are your experiences with this mental disorder?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7104,How can I convince a guy who has depression to be in a relationship with me?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7105,How can I convince a guy who has depression to be in a relationship with me?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7106,"I have clinical depression and I cry everyday, the medicines my doctor gave me doesn't help it at all, what should I do? I'm 27 already and still single, who would want to get married with someone who is severely depressed?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7107,What are some of the best ways to manifest what you want?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7108,What are some of the best ways to manifest what you want?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7109,Why do therapists ask if there was blood when you self-harm?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7110,Why do therapists ask if there was blood when you self-harm?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7111,Why are intelligent people so depressed?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7112,Why are intelligent people so depressed?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7113,What should one consider before marrying someone with bipolar disorder?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7114,What should one consider before marrying someone with bipolar disorder?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7115,"Is it typical or common for an Alzheimer's patient to tell outrageously violent and absurd stories? My mother is doing this frequently, and it's very upsetting that she believes these things are happening to her.",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7116,"Is it typical or common for an Alzheimer's patient to tell outrageously violent and absurd stories? My mother is doing this frequently, and it's very upsetting that she believes these things are happening to her.",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7117,"What is more important, peace of mind or money?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7118,"What is more important, peace of mind or money?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7119,"What is the definition of borderline personality disorder (BPD)? Can people with BPD be in relationships? If so, how should one deal with this disorder in the relationship?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7120,Will AI degrade humans' mental health?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7121,Will AI degrade humans' mental health?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7122,When do you know the relationship is over with someone who has borderline personality disorder (BPD)?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7123,When do you know the relationship is over with someone who has borderline personality disorder (BPD)?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7124,When do you know the relationship is over with someone who has borderline personality disorder (BPD)?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7125,What is something people need to understand?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7126,What is something people need to understand?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7127,What is something people need to understand?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7128,What are the symptoms of a psychotic episode? How can you tell if you are experiencing one? How can you deal with it?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7129,What are the symptoms of a psychotic episode? How can you tell if you are experiencing one? How can you deal with it?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7130,"Can untreated mental conditions like bipolar, depression or anxiety lead to other mental conditions like borderline personality disorder later in life?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7131,"Can untreated mental conditions like bipolar, depression or anxiety lead to other mental conditions like borderline personality disorder later in life?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7132,"Hello everyone i hope you are well. I do not post a lot but do a lot of reading, but im so anxious and depressed. I was with a narc for 8yrs, well we split up and i went non contacr for 2yrs. well recently she got in touch to see about a care package im on as ive been really ill in hospital. well we got talking she told me how much she missed me and we started seeing each other again. now after about 6 times of seeing her she has ditched me again. im in bits as i do love her so much. im trying so hard to forget her and that she is gutter scum, but living alone and suffering makes it so hard. i do feel im ready for a breakdown or even worse. apart from blocking her how do i get her out of my head and life for good without it making me really ill. thank you for your time and patients, stay safe and god be with you.",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7133,"Hello everyone i hope you are well. I do not post a lot but do a lot of reading, but im so anxious and depressed. I was with a narc for 8yrs, well we split up and i went non contacr for 2yrs. well recently she got in touch to see about a care package im on as ive been really ill in hospital. well we got talking she told me how much she missed me and we started seeing each other again. now after about 6 times of seeing her she has ditched me again. im in bits as i do love her so much. im trying so hard to forget her and that she is gutter scum, but living alone and suffering makes it so hard. i do feel im ready for a breakdown or even worse. apart from blocking her how do i get her out of my head and life for good without it making me really ill. thank you for your time and patients, stay safe and god be with you.",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7134,Is there a possibility that people seeing spirits of deceased can be valid and not simply due to mental health condition?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7135,Is there a possibility that people seeing spirits of deceased can be valid and not simply due to mental health condition?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7136,Can a psychologist/therapist have another therapist as his/her client?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7137,Can a psychologist/therapist have another therapist as his/her client?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7138,Can a psychologist/therapist have another therapist as his/her client?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7139,"Which one is better, Realme or Oppo?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7140,"Which one is better, Realme or Oppo?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7141,"Which one is better, Realme or Oppo?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7142,How can I keep track of my wife's phone?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7143,How can I keep track of my wife's phone?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7144,How can I keep track of my wife's phone?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7145,"Hat are the key challenges and ethical considerations in the development and deployment of artificial intelligence, and how can we address them to ensure responsible and beneficial AI technology?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7146,"Hat are the key challenges and ethical considerations in the development and deployment of artificial intelligence, and how can we address them to ensure responsible and beneficial AI technology?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7147,"Hat are the key challenges and ethical considerations in the development and deployment of artificial intelligence, and how can we address them to ensure responsible and beneficial AI technology?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7148,Doesn't EV battery technology have to improve dramatically before electric vehicles can be adopted by the masses?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7149,Can whatsapp messages be tracked?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7150,Will a 5G SIM card work in a 4G phone?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7151,Will a 5G SIM card work in a 4G phone?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7152,How can I tell if someone is monitoring my phone?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7153,How can I tell if someone is monitoring my phone?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7154,How can I tell if someone is monitoring my phone?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7155,Why did Islam ban eating pork?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7156,Why did Islam ban eating pork?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7157,Why did Islam ban eating pork?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7158,Why does my 5G phone say 4G?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7159,Why does my 5G phone say 4G?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7160,Why does my 5G phone say 4G?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7161,How do you find a person's cell phone number?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7162,How do you find a person's cell phone number?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7163,How can learning about emerging technologies lead to entrepreneurial ventures and increased income?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7164,How can learning about emerging technologies lead to entrepreneurial ventures and increased income?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7165,What would some far-future tech have to be able to do to accurately predict geomagnetic reversals?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7166,What would some far-future tech have to be able to do to accurately predict geomagnetic reversals?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7167,What is the new technology in India 2023?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7168,What is the new technology in India 2023?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7169,Does 5G use more mobile data than LTE?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7170,"What is better, SEO or PPC?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7171,"What is better, SEO or PPC?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7172,How do we know when our phone is hacked?,meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-70b-chat-hf
+7173,What was the most advanced calculator ever made before computers were invented?,meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7174,What was the most advanced calculator ever made before computers were invented?,meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7175,"If science played some role in the creation of useful technology, are we now bound by obligation to accept any ridiculous lie that mainstream science puts out?",meta-llama/Llama-2-7b-chat-hf,meta-llama/Llama-2-13b-chat-hf
+7176,"If science played some role in the creation of useful technology, are we now bound by obligation to accept any ridiculous lie that mainstream science puts out?",meta-llama/Llama-2-70b-chat-hf,meta-llama/Llama-2-7b-chat-hf
+7177,"If science played some role in the creation of useful technology, are we now bound by obligation to accept any ridiculous lie that mainstream science puts out?",meta-llama/Llama-2-13b-chat-hf,meta-llama/Llama-2-70b-chat-hf

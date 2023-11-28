@@ -28,7 +28,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import pandas as pd
-from judger.gpt4_helper import extract_winner_from_response
+from judger.gpt_helper import extract_winner_from_response
 
 df = pd.read_csv(r'/elo_bench/data/quora_100/battle_records.csv', keep_default_na=False)
 
