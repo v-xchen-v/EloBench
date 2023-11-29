@@ -1,14 +1,14 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
-from battle_pipe.all_from_question import AllFromQuestionsBattlePipeline
+from pipe.battle_pipe import BattlePipeline
 import pandas as pd
 from pathlib import Path
 from datamodel import ArrangementStrategy, PairwiseBattleArrangement
 
 questions = pd.read_csv(Path('data')/'quora_100'/'questions.csv')['question'].tolist()
 
-battle_pipe = AllFromQuestionsBattlePipeline(tempcache_dir='data/quora_100', save_dir=Path('results')/'quora_100_test4')
+battle_pipe = BattlePipeline(tempcache_dir='data/quora_100', save_dir=Path('results')/'quora_100_test4')
 battle_pipe.register_questions(questions)
 
 print(battle_pipe.question_collection)

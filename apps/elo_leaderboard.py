@@ -249,7 +249,7 @@ def vis_predict_win_rate(win_rate):
                     "Model A: %{y}<br>Model B: %{x}<br>Win Rate: %{z}<extra></extra>")
     return fig
 
-def get_gpt4_judger_elo_on_arena(filepath=r'results/quora_100_test4/battle_records.csv', use_bootstrap=True):
+def get_gpt4_judger_elo_on_arena(filepath=r'results/quora_100_test5_iterative_80_no_tie/battle_records.csv', use_bootstrap=True):
     df = pd.read_csv(filepath)
     columns_to_inclusive = ['model_a', 'model_b', 'winner']
     data = df[columns_to_inclusive]
@@ -269,10 +269,10 @@ def get_gpt4_judger_elo_on_arena(filepath=r'results/quora_100_test4/battle_recor
     fig2 = vis_predict_win_rate(predict_win_rate(elo_result))
     
     model_ordering = elo_result['Model'].tolist()
+    no_tie_battle_count_fig = visualize_pairwise_count(data_no_ties, title =  "Count of Model A Battles for All Non-tied A vs. B Battles", ordering=model_ordering)
     fig3 = visualize_pairwise_win_count(data_no_ties, title = "Count of Model A Wins for All Non-tied A vs. B Battles", ordering=model_ordering)
-    fig4 = visualize_pairwise_count(data_no_ties, title =  "Count of Model A Battles for All Non-tied A vs. B Battles", ordering=model_ordering)
     fig5 = visualize_pairwise_count(data, title =  "Count of Model A Battles for All A vs. B Battles", ordering=model_ordering)
-    return elo_result, fig, fig2, fig3, fig4, fig5
+    return elo_result, fig, fig2, fig3, no_tie_battle_count_fig, fig5
 
 with gr.Blocks() as demo:
     gr.Markdown('🏆Elo Bench Leadboard')
@@ -286,7 +286,7 @@ with gr.Blocks() as demo:
     # dummy_data = get_elo_results_from_battles_data(arena_battles_data, K=ARENA_K)
     # result_data = dummy_data
     
-    result_data, fig, fig2, fig3, fig4, fig5 = get_gpt4_judger_elo_on_arena()
+    result_data, fig, fig2, fig3, no_tie_battle_count_fig, fig5 = get_gpt4_judger_elo_on_arena()
     
     # Calculate an approximate height for the DataFrame output
     # You might need to adjust the multiplier based on your specific row height
@@ -298,14 +298,13 @@ with gr.Blocks() as demo:
     
     with gr.Row():
         gr.Plot(fig)
-        
         gr.Plot(fig2)
         
     with gr.Row():
+        gr.Plot(no_tie_battle_count_fig)
+        
+    with gr.Row():
         gr.Plot(fig3)
-        
-        gr.Plot(fig4)
-        
         gr.Plot(fig5)
     
 demo.launch()

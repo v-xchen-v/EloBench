@@ -70,7 +70,7 @@ def _prompt_to_chatml(prompt: str, start_token: str = "<|im_start|>", end_token:
 
     return message
 
-def chat_completion(template_file_path, model_name='gpt-4-turbo', temperature=0.7, max_tokens=800, top_p=0.95, **kwargs):
+def chat_completion(template_file_path, gpt_name='gpt-4-turbo', temperature=0.7, max_tokens=800, top_p=0.95, **kwargs):
     if not os.path.exists(template_file_path):
         raise ValueError(f"Template file does not exist: {template_file_path}")
   
@@ -94,7 +94,7 @@ def chat_completion(template_file_path, model_name='gpt-4-turbo', temperature=0.
     while True:
         try:
             response = client.chat.completions.create(
-                model=model_name,
+                model=gpt_name,
                 messages=prompt,
                 max_tokens=max_tokens,
                 temperature=0)

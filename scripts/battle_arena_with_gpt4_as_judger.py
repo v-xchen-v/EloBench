@@ -1,7 +1,7 @@
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname((__file__))))
 
-from battle_pipe.battle_pipe import BattlePipeline
+from pipe.dumpy_pipe import DumpyPipeline
 from datamodel.question_and_answers_collection import QuestionAndAnswersCollection, LLMAnswer
 from datamodel import QuestionCollection, PairwiseBattleArrangement, ArrangementStrategy
 import pandas as pd
@@ -13,7 +13,7 @@ q_and_as_file = Path('data')/'arena_data'/'chatbot_arena_conversations'/'q_and_a
 battle_arrangement_file = Path('data')/'arena_data'/'chatbot_arena_conversations'/'battle_arrangement.csv'
 battled_pairs_file = Path('data')/'arena_data/chatbot_arena_conversations'/'battled_pairs.csv'
 
-class BattleArenaWithGPT4AsJudger(BattlePipeline):
+class BattleArenaWithGPT4AsJudger(DumpyPipeline):
     def gen_model_answers(self) -> None:
         battle_arrangement = pd.read_csv(battle_arrangement_file)
         question_and_answers = pd.read_csv(q_and_as_file)

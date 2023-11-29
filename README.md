@@ -309,3 +309,10 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 
 These features collectively provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system would need to be flexible and scalable to accommodate new models and changing technologies in the AI field.
 
+## pipe design changes
+initial arrangement:
+arrangment -> battle
+
+iterative battle arrangement until target condiation:
+for new added players(LM models):
+arrange -> battle -> arrangement -> battle

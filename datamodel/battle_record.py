@@ -24,10 +24,16 @@ class BattleRecord:
 class BattleRecords:
     def __init__(self, records: List[BattleRecord]) -> None:
         self.records = records
+        
+        # initialized by initial records
+        self.record_pair_set = set([PairToBattle(x.question, x.model_a, x.model_b) for x in records]) # A set to keep track of unique items
+        self.record_map = {PairToBattle(x.question, x.model_a, x.model_b):x for x in records}
     
     def add_record(self, record: BattleRecord):
         if not self.record_exists(PairToBattle(question=record.question, model_a=record.model_a, model_b=record.model_b)):
             self.records.append(record)
+            self.record_pair_set.add(PairToBattle(record.question, record.model_a, record.model_b))
+            self.record_map[PairToBattle(record.question, record.model_a, record.model_b)] = record
         # else:
         #     logger.debug('battle pairs already exists in records, skip!')
             
@@ -47,18 +53,20 @@ class BattleRecords:
         
     @classmethod
     def from_csv(cls, save_path):
-        records = []
         df = pd.read_csv(save_path)
+        records = []
         for idx, row in df.iterrows():
             records.append(BattleRecord(model_a=row['model_a'], model_b=row['model_b'],  winner=row['winner'], judger=row['judger'], tstamp=row['tstamp'], question=row['question'], answer_a=row['answer_a'], answer_b=row['answer_b'], gpt_4_response=row['gpt_4_response'], gpt_4_score=row['gpt_4_score'], is_valid=row['is_valid']))
             
         return BattleRecords(records)
     
     def record_exists(self, pair_to_battle: PairToBattle):
-        return any(rec.question == pair_to_battle.question and rec.model_a == pair_to_battle.model_a and rec.model_b == pair_to_battle.model_b for rec in self.records)
+        # return any(rec.question == pair_to_battle.question and rec.model_a == pair_to_battle.model_a and rec.model_b == pair_to_battle.model_b for rec in self.records)
+        return pair_to_battle in self.record_pair_set
     
     def get_record(self, pair_to_battle: PairToBattle):
-        for rec in self.records:
-            if rec.question == pair_to_battle.question and rec.model_a == pair_to_battle.model_a and rec.model_b == pair_to_battle.model_b:
-                return rec
-        return None
+        # for rec in self.records:
+        #     if rec.question == pair_to_battle.question and rec.model_a == pair_to_battle.model_a and rec.model_b == pair_to_battle.model_b:
+        #         return rec
+        # return None
+        return self.record_map.get(pair_to_battle)

@@ -29,6 +29,7 @@ class PairwiseBattleArrangement:
         self.questions = questions
         self.models = models
         self.battles_in_order = []
+        self._battles_in_order_ele_as_dict = []
         
     def arrange(self, arrange_strategy: ArrangementStrategy, **kwargs):
         if arrange_strategy == ArrangementStrategy.Random_N_Pairs_Per_Question:
@@ -70,6 +71,7 @@ class PairwiseBattleArrangement:
         if shuffle:
             battles = self._shuffle_battles(battles)
         self.battles_in_order = battles
+        self._battles_in_order_ele_as_dict = [asdict(obj) for obj in battles]
     
     def arrange_randomly_by_pairnumperquesiton(self, num_of_pair: int, shuffle=True):
         def sample_unique_pairs(lst, n):
@@ -93,6 +95,7 @@ class PairwiseBattleArrangement:
         if shuffle:
             battles = self._shuffle_battles(battles)
         self.battles_in_order = battles
+        self._battles_in_order_ele_as_dict = [asdict(obj) for obj in battles]
     
     def arrange_randomly_by_pairnumpermodel(self, num_of_pair:int, shuffle=True):
         def valid_combination(model_paircounts, question_counts, num_of_pair):
@@ -129,12 +132,14 @@ class PairwiseBattleArrangement:
         if shuffle:
             battles = self._shuffle_battles(battles)
         self.battles_in_order = battles
+        self._battles_in_order_ele_as_dict = [asdict(obj) for obj in battles]
         
         
     def arrange_by_existing_arrangement(self, battle_arrangement_file: str):
         existing_arrangement = self.read_csv(battle_arrangement_file)
         if set(existing_arrangement.questions).issubset(set(self.questions)) and set(existing_arrangement.models).issubset(set(self.models)):
             self.battles_in_order = existing_arrangement.battles_in_order
+            self._battles_in_order_ele_as_dict = [asdict(obj) for obj in existing_arrangement.battles_in_order]
         else:
             raise Exception('battle arrangement is not match question or models')
         
@@ -163,28 +168,53 @@ class PairwiseBattleArrangement:
             questions.add(q)
         battle_arrangemet = PairwiseBattleArrangement(questions=list(questions), models=list(models))
         battle_arrangemet.battles_in_order = rounds
+        battle_arrangemet._battles_in_order_ele_as_dict = [asdict(obj) for obj in rounds]
+        
         return battle_arrangemet
     
     def __repr__(self) -> str:
         return str({'num_of_battle': len(self.battles_in_order)})
             
             
-    def more_battles(self, pairs: List[PairToBattle]):
+    def more_battles(self, pairs: List[PairToBattle], is_battlepair_in_list_despite_aborder=True):
         """The question and two models in each adding pairs should be contains in the battle arrangment. And adding the new and skip the existing pairs."""
-            
-        battle_set = set(self.battles_in_order)     
+        def is_equivalent_battlepair(pair1: PairToBattle, pair2: PairToBattle, battlepair_despite_aborder):
+            if pair1.question != pair2.question:
+                return False
+            if battlepair_despite_aborder:
+                return (pair1.model_a == pair2.model_a and pair1.model_b == pair2.model_b) or ((pair1.model_a == pair2.model_b and pair1.model_b == pair2.model_a))
+            else:
+                return pair1.model_a == pair2.model_a and pair1.model_b == pair2.model_b
+        
+        def is_battlepair_in_list_despite_aborder(pairs_list, pair_to_check):
+            """Check if a list contains an equivalent PairToBattle instance, regardless of model order."""
+            return any(is_equivalent_battlepair(pair, pair_to_check, battlepair_despite_aborder=True) for pair in pairs_list)
+
+
         new_battle_counter = 0         
         for pair in pairs:
             if pair.question not in self.questions or pair.model_a not in self.models or pair.model_b not in self.models:
                 raise Exception("invalid adding pairs")
-            if pair in battle_set:
+            if is_battlepair_in_list_despite_aborder(self.battles_in_order, pair):
                 continue
             else:
                 self.battles_in_order.append(pair)
-                battle_set.add(pair)
+                self._battles_in_order_ele_as_dict.append(asdict(pair))
                 new_battle_counter+=1
-                
         logger.debug(f'new {new_battle_counter} battle added!')
+        
+        return new_battle_counter
+                
+        
+    def get_questions_to_arrange(self, model_a, model_b):
+        # TODO: optimize the speed
+        # battled_pairs_dict = [asdict(obj) for obj in self.battles_in_order]
+        df = pd.DataFrame.from_dict(self._battles_in_order_ele_as_dict)
+        
+        arranged_questions = df[((df['model_a']==model_a) & (df['model_b']==model_b)) | (df['model_a']==model_b) & (df['model_b']==model_a)]['question'].unique().tolist()
+        
+        return list(set(self.questions) - set(arranged_questions))
+        
         
     
         

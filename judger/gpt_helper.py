@@ -1,6 +1,7 @@
 from models.gpt import chat_completion
 import re
-from models.prompts import GPT4_EVAL_AND_SCORE_PROMPT, GPT4_GEN_ANS_PROMPT, GPT_JUDGER
+from models.prompts import GPT4_EVAL_AND_SCORE_PROMPT, GPT_JUDGER
+from logger import gpt_as_judger_logger
     
 def extract_winner_from_response(gpt4_response_text):
     # Compile the regular expression
@@ -14,15 +15,15 @@ def extract_winner_from_response(gpt4_response_text):
     # If a match is found, print the score
     if ismatch_design_pattern1:
         score1 = ismatch_design_pattern1.group(1)
-        print(f"Model 1's Score is: {score1}")
+        gpt_as_judger_logger.debug(f"Model 1's Score is: {score1}")
     else:
-        print("No score found for Model 1.")
+        gpt_as_judger_logger.debug("No score found for Model 1.")
         
     if ismatch_design_pattern2:
         score2 = ismatch_design_pattern2.group(1)
-        print(f"Model 2's Score is: {score2}")
+        gpt_as_judger_logger.debug(f"Model 2's Score is: {score2}")
     else:
-        print("No score found for Model 2.")
+        gpt_as_judger_logger.debug("No score found for Model 2.")
         
     if ismatch_design_pattern1 and ismatch_design_pattern2:
         gpt_4_score = {
@@ -42,23 +43,16 @@ def extract_winner_from_response(gpt4_response_text):
             
     return gpt_4_winner
 
-def gpt_4_eval_and_score(question, model_a_ans, model_b_ans):
+def gpt_4_eval_and_score(question, model_a_ans, model_b_ans, judger_name=GPT_JUDGER):
     gpt4_response_text = None
     gpt_4_score = None
     gpt_4_winner = None
     
-    gpt4_response = chat_completion(GPT4_EVAL_AND_SCORE_PROMPT, model_name=GPT_JUDGER, question=question, model1_answer=model_a_ans, model2_answer=model_b_ans)
+    gpt4_response = chat_completion(GPT4_EVAL_AND_SCORE_PROMPT, gpt_name=judger_name, question=question, model1_answer=model_a_ans, model2_answer=model_b_ans)
     
     gpt4_response_text = gpt4_response['response']
     
     gpt_4_winner = extract_winner_from_response(gpt4_response_text)
     
-    print(gpt4_response)
+    gpt_as_judger_logger.debug(gpt4_response)
     return gpt4_response, str(gpt_4_score), gpt_4_winner
-    
-def gpt_4_gen_ans(question) -> str:
-    gpt_4_response = chat_completion(GPT4_GEN_ANS_PROMPT, model_name=GPT_JUDGER, question=question)
-    gpt4_response_text = gpt_4_response['response']
-    answer = gpt4_response_text
-    return answer
-
