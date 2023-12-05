@@ -14,11 +14,14 @@ from tqdm import tqdm
 from logger import logger
 import gc
 import torch
-from models.huggingface import AutoCausalLM
+from models.hf_local_lm import AutoCausalLM
 from models import get_model
 
 class BattlePipeline(DumpyPipeline):
     def gen_model_answers(self) -> None:
+        """
+        Generate answers for each model based on the given questions.
+        """
         
         def group_questions_by_model(lst: list[PairToBattle]):
             """Group question by each model to avoid reload and free model frequently for efficiency"""

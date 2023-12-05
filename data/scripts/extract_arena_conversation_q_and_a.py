@@ -5,7 +5,7 @@ sys.path.append(os.path.dirname(os.path.dirname((os.path.dirname(__file__)))))
 
 from dataclasses import dataclass
 from collections import defaultdict
-from datamodel import QuestionAndAnswersCollection, LLMAnswer, PairToBattle, PairwiseBattleArrangement, BattledPairs
+from datamodel import QuestionAndAnswersCollection, LLMAnswer, PairToBattle, PairwiseBattleArrangement, BattleOutcomes
     
 from datasets import load_dataset
 import pandas as pd
@@ -49,12 +49,12 @@ arrangement.to_csv('battle_arrangement.csv')
 ar = PairwiseBattleArrangement.read_csv('battle_arrangement.csv')
 print(ar)
 
-battle_res = BattledPairs()
+battle_res = BattleOutcomes()
 for row in singleturn:
     battle_res.add_pair(row['model_a'], row['model_b'], row['winner'])
 
 battle_res.to_csv('battle_res.csv')
-battle_res = BattledPairs.read_csv('battle_res.csv')
+battle_res = BattleOutcomes.read_csv('battle_res.csv')
 print(battle_res)
 
 

@@ -316,3 +316,5 @@ arrangment -> battle
 iterative battle arrangement until target condiation:
 for new added players(LM models):
 arrange -> battle -> arrangement -> battle
+
+## [Data Design](./datamodel/README.md)

@@ -1,9 +1,10 @@
 from datamodel.question_collection import QuestionCollection
+from datamodel.model_collection import ModelCollection
 from datamodel.question_and_answers_collection import QuestionAndAnswersCollection, LLMAnswer
 from datamodel.pairwise_battle_arrangement import PairToBattle, PairwiseBattleArrangement, ArrangementStrategy
-from datamodel.battled_pairs import BattledPair, BattledPairs
-
-from datamodel.columns import QUESTION_COLUMN_NAME, MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME, WINNER_COLUMN_NAME
+from datamodel.battle_outcome import BattleOutcome, BattleOutcomes
+from datamodel.battle_record import BattleRecord, BattleRecords
+from datamodel.column_names import QUESTION_COLUMN_NAME, MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME, WINNER_COLUMN_NAME
 
 
 

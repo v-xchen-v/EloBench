@@ -1,9 +1,9 @@
 from __future__ import annotations
 from dataclasses import dataclass
 import random
-from typing import List
+from typing import List, Dict, Union
 import pandas as pd
-from .columns import QUESTION_COLUMN_NAME, MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME
+from datamodel.column_names import QUESTION_COLUMN_NAME, MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME
 import itertools
 from enum import Enum
 from logger import logger
@@ -11,12 +11,12 @@ import numpy as np
 from dataclasses import asdict
 
 class ArrangementStrategy(Enum):
-    Random_N_Pairs_Per_Question = 1,
-    Random_N_BattleCount_Each_Model = 2,
-    Random_N_Questions_Per_Pair = 3,
-    All_Combination = 4,
-    Reload_Existing_Arrangement = 5,
-    Preset=6
+    Random_N_BattleCount_Each_CombPair = 0,
+    Reload_Existing_Arrangement = 1,
+    All_Combination = 2,
+    Random_N_Pairs_Per_Question = 3,
+    Random_N_BattleCount_Each_Model = 4,
+    Random_N_Questions_Per_Pair = 5,
     
 @dataclass(frozen=True)
 class PairToBattle:
@@ -25,13 +25,37 @@ class PairToBattle:
     model_b: str
     
 class PairwiseBattleArrangement:
+    """
+    Represents a pairwise battle arrangement for comparing models on a set of questions.
+    
+    Attributes:
+        questions (List[str]): The list of questions to be asked in the battles.
+        models (List[str]): The list of models to be compared in the battles.
+        battles_in_order (List[PairToBattle]): The list of battles in the arranged order.
+        _battles_in_order_ele_as_dict (List[Dict[str, Union[str, int]]]): The list of battles as dictionaries.
+    """
+    
     def __init__(self, questions: List[str], models: List[str]) -> None:
-        self.questions = questions
-        self.models = models
-        self.battles_in_order = []
-        self._battles_in_order_ele_as_dict = []
+        """
+        Initializes a new instance of the PairwiseBattleArrangement class.
+        
+        Args:
+            questions (List[str]): The list of questions to be asked in the battles.
+            models (List[str]): The list of models to be compared in the battles.
+        """
+        self.questions: List[str] = questions
+        self.models: List[str] = models
+        self.battles_in_order: List[PairToBattle] = []
+        self._battles_in_order_ele_as_dict: List[Dict[str, Union[str, int]]] = []
         
     def arrange(self, arrange_strategy: ArrangementStrategy, **kwargs):
+        """
+        Arranges the battles based on the specified arrangement strategy.
+        
+        Args:
+            arrange_strategy (ArrangementStrategy): The arrangement strategy to be used.
+            **kwargs: Additional arguments specific to the arrangement strategy.
+        """
         if arrange_strategy == ArrangementStrategy.Random_N_Pairs_Per_Question:
             self.arrange_randomly_by_pairnumperquesiton(**kwargs)
         elif arrange_strategy == ArrangementStrategy.Random_N_BattleCount_Each_Model:
@@ -40,27 +64,63 @@ class PairwiseBattleArrangement:
             self.arrange_all_combinations()
         elif arrange_strategy == ArrangementStrategy.Reload_Existing_Arrangement:
             self.arrange_by_existing_arrangement(**kwargs)
+        elif arrange_strategy == ArrangementStrategy.Random_N_BattleCount_Each_CombPair:
+            self.arrange_randomly_by_battlecountnumpercombpair(**kwargs)
         else:
             raise NotImplementedError
     
-    def _shuffle_battles(self, battles: List[PairToBattle]):
+    def _shuffle_battles_ab(self, battles: List[PairToBattle]):
+        """
+        Shuffles the battles randomly.
+        
+        Args:
+            battles (List[PairToBattle]): The list of battles to be shuffled.
+        
+        Returns:
+            List[PairToBattle]: The shuffled list of battles.
+        """
         battled_pairs_dict = [asdict(obj) for obj in battles]
-        df = pd.DataFrame.from_dict(battled_pairs_dict)
+        df = pd.DataFrame(battled_pairs_dict)
         
         # Create a random boolean mask
         mask = np.random.rand(len(battles)) > 0.5
 
         # Shuffle using the mask
-        temp = df['model_a'][mask].copy()
-        df['model_a'][mask] = df['model_b'][mask]
-        df['model_b'][mask] = temp
+        temp = df[MODEL_A_COLUMN_NAME][mask].copy()
+        df[MODEL_A_COLUMN_NAME][mask] = df[MODEL_B_COLUMN_NAME][mask]
+        df[MODEL_B_COLUMN_NAME][mask] = temp
         
         shuffled_battles = []
         for _, item in df.iterrows():
-            shuffled_battles.append(PairToBattle(item['question'], item['model_a'], item['model_b']))
+            shuffled_battles.append(PairToBattle(item[QUESTION_COLUMN_NAME], item[MODEL_A_COLUMN_NAME], item[MODEL_B_COLUMN_NAME]))
         return shuffled_battles
+    
+    def arrange_randomly_by_battlecountnumpercombpair(self, num_of_battle: int, shuffle=True):
+        # generate all unique pairs from the list
+        all_pairs = list(itertools.combinations(self.models, 2))
+        
+        if num_of_battle > len(self.questions):
+            raise Exception('num_of_battle is larger than question number')
+        selected_questiosn = random.sample(self.questions, num_of_battle)
+        
+        battles = []
+        for question in selected_questiosn:
+            for pair in all_pairs:
+                battles.append(PairToBattle(question=question, model_a=pair[0], model_b=pair[1]))
+
+        if shuffle:
+            battles = self._shuffle_battles_ab(battles)
+        self.battles_in_order = battles
+        self._battles_in_order_ele_as_dict = [asdict(obj) for obj in battles]
+        
         
     def arrange_all_combinations(self, shuffle=True):
+        """
+        Arranges the battles by considering all possible combinations of models for each question.
+        
+        Args:
+            shuffle (bool): Indicates whether to shuffle the battles after arranging them. Default is True.
+        """
         # generate all unique pairs from the list
         all_pairs = list(itertools.combinations(self.models, 2))
         battles = []
@@ -69,11 +129,18 @@ class PairwiseBattleArrangement:
                 battles.append(PairToBattle(question=question, model_a=pair[0], model_b=pair[1]))
 
         if shuffle:
-            battles = self._shuffle_battles(battles)
+            battles = self._shuffle_battles_ab(battles)
         self.battles_in_order = battles
         self._battles_in_order_ele_as_dict = [asdict(obj) for obj in battles]
     
     def arrange_randomly_by_pairnumperquesiton(self, num_of_pair: int, shuffle=True):
+        """
+        Arranges the battles randomly by selecting a specific number of pairs per question.
+        
+        Args:
+            num_of_pair (int): The number of pairs to be selected per question.
+            shuffle (bool): Indicates whether to shuffle the battles after arranging them. Default is True.
+        """
         def sample_unique_pairs(lst, n):
             # Generate all unique pairs from the list
             all_pairs = list(itertools.combinations(lst, 2))
@@ -93,11 +160,18 @@ class PairwiseBattleArrangement:
                 battles.append(PairToBattle(question=question, model_a=model_pair[0], model_b=model_pair[1]))
                 
         if shuffle:
-            battles = self._shuffle_battles(battles)
+            battles = self._shuffle_battles_ab(battles)
         self.battles_in_order = battles
         self._battles_in_order_ele_as_dict = [asdict(obj) for obj in battles]
     
     def arrange_randomly_by_pairnumpermodel(self, num_of_pair:int, shuffle=True):
+        """
+        Arranges the battles randomly by selecting a specific number of pairs for each model.
+        
+        Args:
+            num_of_pair (int): The number of pairs to be selected for each model.
+            shuffle (bool): Indicates whether to shuffle the battles after arranging them. Default is True.
+        """
         def valid_combination(model_paircounts, question_counts, num_of_pair):
             # check if each model meets the least num_of_pair and each question have at least involved in 1 combination
             return all(model_paircounts[m]>=num_of_pair for m in model_paircounts.keys()) and all(question_counts[q]>=1 for q in question_counts.keys())
@@ -130,13 +204,22 @@ class PairwiseBattleArrangement:
         battles = [PairToBattle(question=q, model_a=model_pair[0], model_b=model_pair[1]) for q, model_pair in selected_combinations]
         
         if shuffle:
-            battles = self._shuffle_battles(battles)
+            battles = self._shuffle_battles_ab(battles)
         self.battles_in_order = battles
         self._battles_in_order_ele_as_dict = [asdict(obj) for obj in battles]
         
         
-    def arrange_by_existing_arrangement(self, battle_arrangement_file: str):
-        existing_arrangement = self.read_csv(battle_arrangement_file)
+    def arrange_by_existing_arrangement(self, file: str):
+        """
+        Arranges the battles based on an existing battle arrangement file.
+        
+        Args:
+            battle_arrangement_file (str): The path to the battle arrangement file.
+        
+        Raises:
+            Exception: If the battle arrangement does not match the questions or models.
+        """
+        existing_arrangement = self.read_csv(file)
         if set(existing_arrangement.questions).issubset(set(self.questions)) and set(existing_arrangement.models).issubset(set(self.models)):
             self.battles_in_order = existing_arrangement.battles_in_order
             self._battles_in_order_ele_as_dict = [asdict(obj) for obj in existing_arrangement.battles_in_order]
@@ -144,16 +227,30 @@ class PairwiseBattleArrangement:
             raise Exception('battle arrangement is not match question or models')
         
     def to_csv(self, save_path):
+        """
+        Saves the battle arrangement to a CSV file.
+        
+        Args:
+            save_path (str): The path to save the CSV file.
+        """
         arrangments = []
         for battle in self.battles_in_order:
             arrangments.append([battle.question, battle.model_a, battle.model_b])
             
         arrangments_df = pd.DataFrame(arrangments, columns=[QUESTION_COLUMN_NAME, MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME])
-        # print(arrangement)
         arrangments_df.to_csv(save_path)
         
     @classmethod
     def read_csv(cls, save_path) -> PairwiseBattleArrangement:
+        """
+        Reads a battle arrangement from a CSV file.
+        
+        Args:
+            save_path (str): The path to the CSV file.
+        
+        Returns:
+            PairwiseBattleArrangement: The battle arrangement read from the CSV file.
+        """
         df = pd.read_csv(save_path)
         models = set()
         questions = set()
@@ -173,11 +270,26 @@ class PairwiseBattleArrangement:
         return battle_arrangemet
     
     def __repr__(self) -> str:
+        """
+        Returns a string representation of the PairwiseBattleArrangement object.
+        
+        Returns:
+            str: The string representation of the object.
+        """
         return str({'num_of_battle': len(self.battles_in_order)})
             
             
-    def more_battles(self, pairs: List[PairToBattle], is_battlepair_in_list_despite_aborder=True):
-        """The question and two models in each adding pairs should be contains in the battle arrangment. And adding the new and skip the existing pairs."""
+    def more_battles(self, pairs: List[PairToBattle], is_battlepair_in_list_despite_aborder=True, only_on_exists_q_and_models=True):
+        """
+        Adds more battles to the existing battle arrangement.
+        
+        Args:
+            pairs (List[PairToBattle]): The list of PairToBattle instances to be added.
+            is_battlepair_in_list_despite_aborder (bool): Indicates whether to consider battle pairs in the list regardless of model order. Default is True.
+        
+        Returns:
+            int: The number of new battles added.
+        """
         def is_equivalent_battlepair(pair1: PairToBattle, pair2: PairToBattle, battlepair_despite_aborder):
             if pair1.question != pair2.question:
                 return False
@@ -193,7 +305,7 @@ class PairwiseBattleArrangement:
 
         new_battle_counter = 0         
         for pair in pairs:
-            if pair.question not in self.questions or pair.model_a not in self.models or pair.model_b not in self.models:
+            if only_on_exists_q_and_models and (pair.question not in self.questions or pair.model_a not in self.models or pair.model_b not in self.models):
                 raise Exception("invalid adding pairs")
             if is_battlepair_in_list_despite_aborder(self.battles_in_order, pair):
                 continue
@@ -207,11 +319,19 @@ class PairwiseBattleArrangement:
                 
         
     def get_questions_to_arrange(self, model_a, model_b):
-        # TODO: optimize the speed
-        # battled_pairs_dict = [asdict(obj) for obj in self.battles_in_order]
+        """
+        Gets the list of questions that need to be arranged for the specified model pair.
+        
+        Args:
+            model_a (str): The first model in the pair.
+            model_b (str): The second model in the pair.
+        
+        Returns:
+            List[str]: The list of questions to be arranged for the model pair.
+        """
         df = pd.DataFrame.from_dict(self._battles_in_order_ele_as_dict)
         
-        arranged_questions = df[((df['model_a']==model_a) & (df['model_b']==model_b)) | (df['model_a']==model_b) & (df['model_b']==model_a)]['question'].unique().tolist()
+        arranged_questions = df[((df[MODEL_A_COLUMN_NAME]==model_a) & (df[MODEL_B_COLUMN_NAME]==model_b)) | (df[MODEL_A_COLUMN_NAME]==model_b) & (df[MODEL_B_COLUMN_NAME]==model_a)][QUESTION_COLUMN_NAME].unique().tolist()
         
         return list(set(self.questions) - set(arranged_questions))
         

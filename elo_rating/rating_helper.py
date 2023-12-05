@@ -5,6 +5,7 @@ from elo_rating.llm_player import LLMPlayer
 from elo_rating.pairwise_rating_entity import PairwiseBattleWinner, PairwiseRatingEntity
 import pandas as pd
 import numpy as np
+from tqdm import tqdm
 
 MODEL_HEADER = "Model"
 ELO_RATING_HEADER = "Elo Rating"
@@ -13,19 +14,34 @@ MODEL_A_HEADER = "model_a"
 MODEL_B_HEADER = "model_b"
 BATTLE_RES_HEADER = "winner"
 
-from tqdm import tqdm
-
 def get_players_elo_result(llm_players: list[LLMPlayer], rating_places=0) -> pd.DataFrame:
-    """Get elo ranking and rating scores of players, after players completed battles."""
+    """
+    Get elo ranking and rating scores of players, after players completed battles.
+
+    Parameters:
+    llm_players (list[LLMPlayer]): List of LLMPlayer objects representing the players.
+    rating_places (int, optional): Number of decimal places to round the rating scores to. Defaults to 0.
+
+    Returns:
+    pd.DataFrame: DataFrame containing the player IDs and their rounded elo rating scores, sorted in descending order.
+    """
     df = pd.DataFrame([[x.id, np.round(x.rating, rating_places)] for x in llm_players], columns=[MODEL_HEADER, ELO_RATING_HEADER]).sort_values(ELO_RATING_HEADER, ascending=False).reset_index(drop=True)
     df.index = df.index+1
     return df
 
 def get_elo_results_from_battles_data(battles_data: pd.DataFrame, K: int) -> pd.DataFrame:
-    """Get elo ranking and rating scores of players by the arranged order of battles."""
+    """
+    Get elo ranking and rating scores of players by the arranged order of battles.
+
+    Args:
+        battles_data (pd.DataFrame): DataFrame containing the battles data.
+        K (int): The K-factor used in the Elo rating system.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the elo results of the players.
+    """
     battle_models = pd.concat([battles_data['model_a'], battles_data['model_b']]).unique().tolist()
     llm_players = {x: LLMPlayer(x, K=K) for x in battle_models}
-    # print(llm_players)
 
     for rd, model_a, model_b, winner in battles_data[['model_a', 'model_b', 'winner']].itertuples():
         model_a_player = llm_players[model_a]
@@ -45,6 +61,18 @@ def get_elo_results_from_battles_data(battles_data: pd.DataFrame, K: int) -> pd.
 
 
 def get_bootstrap_result(battles, func_compute_elo, K, num_round):
+    """
+    Perform bootstrap resampling on battles data to compute Elo ratings.
+
+    Parameters:
+    - battles (DataFrame): DataFrame containing battle data.
+    - func_compute_elo (function): Function to compute Elo ratings.
+    - K (float): Elo rating constant.
+    - num_round (int): Number of bootstrap rounds.
+
+    Returns:
+    - DataFrame: DataFrame containing Elo ratings for each model.
+    """
     rows = []
     for i in tqdm(range(num_round), desc="bootstrap"):
         rating_df = func_compute_elo(battles.sample(frac=1.0, replace=True), K)
@@ -56,6 +84,16 @@ def get_bootstrap_result(battles, func_compute_elo, K, num_round):
     return df[df.median().sort_values(ascending=False).index]
 
 def get_bootstrap_medium_elo(battles, K=4):
+    """
+    Calculate the bootstrap medium Elo rating for a given set of battles.
+
+    Parameters:
+    battles (DataFrame): The DataFrame containing the battles data.
+    K (int, optional): The K-factor used in Elo rating calculation. Default is 4.
+
+    Returns:
+    DataFrame: The DataFrame containing the bootstrap medium Elo ratings for each model.
+    """
     BOOTSTRAP_ROUNDS = 1000
 
     np.random.seed(42)

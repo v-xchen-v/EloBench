@@ -14,9 +14,9 @@ class K_ADJUSTMENT_STRATEGY(Enum):
     BASE_ON_MATCH_IMPORTANCE=4 # TODO: the difficulties of question
 
 class Player(RatingEntity, ABC):
-    """Represents a large language model which is a player with Elo rating.
+    """Represents a player with Elo rating.
     
-    This class also defines a strategy to handle the evolution of the K factor.
+    This class is an abstract base class that defines the common behavior and attributes of a player.
     """
     def __init__(self, rating: float, K: int):
         super().__init__(rating, K)
@@ -28,6 +28,10 @@ class Player(RatingEntity, ABC):
         return self.K
     
 class LLMPlayer(Player):
+    """Represents a large language model player with Elo rating.
+    
+    This class inherits from the `Player` class and adds additional functionality specific to large language models.
+    """
     def __init__(self, id: str, K: int = INITIAL_PLAYER_K, evolve_K: K_ADJUSTMENT_STRATEGY=K_ADJUSTMENT_STRATEGY.SOLID):
         self.id = id
         super().__init__(INITIAL_LLMPLAYER_RATING, K)
@@ -40,6 +44,7 @@ class LLMPlayer(Player):
         return f'model_id:{self.id} rating:{self.rating}'
     
     def update_K(self):
+        """Update the K factor based on the specified strategy."""
         if self.evolve_K == K_ADJUSTMENT_STRATEGY.SOLID:
             pass
         elif self.evolve_K == K_ADJUSTMENT_STRATEGY.BASE_ON_RATING_LEVEL:
@@ -50,12 +55,14 @@ class LLMPlayer(Player):
             raise Exception("Not implemented")
         
     def adjust_K_by_rating_level(self):
+        """Adjust the K factor based on the rating level of the player."""
         if self.rating > 1100:
             self.K = INITIAL_PLAYER_K//2
         else:
             self.K = INITIAL_PLAYER_K
     
     def adjust_K_by_num_of_battle(self):
+        """Adjust the K factor based on the number of battles the player has participated in."""
         if self.num_battle > 10:
             self.K = INITIAL_PLAYER_K//2
         else:
