@@ -16,6 +16,7 @@ import gc
 import torch
 from models.hf_local_lm import AutoCausalLM
 from models import get_model
+from elo_rating.rating_evaluator import compute_predict_winrate, compute_acutal_winrate, evaluate_winrate, evaluate_rank_consistency
 
 class BattlePipeline(DumpyPipeline):
     def gen_model_answers(self) -> None:
@@ -79,50 +80,76 @@ class BattlePipeline(DumpyPipeline):
                 
 if __name__ == "__main__":
     # TODOs: design and dump config of battle in save folder with results
-    # Register questions to battle pipeline
-    questions = pd.read_csv(Path('data')/'quora_100'/'questions.csv')['question'].tolist()
+    # # Register questions to battle pipeline
+    # questions = pd.read_csv(Path('data')/'quora_100'/'questions.csv')['question'].tolist()
 
-    battle_pipe = BattlePipeline(tempcache_dir='data/quora_100', save_dir=Path('results')/'quora_100_test4')
-    battle_pipe.register_questions(questions)
+    # battle_pipe = BattlePipeline(tempcache_dir='data/quora_100', save_dir=Path('results')/'quora_100_test4')
+    # battle_pipe.register_questions(questions)
     
-    print(battle_pipe.question_collection)
+    # print(battle_pipe.question_collection)
     
-    # Register models to battle
-    models = [ \
-        # 'gpt2',
-        'huggyllama/llama-7b', 
-        'huggyllama/llama-13b',
-        'huggyllama/llama-30b',
-        'huggyllama/llama-65b',
-        'meta-llama/Llama-2-7b-hf',
-        'meta-llama/Llama-2-13b-hf',
-        'meta-llama/Llama-2-70b-hf',
-        'lmsys/vicuna-7b-v1.5',
-        'lmsys/vicuna-13b-v1.5',
-        'lmsys/vicuna-33b-v1.3',
-        'meta-llama/Llama-2-7b-chat-hf',
-        'meta-llama/Llama-2-13b-chat-hf',
-        'meta-llama/Llama-2-70b-chat-hf',
-        'chavinlo/alpaca-native',
-        'chavinlo/alpaca-13b',
-        'gpt-4-turbo',
-        'gpt-35-turbo',
-    ]
-    battle_pipe.register_models(models)
-    print(battle_pipe)
-    
-    # Arrange battle rounds
-    battle_pipe.arrange_battles(ArrangementStrategy.Random_N_BattleCount_Each_Model, num_of_pair=300*3)
-    
+    # # Register models to battle
+    # models = [ \
+    #     # 'gpt2',
+    #     'huggyllama/llama-7b', 
+    #     'huggyllama/llama-13b',
+    #     'huggyllama/llama-30b',
+    #     'huggyllama/llama-65b',
+    #     'meta-llama/Llama-2-7b-hf',
+    #     'meta-llama/Llama-2-13b-hf',
+    #     'meta-llama/Llama-2-70b-hf',
+    #     'lmsys/vicuna-7b-v1.5',
+    #     'lmsys/vicuna-13b-v1.5',
+    #     'lmsys/vicuna-33b-v1.3',
+    #     'meta-llama/Llama-2-7b-chat-hf',
+    #     'meta-llama/Llama-2-13b-chat-hf',
+    #     'meta-llama/Llama-2-70b-chat-hf',
+    #     'chavinlo/alpaca-native',
+    #     'chavinlo/alpaca-13b',
+    #     'gpt-4-turbo',
+    #     'gpt-35-turbo',
+    # ]
+    # battle_pipe.register_models(models)
     # print(battle_pipe)
+    
+    # # Arrange battle rounds
+    # battle_pipe.arrange_battles(ArrangementStrategy.Random_N_BattleCount_Each_Model, num_of_pair=300*3)
+    
+    tempcache_dir = "tempcache/quora_100"
+    save_dir = "results/quora_100_test5_iterative_80_no_tie"
+    battle_pipe = BattlePipeline(tempcache_dir,save_dir)
+    battle_pipe.no_cache = False
+    
+    battle_pipe.reload_pipe()
+    # questions = ["Give me a question about animal.", "Is Landon rainy?", 'Is Austrilia always sunny?']
+    # models = ['huggyllama/llama-7b', 'meta-llama/Llama-2-7b-hf', 'mosaicml/mpt-7b']
+    # battle_pipe.register_questions(questions)
+    # battle_pipe.register_models(models)
+    
+    # # print(battle_pipe)
+    
+    # # battle_pipe.arrange_battles(ArrangementStrategy.Reload_Existing_Arrangement)
+    # # print(battle_pipe)
     
     # battle_pipe.arrange_battles(ArrangementStrategy.Reload_Existing_Arrangement)
-    # print(battle_pipe)
+    # battle_pipe.gen_model_answers()
     
     # Generate answer
     battle_pipe.gen_model_answers()
-    print(battle_pipe)    
     
     battle_pipe.battle()
 
-    battle_pipe.gen_elo()
+    battle_pipe.gen_elo(with_history=True)
+    
+    for idx, battle_num in enumerate(battle_pipe.elo_rating_history.recorded_battle_num):
+        # if battle_num > 0 and ((battle_num) % 100 == 0 or battle_num == battle_pipe.elo_rating_history.recorded_battle_num[-1]):
+            
+        history_point = battle_pipe.elo_rating_history.get_point(battle_num)
+        predicted_winrate = compute_predict_winrate(history_point)
+        actual_winrate = compute_acutal_winrate(battle_pipe.battled_pairs._to_df(battle_pipe.battled_pairs[0:battle_num]))
+        # print(predicted_winrate)
+        # print(actual_winrate)
+        print(evaluate_winrate(actual_winrate, predicted_winrate))
+        if idx > 0:
+            prev_history_point_battle_num = battle_pipe.elo_rating_history.recorded_battle_num[idx-1]
+            print(evaluate_rank_consistency(battle_pipe.elo_rating_history, prev_history_point_battle_num, battle_num))

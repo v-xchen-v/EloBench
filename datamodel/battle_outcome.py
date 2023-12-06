@@ -168,3 +168,14 @@ class BattleOutcomes:
                 no_tie_counter_table[a][b] = notie_battle_count
         
         return all_counter_table, no_tie_counter_table
+    
+    def to_df(self):
+        return self._to_df(self.battled_pairs_in_order)
+    
+    def _to_df(self, battled_pairs: List[BattleOutcome]):
+        battled_pairs_dict = [asdict(obj) for obj in battled_pairs]
+        battled_pairs_df = pd.DataFrame(battled_pairs_dict)
+        return battled_pairs_df
+        
+    def __getitem__ (self, idx):
+        return self.battled_pairs_in_order[idx]

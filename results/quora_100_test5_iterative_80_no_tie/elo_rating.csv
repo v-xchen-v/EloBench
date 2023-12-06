@@ -1,4 +1,4 @@
-,Model,Elo Rating
+,model,elo_rating
 1,meta-llama/Llama-2-13b-chat-hf,1350.0
 2,meta-llama/Llama-2-70b-chat-hf,1348.0
 3,gpt-4-turbo,1348.0

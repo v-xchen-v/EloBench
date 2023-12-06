@@ -318,3 +318,13 @@ for new added players(LM models):
 arrange -> battle -> arrangement -> battle
 
 ## [Data Design](./datamodel/README.md)
+
+## Feature List
+- GPT-4 as judger.
+- Generate LLM answer with gpu.
+- Turn on model parallel as default to enable huge LM inference. 
+- Caching gpt-4 judgemetn and LLM answer to avoid waste of time and computation.
+- Battle with assign stragy.
+- Iterative battle to n no-tie battle count of each model pair.
+- Elo rating.
+- Web app to show elo result and data visualiztion.

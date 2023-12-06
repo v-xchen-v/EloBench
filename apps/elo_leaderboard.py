@@ -42,10 +42,9 @@ def compute_pairwise_win_count(battles, ordering):
     }
 
     df = pd.DataFrame(data, index=union_model_names)
+    row_beats_col_freq = df.T
     df.index.name = "model_a"
     df.columns.name = "model_b"
-    
-    row_beats_col_freq = df.T
     
     # Arrange ordering according to proprition of wins
     prop_wins = row_beats_col_freq.mean(axis=1).sort_values(ascending=False)

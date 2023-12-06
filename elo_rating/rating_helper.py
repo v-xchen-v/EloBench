@@ -7,8 +7,8 @@ import pandas as pd
 import numpy as np
 from tqdm import tqdm
 
-MODEL_HEADER = "Model"
-ELO_RATING_HEADER = "Elo Rating"
+MODEL_HEADER = "model"
+ELO_RATING_HEADER = "elo_rating"
 
 MODEL_A_HEADER = "model_a"
 MODEL_B_HEADER = "model_b"
@@ -78,12 +78,12 @@ def get_bootstrap_result(battles, func_compute_elo, K, num_round):
         rating_df = func_compute_elo(battles.sample(frac=1.0, replace=True), K)
         rating_dict = {}
         for _, row in rating_df.iterrows():
-            rating_dict[row['Model']] = row['Elo Rating']
+            rating_dict[row['model']] = row['elo_rating']
         rows.append(rating_dict)
     df = pd.DataFrame(rows)
     return df[df.median().sort_values(ascending=False).index]
 
-def get_bootstrap_medium_elo(battles, K=4):
+def get_bootstrap_medium_elo(battles, K=4, BOOTSTRAP_ROUNDS=1000):
     """
     Calculate the bootstrap medium Elo rating for a given set of battles.
 
@@ -94,16 +94,14 @@ def get_bootstrap_medium_elo(battles, K=4):
     Returns:
     DataFrame: The DataFrame containing the bootstrap medium Elo ratings for each model.
     """
-    BOOTSTRAP_ROUNDS = 1000
-
     np.random.seed(42)
     bootstrap_elo_lu = get_bootstrap_result(battles, get_elo_results_from_battles_data, K, BOOTSTRAP_ROUNDS)
-    bootstrap_lu_median = bootstrap_elo_lu.median().reset_index().set_axis(["Model", "Elo Rating"], axis=1)
-    bootstrap_lu_median["Elo Rating"] = (bootstrap_lu_median["Elo Rating"] + 0.5).astype(int)
+    bootstrap_lu_median = bootstrap_elo_lu.median().reset_index().set_axis(["model", "elo_rating"], axis=1)
+    bootstrap_lu_median["elo_rating"] = (bootstrap_lu_median["elo_rating"] + 0.5).astype(int)
     # print(bootstrap_lu_median)
     return bootstrap_lu_median
 
-if __name__ == '__main__':
-    battles_data = pd.read_csv(r'/elo_bench/results/quora_100_test1_shuffle_ab/battled_pairs.csv')
-    print(get_bootstrap_medium_elo(battles_data))
+# if __name__ == '__main__':
+#     battles_data = pd.read_csv(r'/elo_bench/results/quora_100_test1_shuffle_ab/battled_pairs.csv')
+#     print(get_bootstrap_medium_elo(battles_data))
 

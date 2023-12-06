@@ -9,6 +9,7 @@ from datamodel import QuestionAndAnswersCollection, LLMAnswer
 from datamodel import BattleRecord, BattleRecords
 from judger import gpt_4_eval_and_score, GPT_JUDGER_NAME
 from elo_rating import rating_helper
+from datamodel.elo_rating_history import EloRatingHistory
 
 from typing import List
 from datetime import datetime
@@ -17,8 +18,9 @@ import pandas as pd
 from tqdm import tqdm
 import os
 from pathlib import Path
-from logger import logger, battle_pipeline_logger
+from logger import logger, battle_pipeline_logger, elo_rating_history_logger
 from openai import OpenAIError
+from typing import Optional
 
 
 class DumpyPipeline:
@@ -40,12 +42,6 @@ class DumpyPipeline:
         - save_dir (str): The directory path for saving battle records and results.
         - no_cache (bool, optional): Flag indicating whether to use caching. Defaults to False.
         """
-        # allow adding questions multple times
-        self.question_collection = None
-        self.model_collection = None
-        self.battle_arrangements = None
-        self.question_and_answers_collection = QuestionAndAnswersCollection()
-        self.battled_pairs = BattleOutcomes()
         self.save_dir = save_dir
         self.tempcache_dir = tempcache_dir
         if not os.path.isdir(self.save_dir):
@@ -53,7 +49,9 @@ class DumpyPipeline:
         if not os.path.isdir(self.tempcache_dir):
             os.makedirs(self.tempcache_dir)
         self.no_cache = no_cache
-        self.elo_ratings = None
+            
+        # TODO: allow adding questions multple times
+        self.clear()
 
     def register_questions(self, questions: List[str]):
         """
@@ -137,7 +135,51 @@ class DumpyPipeline:
                 tempcache_records = BattleRecords.from_csv(tempcache_records_filepath)
 
         return tempcache_records
+    
+    def clear(self):
+        self.question_collection = None
+        self.model_collection = None
+        self.battle_arrangements = None
+        self.question_and_answers_collection = QuestionAndAnswersCollection()
+        self.battled_pairs = BattleOutcomes()
+        self.elo_ratings = None
+        self.elo_rating_history = None
+    
+    def reload_pipe(self):
+        self.clear()
+        
+        # Check if the files in save_dir is ready
+        if os.path.isfile(Path(self.save_dir)/'questions.csv') and os.path.isfile(Path(self.save_dir)/'models.csv') and os.path.isfile(Path(self.save_dir)/'battle_arrangement.csv'):
+            battle_pipeline_logger.info('Reloading pipeline...')
+        else:
+            battle_pipeline_logger.info('No existing pipeline found.')
+            return
+        
+        # Register questions to battle pipeline
+        questions = pd.read_csv(Path(self.save_dir)/'questions.csv')['question'].tolist()
+        self.register_questions(questions)
 
+        # Register models to battle pipeline
+        models = pd.read_csv(Path(self.save_dir)/'models.csv')['model'].tolist()        
+        self.register_models(models)
+        
+        # Arrange battles
+        self.arrange_battles(ArrangementStrategy.Reload_Existing_Arrangement)
+        battle_pipeline_logger.info('Pipeline reloaded.')
+        
+        
+    def run(self, save_every=50, with_history=True):
+        """
+        Run the pipeline.
+
+        Args:
+        - save_every (int, optional): The number of battles after which to save the results. Defaults to 50.
+        """
+        self.gen_model_answers()
+        self.battle(saving_per=save_every)
+        self.gen_elo(with_history=with_history)
+        battle_pipeline_logger.info('Pipeline finished.')
+                                    
     def battle(self, saving_per=50):
         """
         Conduct battles between the registered questions and models.
@@ -211,19 +253,37 @@ class DumpyPipeline:
             tempcache_records.add_records(records.records)
             tempcache_records.to_csv(Path(self.tempcache_dir) / 'battle_records.csv')
 
-    def gen_elo(self):
+    def gen_elo(self, with_history=True, use_bootstrap=True):
         """
         Generate Elo ratings based on the battled pairs.
         """
         if not self.no_cache and self.battled_pairs is None:
             self.battled_pairs = BattleOutcomes.read_csv(self.save_dir / 'battled_pairs.csv')
 
-        battled_pairs_dict = [asdict(obj) for obj in self.battled_pairs.battled_pairs_in_order]
-        df = pd.DataFrame.from_dict(battled_pairs_dict)
+        battled_pairs_list = [asdict(obj) for obj in self.battled_pairs.battled_pairs_in_order]
+        df = pd.DataFrame.from_dict(battled_pairs_list)
+        # if use_bootstrap:
+        #     self.elo_ratings = rating_helper.get_bootstrap_medium_elo(df, K=4, BOOTSTRAP_ROUNDS=100)
+        # else:
         self.elo_ratings = rating_helper.get_elo_results_from_battles_data(df, K=4)
         self.elo_ratings.to_csv(Path(self.save_dir) / 'elo_rating.csv')
         battle_pipeline_logger.info('Elo ratings generated.')
-
+        
+        self.elo_rating_history = EloRatingHistory()
+        if with_history:
+            for idx_battle in tqdm(range(len(battled_pairs_list))):
+                num_battle = idx_battle + 1
+                if num_battle > 0 and (num_battle % 100 == 0 or idx_battle == len(battled_pairs_list)-1):
+                    historypoint_battles_df = pd.DataFrame.from_dict(battled_pairs_list[:idx_battle+1])
+                    if use_bootstrap:                     
+                        historypoint_rating_df = rating_helper.get_bootstrap_medium_elo(historypoint_battles_df, K=4, BOOTSTRAP_ROUNDS=100)
+                    else:
+                        historypoint_rating_df = rating_helper.get_elo_results_from_battles_data(historypoint_battles_df, K=4)
+                    # elo_rating_history_logger.debug(historypoint_rating_df)
+                    self.elo_rating_history.add_point(historypoint_rating_df, idx_battle+1)
+            self.elo_rating_history.to_csv(Path(self.save_dir) / 'elo_rating_history.csv')
+            battle_pipeline_logger.info('Elo rating history generated.')
+        
     def __repr__(self) -> str:
         """
         Return a string representation of the DumpyPipeline object.
@@ -248,7 +308,7 @@ if __name__ == '__main__':
     dummy_bp.arrange_battles(ArrangementStrategy.Random_N_BattleCount_Each_CombPair, num_of_battle=2)
     dummy_bp.gen_model_answers()
     dummy_bp.battle()
-    dummy_bp.gen_elo()
+    dummy_bp.gen_elo(with_history=True)
 
     # records = pd.read_csv(r'results/quora_100_test2_shuffle_ab/battle_records.csv')
     # inclusive_cols = ['model_a', 'model_b', 'winner']
