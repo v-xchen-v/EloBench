@@ -9,6 +9,7 @@ from enum import Enum
 from logger import logger
 import numpy as np
 from dataclasses import asdict
+from collections import defaultdict
 
 class ArrangementStrategy(Enum):
     Random_N_BattleCount_Each_CombPair = 0,
@@ -45,9 +46,12 @@ class PairwiseBattleArrangement:
         """
         self.questions: List[str] = questions
         self.models: List[str] = models
+        # records how many times a question has been involved in a battle
+        self.question_frequency = defaultdict(int)
+        for q in self.questions:
+            self.question_frequency[q] = 0
         self.battles_in_order: List[PairToBattle] = []
         self._battles_in_order_ele_as_dict: List[Dict[str, Union[str, int]]] = []
-        
     def arrange(self, arrange_strategy: ArrangementStrategy, **kwargs):
         """
         Arranges the battles based on the specified arrangement strategy.
@@ -101,12 +105,17 @@ class PairwiseBattleArrangement:
         
         if num_of_battle > len(self.questions):
             raise Exception('num_of_battle is larger than question number')
-        selected_questiosn = random.sample(self.questions, num_of_battle)
+        # selected_questiosn = random.sample(self.questions, num_of_battle)
         
         battles = []
-        for question in selected_questiosn:
-            for pair in all_pairs:
-                battles.append(PairToBattle(question=question, model_a=pair[0], model_b=pair[1]))
+        # for question in selected_questiosn:
+        for pair in all_pairs:
+            for i in range(0, num_of_battle):
+                model_a = pair[0]
+                model_b = pair[1]
+                question = self.random_select_question_to_arrange_by_frequency(model_a, model_b)
+                battles.append(PairToBattle(question=question, model_a=model_a, model_b=model_b))
+                self.question_frequency[question] += 1
 
         if shuffle:
             battles = self._shuffle_battles_ab(battles)
@@ -127,6 +136,7 @@ class PairwiseBattleArrangement:
         for question in self.questions:
             for pair in all_pairs:
                 battles.append(PairToBattle(question=question, model_a=pair[0], model_b=pair[1]))
+                self.question_frequency[question] += 1
 
         if shuffle:
             battles = self._shuffle_battles_ab(battles)
@@ -158,6 +168,7 @@ class PairwiseBattleArrangement:
             for _ in range(num_of_pair):
                 model_pair = sample_unique_pairs(self.models, 2)
                 battles.append(PairToBattle(question=question, model_a=model_pair[0], model_b=model_pair[1]))
+                self.question_frequency[question] += 1
                 
         if shuffle:
             battles = self._shuffle_battles_ab(battles)
@@ -201,7 +212,10 @@ class PairwiseBattleArrangement:
             if valid_combination(model_counts, question_counts, num_of_pair):
                 break
         
-        battles = [PairToBattle(question=q, model_a=model_pair[0], model_b=model_pair[1]) for q, model_pair in selected_combinations]
+        battles = []
+        for q, model_pair in selected_combinations:
+            self.question_frequency[q] += 1
+            battles.append(PairToBattle(question=q, model_a=model_pair[0], model_b=model_pair[1]))
         
         if shuffle:
             battles = self._shuffle_battles_ab(battles)
@@ -223,6 +237,7 @@ class PairwiseBattleArrangement:
         if set(existing_arrangement.questions).issubset(set(self.questions)) and set(existing_arrangement.models).issubset(set(self.models)):
             self.battles_in_order = existing_arrangement.battles_in_order
             self._battles_in_order_ele_as_dict = [asdict(obj) for obj in existing_arrangement.battles_in_order]
+            self.question_frequency = existing_arrangement.question_frequency
         else:
             raise Exception('battle arrangement is not match question or models')
         
@@ -255,6 +270,7 @@ class PairwiseBattleArrangement:
         models = set()
         questions = set()
         rounds = []
+        question_frequency = defaultdict(int)
         for index, row in df.iterrows():
             q = row[QUESTION_COLUMN_NAME]
             m_a = row[MODEL_A_COLUMN_NAME]
@@ -263,9 +279,12 @@ class PairwiseBattleArrangement:
             models.add(m_a)
             models.add(m_b)
             questions.add(q)
+            question_frequency[q]+=1
+            
         battle_arrangemet = PairwiseBattleArrangement(questions=list(questions), models=list(models))
         battle_arrangemet.battles_in_order = rounds
         battle_arrangemet._battles_in_order_ele_as_dict = [asdict(obj) for obj in rounds]
+        battle_arrangemet.question_frequency = question_frequency
         
         return battle_arrangemet
     
@@ -313,6 +332,7 @@ class PairwiseBattleArrangement:
                 self.battles_in_order.append(pair)
                 self._battles_in_order_ele_as_dict.append(asdict(pair))
                 new_battle_counter+=1
+                self.question_frequency[pair.question] += 1
         logger.debug(f'new {new_battle_counter} battle added!')
         
         return new_battle_counter
@@ -331,9 +351,40 @@ class PairwiseBattleArrangement:
         """
         df = pd.DataFrame.from_dict(self._battles_in_order_ele_as_dict)
         
-        arranged_questions = df[((df[MODEL_A_COLUMN_NAME]==model_a) & (df[MODEL_B_COLUMN_NAME]==model_b)) | (df[MODEL_A_COLUMN_NAME]==model_b) & (df[MODEL_B_COLUMN_NAME]==model_a)][QUESTION_COLUMN_NAME].unique().tolist()
+        if df.shape[0] > 0:
+            arranged_questions = df[((df[MODEL_A_COLUMN_NAME]==model_a) & (df[MODEL_B_COLUMN_NAME]==model_b)) | (df[MODEL_A_COLUMN_NAME]==model_b) & (df[MODEL_B_COLUMN_NAME]==model_a)][QUESTION_COLUMN_NAME].unique().tolist()
         
-        return list(set(self.questions) - set(arranged_questions))
+            return list(set(self.questions) - set(arranged_questions))
+        else:
+            return self.questions
+    
+    def random_select_question_to_arrange_by_frequency(self, model_a, model_b):
+        """
+        Randomly selects a question to be arranged for the specified model pair based on the frequency of questions.
+        
+        Args:
+            model_a (str): The first model in the pair.
+            model_b (str): The second model in the pair.
+        
+        Returns:
+            str: The selected question.
+        """
+        questions_to_arrange = self.get_questions_to_arrange(model_a, model_b)
+        
+        if len(questions_to_arrange) == 0:
+            return None
+        
+        probabilities = list(self.question_frequency.values())
+        
+        # Add 1 to each probability to avoid zero probability
+        probabilities = [(i+1) for i in probabilities]
+        
+        # Normalize probabilities so they sum up to 1
+        probabilities = [float(i)/sum(probabilities) for i in probabilities]
+
+        selected_indexs = np.random.choice(len(probabilities), p=probabilities, replace=True, size=1)
+        
+        return list(self.question_frequency.keys())[selected_indexs[0]]
         
         
     

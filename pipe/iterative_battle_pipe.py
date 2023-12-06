@@ -76,10 +76,18 @@ class IterativeBattlePipeline(BattlePipeline):
             #     if random_select.choice([True, False]):
             #         model_a_name, model_b_name = model_b_name, model_a_name
         
+        # for model_a_name, model_b_name in zip(model_as, model_bs):
+        #     qs = self.battle_arrangements.get_questions_to_arrange(model_a=model_a_name, model_b=model_b_name)
+        #     if len(qs)>0:
+        #         new_pairs.append(PairToBattle(random.choices(qs)[0], model_a_name, model_b_name))
+                
         for model_a_name, model_b_name in zip(model_as, model_bs):
-            qs = self.battle_arrangements.get_questions_to_arrange(model_a=model_a_name, model_b=model_b_name)
-            if len(qs)>0:
-                new_pairs.append(PairToBattle(random.choices(qs)[0], model_a_name, model_b_name))
+            q = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name)
+            if q == None:
+                continue
+            else:
+                new_pairs.append(PairToBattle(q, model_a_name, model_b_name))
+                
         num_try_add = len(new_pairs)
         iterate_to_no_tie_logger.debug(f'trying add {num_try_add} more.')        
         
@@ -131,7 +139,7 @@ class IterativeBattlePipeline(BattlePipeline):
 # TODO add config file to config the parameters
  
 if __name__ == '__main__':
-    iterative_battle_pipe = IterativeBattlePipeline(tempcache_dir=r'tempcache/quora_100', save_dir='results/quora_100_test6_refactoring', no_cache=False, target_n_notie=1)
+    iterative_battle_pipe = IterativeBattlePipeline(tempcache_dir=r'tempcache/quora_100', save_dir='results/quora_100_test6_refactoring', no_cache=False, target_n_notie=10)
 
     # Register questions to battle pipeline
     questions = pd.read_csv(Path('data')/'quora_100'/'questions.csv')['question'].tolist()

@@ -253,7 +253,7 @@ class DumpyPipeline:
             tempcache_records.add_records(records.records)
             tempcache_records.to_csv(Path(self.tempcache_dir) / 'battle_records.csv')
 
-    def gen_elo(self, with_history=True, use_bootstrap=True):
+    def gen_elo(self, with_history=False, use_bootstrap=False):
         """
         Generate Elo ratings based on the battled pairs.
         """
