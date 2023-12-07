@@ -1,5 +1,22 @@
 import logging
 
+# Step 1 & 2: Create a logger
+info_logger = logging.getLogger('info_logger')
+# Step 3: Set log level
+info_logger.setLevel(logging.INFO)
+
+# Step 4: Create a handler (e.g., console handler)
+info_console_handler = logging.StreamHandler()
+info_console_handler.setLevel(logging.INFO)
+
+# Step 5: Create a formatter and set it to the handler
+info_formatter = logging.Formatter('[%(levelname)s] - %(message)s')
+info_console_handler.setFormatter(info_formatter)
+
+# Step 6: Add the handler to the logger
+info_logger.addHandler(info_console_handler)
+
+
 # Set up the logger
 logger = logging.getLogger('elo_bench_logger')
 logger.setLevel(logging.DEBUG)
@@ -20,15 +37,15 @@ elo_rating_history_logger.setLevel(logging.DEBUG)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
 
-info_console_handler = logging.StreamHandler()
-info_console_handler.setLevel(logging.INFO)
+
 
 # # Create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+short_formater = logging.Formatter('[%(levelname)s] %(message)s')
 
 # # Add formatter to console_handler
-console_handler.setFormatter(formatter)
-info_console_handler.setFormatter(formatter)
+console_handler.setFormatter(short_formater)
+info_console_handler.setFormatter(short_formater)
 
 # Add console_handler to logger
 logger.addHandler(console_handler)

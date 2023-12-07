@@ -24,13 +24,14 @@
 # non_empty_rows = df[df['gpt_4_score']!='None']
 # non_empty_rows.to_csv('fixed_battle_records', index=False)
 
-import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+# import sys, os
+# sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
-import pandas as pd
-from judger.gpt_judger import _extract_winner_from_response
+# import pandas as pd
+# from judger.gpt_judger import _extract_winner_from_response
 
-df = pd.read_csv(r'/elo_bench/data/quora_100/battle_records.csv', keep_default_na=False)
+# df = pd.read_csv(r'/elo_bench/data/quora_100/battle_records.csv', keep_default_na=False)
 
-non_empty_rows = df[~((df['answer_a']=='NULL') | (df['answer_b']=='NULL'))]
-non_empty_rows.to_csv('fixed_battle_records', index=False)
+# non_empty_rows = df[~((df['answer_a']=='NULL') | (df['answer_b']=='NULL'))]
+# non_empty_rows.to_csv('fixed_battle_records', index=False)
+

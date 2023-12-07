@@ -31,7 +31,7 @@ class ModelCollection:
         self.models: List[str] = []
         if models is not None:
             self.adds(models)
-            logger.debug(f'Removed {len(models)-len(self.models)} repeat questions.')
+            logger.debug(f'Removed {len(models)-len(self.models)} repeat models.')
 
     def add(self, question: str) -> None:
         """

@@ -18,7 +18,7 @@ import pandas as pd
 from tqdm import tqdm
 import os
 from pathlib import Path
-from logger import logger, battle_pipeline_logger, elo_rating_history_logger
+from logger import logger, battle_pipeline_logger, elo_rating_history_logger, info_logger
 from openai import OpenAIError
 from typing import Optional
 
@@ -44,6 +44,7 @@ class DumpyPipeline:
         """
         self.save_dir = save_dir
         self.tempcache_dir = tempcache_dir
+        self.question_filename = 'questions.csv'
         if not os.path.isdir(self.save_dir):
             os.makedirs(self.save_dir)
         if not os.path.isdir(self.tempcache_dir):
@@ -53,9 +54,11 @@ class DumpyPipeline:
         # TODO: allow adding questions multple times
         self.clear()
 
-    def register_questions(self, questions: List[str]):
+    def register_questions(self, questions: Optional[List[str]]=None, reload=False):
         """
-        Register a list of questions and save them to a CSV file.
+        Register questions to the system.
+        if reload is True, then reload the questions from the csv file in save_dir.
+        If reload is False, then register the given questions and save them to a CSV file.
 
         Args:
         - questions (List[str]): The list of questions to be registered.
@@ -63,13 +66,24 @@ class DumpyPipeline:
         Returns:
             None
         """
-        self.question_collection = QuestionCollection(questions)
-        self.question_collection.to_csv(Path(self.save_dir) / 'questions.csv')
-        battle_pipeline_logger.info('Questions registered.')
+        if reload == False:
+            self.question_collection = QuestionCollection(questions)
+            self.question_collection.to_csv(Path(self.save_dir) / self.question_filename)
+            info_logger.info(f'{len(self.question_collection)} questions registered.')
+        else:
+            # Reload questions from csv file
+            file_path = Path(self.save_dir) / self.question_filename 
+            if not os.path.isfile(file_path):
+                raise Exception(f'No {self.question_filename } found in {self.save_dir}')
+            
+            self.question_collection = QuestionCollection.read_csv(file_path)
+            info_logger.info(f'{len(self.question_collection)} questions regiesterd by reloading.')
 
-    def register_models(self, models: List[str]):
+    def register_models(self, models: Optional[List[str]]=None, reload=False):
         """
-        Register the given models and save them to a CSV file.
+        Register the given models to system.
+        If reload is True, then reload the models from the csv file in save_dir.
+        If reload is False, then register the given models and save them to a CSV file.
 
         Args:
             models (List[str]): A list of model names to register.
@@ -77,9 +91,18 @@ class DumpyPipeline:
         Returns:
             None
         """
-        self.model_collection = ModelCollection(models)
-        self.model_collection.to_csv(Path(self.save_dir) / 'models.csv')
-        battle_pipeline_logger.info('Models registered.')
+        if reload == False:
+            self.model_collection = ModelCollection(models)
+            self.model_collection.to_csv(Path(self.save_dir) / 'models.csv')
+            info_logger.info(f'f{len(self.model_collection)} models registered.')
+        else:
+            # Reload models from csv file
+            file_path = Path(self.save_dir) / 'models.csv'
+            if not os.path.isfile(file_path):
+                raise Exception(f'No models.csv found in {self.save_dir}')
+            
+            self.model_collection = ModelCollection.read_csv(file_path)
+            info_logger.info(f'{len(self.model_collection)} models regiestered by reloading.')
 
     def arrange_battles(self, arrange_strategy: ArrangementStrategy, **kwargs):
         """

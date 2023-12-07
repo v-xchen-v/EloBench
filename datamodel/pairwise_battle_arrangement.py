@@ -6,10 +6,11 @@ import pandas as pd
 from datamodel.column_names import QUESTION_COLUMN_NAME, MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME
 import itertools
 from enum import Enum
-from logger import logger
+from logger import logger, info_logger
 import numpy as np
 from dataclasses import asdict
 from collections import defaultdict
+from tqdm import tqdm
 
 class ArrangementStrategy(Enum):
     Random_N_BattleCount_Each_CombPair = 0,
@@ -53,6 +54,7 @@ class PairwiseBattleArrangement:
         self.battles_in_order: List[PairToBattle] = []
         self._battles_in_order_ele_as_dict: List[Dict[str, Union[str, int]]] = []
     def arrange(self, arrange_strategy: ArrangementStrategy, **kwargs):
+        info_logger.info(f'arrange battles by {arrange_strategy}')
         """
         Arranges the battles based on the specified arrangement strategy.
         
@@ -72,6 +74,7 @@ class PairwiseBattleArrangement:
             self.arrange_randomly_by_battlecountnumpercombpair(**kwargs)
         else:
             raise NotImplementedError
+        info_logger.info(f'arrange battles by {arrange_strategy} done')
     
     def _shuffle_battles_ab(self, battles: List[PairToBattle]):
         """
@@ -109,13 +112,18 @@ class PairwiseBattleArrangement:
         
         battles = []
         # for question in selected_questiosn:
-        for pair in all_pairs:
-            for i in range(0, num_of_battle):
+        for pair in tqdm(all_pairs, desc='comb pairs'):
+            num_question_batch = 10
+            for i in tqdm(range(0, num_of_battle, num_question_batch), desc='questions', leave=False):
                 model_a = pair[0]
                 model_b = pair[1]
-                question = self.random_select_question_to_arrange_by_frequency(model_a, model_b)
-                battles.append(PairToBattle(question=question, model_a=model_a, model_b=model_b))
-                self.question_frequency[question] += 1
+                questions = self.random_select_question_to_arrange_by_frequency(model_a, model_b, num_question_batch)
+                if questions is None:
+                    raise Exception('no more questions to arrange')
+                
+                for question in questions:
+                    battles.append(PairToBattle(question=question, model_a=model_a, model_b=model_b))
+                    self.question_frequency[question] += 1
 
         if shuffle:
             battles = self._shuffle_battles_ab(battles)
@@ -358,7 +366,7 @@ class PairwiseBattleArrangement:
         else:
             return self.questions
     
-    def random_select_question_to_arrange_by_frequency(self, model_a, model_b):
+    def random_select_question_to_arrange_by_frequency(self, model_a, model_b, size=1):
         """
         Randomly selects a question to be arranged for the specified model pair based on the frequency of questions.
         
@@ -371,7 +379,7 @@ class PairwiseBattleArrangement:
         """
         questions_to_arrange = self.get_questions_to_arrange(model_a, model_b)
         
-        if len(questions_to_arrange) == 0:
+        if len(questions_to_arrange) == 0 or size > len(questions_to_arrange):
             return None
         
         probabilities = list(self.question_frequency.values())
@@ -384,9 +392,9 @@ class PairwiseBattleArrangement:
         # Normalize probabilities so they sum up to 1
         probabilities = [float(i)/sum(probabilities) for i in probabilities]
 
-        selected_indexs = np.random.choice(len(probabilities), p=probabilities, replace=True, size=1)
+        selected_indexs = np.random.choice(len(probabilities), p=probabilities, replace=True, size=size)
         
-        return list(self.question_frequency.keys())[selected_indexs[0]]
+        return list(np.array(list(self.question_frequency.keys()))[selected_indexs])
         
         
     

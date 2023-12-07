@@ -16,15 +16,16 @@ class IterativeBattlePipeline(BattlePipeline):
     # TODO: refactor to general iterative battle pipeline
     def __init__(self, tempcache_dir: str, save_dir: str, target_n_notie: int = 80, no_cache: bool = False) -> None:
         super().__init__(tempcache_dir, save_dir, no_cache)
-        self.target_no_notie = target_n_notie
+        self.target_n_notie = target_n_notie
         # self.no_tie_battle_count = defaultdict(lambda: defaultdict(int))
         
     def battle(self, saving_per=50):
         # initial battle 
         super().battle(saving_per)
-        
+    
+    def iterative_battle(self):        
         # iterative battle
-        self._iterative_to_n_no_tie(self.target_no_notie, None)
+        self._iterative_to_n_no_tie(self.target_n_notie, None)
     
     def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, num_need_add, no_tie_target):
         # Replace NaN values with zero (or a small value) before inversion
@@ -82,10 +83,11 @@ class IterativeBattlePipeline(BattlePipeline):
         #         new_pairs.append(PairToBattle(random.choices(qs)[0], model_a_name, model_b_name))
                 
         for model_a_name, model_b_name in zip(model_as, model_bs):
-            q = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name)
+            qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name)
             if q == None:
                 continue
             else:
+                q = qs[0]
                 new_pairs.append(PairToBattle(q, model_a_name, model_b_name))
                 
         num_try_add = len(new_pairs)
@@ -101,7 +103,7 @@ class IterativeBattlePipeline(BattlePipeline):
         
         return new_pairs
         
-    def _iterative_to_n_no_tie(self, N, NUM_NEW_BATTLES_PER_ITER, stop_num_tryadd=1):
+    def _iterative_to_n_no_tie(self, N, NUM_NEW_BATTLES_PER_ITER, stop_num_tryadd=1, save_per=50):
         # arrange num_new_battles more battles, unless no more can arrange or reach setting
         retry_counter=0
         while True:
@@ -120,7 +122,7 @@ class IterativeBattlePipeline(BattlePipeline):
                 
                 if num_added_battles > 0:
                     self.gen_model_answers()
-                    self.battle()
+                    self.battle(saving_per=save_per)
                     self.gen_elo()
                     iterate_to_no_tie_logger.debug(self.elo_ratings)
                       
@@ -170,11 +172,10 @@ if __name__ == '__main__':
 
     # Arrange initial battle
     # TODO: shorten the num_of_xx to num
-    iterative_battle_pipe.arrange_battles(ArrangementStrategy.Random_N_BattleCount_Each_CombPair, num_of_battle=iterative_battle_pipe.target_no_notie)
+    iterative_battle_pipe.arrange_battles(ArrangementStrategy.Random_N_BattleCount_Each_CombPair, num_of_battle=iterative_battle_pipe.target_n_notie)
     
     iterative_battle_pipe.gen_model_answers()
     
     iterative_battle_pipe.battle()
     
     iterative_battle_pipe.gen_elo()
-    
