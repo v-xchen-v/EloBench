@@ -221,16 +221,16 @@ class DumpyPipeline:
                 self._save_records(records, tempcache_records)
                 
         self._finalize_records(records, tempcache_records)
+        battle_pipeline_logger.debug(f'{new_battles_counter} new battles, {len(self.battle_arrangements.battles_in_order)-new_battles_counter} restored from cache.')
         battle_pipeline_logger.info('Battles conducted.')
             
     def _evaluate_and_record_battle(self, m_a, m_b, q, ans_a, ans_b, records):
         # evaluate
         try:
             gpt4_response, gpt_4_score, gpt_4_winner = gpt_4_eval_and_score(question=q, model_a_ans=ans_a, model_b_ans=ans_b, judger_name=GPT_JUDGER_NAME)
+            self.battled_pairs.add_pair(m_a, m_b, gpt_4_winner)
         except OpenAIError as e:
             records.add_record(BattleRecord(model_a=m_a, model_b=m_b, winner=None, tstamp=datetime.now(), question=q, answer_a=ans_a, answer_b=ans_b, gpt_4_response=None, gpt_4_score=None, is_valid=False, judger=GPT_JUDGER_NAME))
-
-        self.battled_pairs.add_pair(m_a, m_b, gpt_4_winner)
 
         # record
         records.add_record(BattleRecord(model_a=m_a, model_b=m_b, winner=gpt_4_winner, tstamp=datetime.now(), question=q, answer_a=ans_a, answer_b=ans_b, gpt_4_response=str(gpt4_response), gpt_4_score=str(gpt_4_score), is_valid=True, judger=GPT_JUDGER_NAME))
@@ -238,7 +238,8 @@ class DumpyPipeline:
     def _save_records(self, records, tempcache_records):
         logger.debug('caching gpt-4 eval and score result...')
         records.to_csv(Path(self.save_dir) / 'battle_records.csv')
-
+        records.to_csv(Path(self.save_dir) / 'battled_pairs.csv', winner_only=True)
+        
         if not self.no_cache:
             tempcache_records.add_records(records.records)
             tempcache_records.to_csv(Path(self.tempcache_dir) / 'battle_records.csv')

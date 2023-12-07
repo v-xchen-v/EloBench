@@ -25,6 +25,8 @@ def _extract_winner_from_response(gpt4_response_text):
     else:
         gpt_as_judger_logger.debug("No score found for Model 2.")
         
+    gpt_4_winner = None
+    gpt_4_score = None
     if ismatch_design_pattern1 and ismatch_design_pattern2:
         gpt_4_score = {
             'model_a': score1,

@@ -377,7 +377,9 @@ class PairwiseBattleArrangement:
         probabilities = list(self.question_frequency.values())
         
         # Add 1 to each probability to avoid zero probability
-        probabilities = [(i+1) for i in probabilities]
+        # Invert to form a probability distribution that favors questions with lower frequency
+        probabilities = [1/(i+1) for i in probabilities]
+
         
         # Normalize probabilities so they sum up to 1
         probabilities = [float(i)/sum(probabilities) for i in probabilities]

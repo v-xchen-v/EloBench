@@ -83,7 +83,7 @@ with gr.Blocks() as demo:
     #     questions_df = pd.read_csv(data_dir/'questions.csv')
     #     questions_df.reset_index(inplace=True)
     #     gr.Dataframe(questions_df, wrap=True)
-    data_dir = Path('results/quora_100_test4')
+    data_dir = Path('results/quora_100_test6_refactoring')
     
     with gr.Tab('Models') as models_tab:
         print(PairwiseBattleArrangement.read_csv(data_dir/'battle_arrangement.csv').models)
@@ -105,4 +105,30 @@ with gr.Blocks() as demo:
         
         fig2 = visualize_battle_count(arrangement_df, title="Battle Count of Each Combination of Models")
         gr.Plot(fig2)
+        
+    with gr.Tab('Question Frequency') as question_frequency_tab:
+        df = pd.read_csv(data_dir/'battle_arrangement.csv')
+        # for question, num in df['question'].value_counts().iteritems()
+        inclusive_cols = ['question']
+        question_frequency_df = df[inclusive_cols]
+        
+        # draw historgram to show the distribution of question frequency
+        question_frequency = df['question'].value_counts()
+        # Map the counts back to the original DataFrame
+        question_frequency_df['question_frequency'] = question_frequency_df['question'].map(question_frequency)
+        gr.Dataframe(question_frequency_df, wrap=True)
+        
+        frequencies = question_frequency_df['question_frequency'].to_list()
+        frequencies = np.array(frequencies)
+        # remove nan value
+        frequencies = frequencies[~np.isnan(frequencies)]
+        
+        fig = plt.figure(figsize=(10, 6))
+        plt.hist(frequencies, bins=50, color='skyblue')  # Adjust the number of bins as needed
+        
+
+        plt.xlabel('Frequency')
+        plt.ylabel('Number of Questions')
+        plt.title('Distribution of Question Usage Frequency')
+        gr.Plot(fig)
 demo.launch()
