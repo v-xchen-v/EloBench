@@ -19,7 +19,7 @@ from models import get_model
 from elo_rating.rating_evaluator import compute_predict_winrate, compute_acutal_winrate, evaluate_winrate, evaluate_rank_consistency
 
 class BattlePipeline(DumpyPipeline):
-    def gen_model_answers(self) -> None:
+    def gen_model_answers(self, batch_mode=True) -> None:
         """
         Generate answers for each model based on the given questions.
         """
@@ -51,18 +51,32 @@ class BattlePipeline(DumpyPipeline):
         
             lm = get_model(model_name)
 
-            answers = []
-            for q in tqdm(questions, desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
-                answer = lm.generate_answer(q, free_model_when_exit=False)
-                answers.append(answer)
-                self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
-                
-                if not self.no_cache:
-                    # caching generated answers per ans
-                    self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
-                
-                logger.debug(f'Question:\n{q}')
-                logger.debug(f'Answer:\n{answer}')
+            if not batch_mode:
+                answers = []
+                for q in tqdm(questions, desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
+                    answer = lm.generate_answer(q, free_model_when_exit=False)
+                    answers.append(answer)
+                    self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
+                    
+                    if not self.no_cache:
+                        # caching generated answers per ans
+                        self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
+                    
+                    logger.debug(f'Question:\n{q}')
+                    logger.debug(f'Answer:\n{answer}')
+            else:
+                answers = []
+                for answer in tqdm(lm.batch_generate_answer(questions, free_model_when_exit=False), total=len(questions), desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
+                    answers.append(answer)
+                    q = questions[len(answers)-1]
+                    self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
+                    
+                    if not self.no_cache:
+                        # caching generated answers per ans
+                        self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
+                    
+                    logger.debug(f'Question:\n{q}')
+                    logger.debug(f'Answer:\n{answer}') 
             
             if isinstance(lm, AutoCausalLM):
                 # free gpu resource

@@ -15,3 +15,18 @@ class LM(ABC):
             str: The generated answer.
         """
         pass
+    
+    @abstractmethod
+    def batch_generate_answer(self, questions, **kwargs) -> list:
+        """Generate answers for the given questions.
+
+        For local models, this method should be overridden to provide a more efficient implementation.
+        
+        Args:
+            questions (list): The questions to generate answers for.
+            **kwargs: Additional keyword arguments.
+
+        Returns:
+            list: The generated answers.
+        """
+        pass
