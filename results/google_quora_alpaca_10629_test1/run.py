@@ -27,27 +27,28 @@ if __name__ == '__main__':
     
     # Regiester the initial models, register the top models on alpaca eval leaderboard later
     # Register models to battle pipeline
-    # models = [ \
-    #     'lmsys/vicuna-7b-v1.5',
-    #     'lmsys/vicuna-13b-v1.5',
-    #     'lmsys/vicuna-33b-v1.3',
-    #     'meta-llama/Llama-2-7b-chat-hf',
-    #     'meta-llama/Llama-2-13b-chat-hf',
-    #     'meta-llama/Llama-2-70b-chat-hf',
-    #     'chavinlo/alpaca-native',
-    #     'chavinlo/alpaca-13b',
-    #     'gpt-4-turbo',
-    #     'gpt-35-turbo',
-    #     'mosaicml/mpt-7b-chat',
-    #     'mosaicml/mpt-30b-chat',
-    #     'WizardLM/WizardLM-7B-V1.0',
-    #     'WizardLM/WizardLM-13B-V1.2',
-    #     'WizardLM/WizardLM-70B-V1.0',
-    #     'Xwin-LM/Xwin-LM-7B-V0.1',
-    #     'Xwin-LM/Xwin-LM-13B-V0.1',
-    #     'tiiuae/falcon-7b-instruct',
-    #     'tiiuae/falcon-40b-instruct'
-    # ]
+    models = [ \
+        'lmsys/vicuna-7b-v1.5',
+        'lmsys/vicuna-13b-v1.5',
+        'lmsys/vicuna-33b-v1.3',
+        'meta-llama/Llama-2-7b-chat-hf',
+        'meta-llama/Llama-2-13b-chat-hf',
+        'meta-llama/Llama-2-70b-chat-hf',
+        'chavinlo/alpaca-native',
+        'chavinlo/alpaca-13b',
+        'gpt-4-turbo',
+        'gpt-35-turbo',
+        'mosaicml/mpt-7b-chat',
+        'mosaicml/mpt-30b-chat',
+        'WizardLM/WizardLM-7B-V1.0',
+        'WizardLM/WizardLM-13B-V1.2',
+        # 'WizardLM/WizardLM-70B-V1.0',
+        'Xwin-LM/Xwin-LM-7B-V0.1',
+        'Xwin-LM/Xwin-LM-13B-V0.1',
+        'tiiuae/falcon-7b-instruct',
+        'tiiuae/falcon-40b-instruct'
+    ]
+    # iterative_battle_pipe.register_models(models)
     iterative_battle_pipe.register_models(reload=True)
 
 

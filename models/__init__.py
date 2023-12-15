@@ -7,8 +7,15 @@ MODEL_REGIESTRY = {
     "gpt-35-turbo": GPTOnlineLM,
 }
 
+USE_MODEL_PARALLEL = {
+    "meta-llama/Llama-2-70b-chat-hf": True,
+}
+
 def get_model(model_name):
     if model_name in MODEL_REGIESTRY:
         return MODEL_REGIESTRY[model_name](model_name)
     else:
-        return AutoCausalLM(model_name)
+        if model_name in USE_MODEL_PARALLEL:
+            return AutoCausalLM(model_name, use_model_parallel=USE_MODEL_PARALLEL[model_name])
+        else:
+            return AutoCausalLM(model_name)

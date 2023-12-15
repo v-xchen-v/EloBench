@@ -15,6 +15,7 @@ from logger import logger
 import gc
 import torch
 from models.hf_local_lm import AutoCausalLM
+from models.gpt_online_lm import GPTOnlineLM
 from models import get_model
 from elo_rating.rating_evaluator import compute_predict_winrate, compute_acutal_winrate, evaluate_winrate, evaluate_rank_consistency
 
@@ -66,17 +67,29 @@ class BattlePipeline(DumpyPipeline):
                     logger.debug(f'Answer:\n{answer}')
             else:
                 answers = []
-                for answer in tqdm(lm.batch_generate_answer(questions, free_model_when_exit=False), total=len(questions), desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
-                    answers.append(answer)
-                    q = questions[len(answers)-1]
-                    self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
-                    
-                    if not self.no_cache:
-                        # caching generated answers per ans
-                        self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
-                    
-                    logger.debug(f'Question:\n{q}')
-                    logger.debug(f'Answer:\n{answer}') 
+                while len(answers) < len(questions):
+                    try:
+                        for answer in tqdm(lm.batch_generate_answer(questions, free_model_when_exit=False), total=len(questions), desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
+                            answers.append(answer)
+                            q = questions[len(answers)-1]
+                            self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
+                            
+                            if not self.no_cache and (len(answers) % lm.batch_size == 0 or len(answers) == len(questions)):
+                                # caching generated answers per ans
+                                self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
+                            
+                            logger.debug(f'Question:\n{q}')
+                            logger.debug(f'Answer:\n{answer}') 
+                    except RuntimeError as e:
+                        if 'CUDA out of memory' in str(e):
+                            logger.warning(f'OOM error on {model_name}, free gpu resource and try again.')
+                            
+                            lm.batch_size = int(lm.batch_size / 2)
+                            if lm.batch_size < 1:
+                                raise e
+                            logger.info(f'retry with half batch size: {int(lm.batch_size / 2)}')
+                        else:
+                            raise e
             
             if isinstance(lm, AutoCausalLM):
                 # free gpu resource

@@ -6,6 +6,7 @@ class GPTOnlineLM(LM):
     def __init__(self, model_name) -> None:
         self.model_name = model_name
         self.max_new_tokens = 512
+        self.batch_size = 16
         
     def generate_answer(self, question, **kwargs) -> str:
         """
@@ -24,4 +25,6 @@ class GPTOnlineLM(LM):
         return answer
     
     def batch_generate_answer(self, questions, **kwargs) -> list:
-        return [self.generate_answer(q, **kwargs) for q in questions]
+        for  q in questions:
+            yield self.generate_answer(q, **kwargs)
+

@@ -16,7 +16,7 @@ from tqdm import tqdm
 # TODO: support give a model as input, and do not free the model for futher use
 # TODO: different decode
 class AutoCausalLM(LM):
-    def __init__(self, model_name) -> None:
+    def __init__(self, model_name, use_model_parallel=False) -> None:
         """
         Initializes an instance of AutoCausalLM.
 
@@ -27,30 +27,42 @@ class AutoCausalLM(LM):
             None
         """
         self.model_name = model_name
-        try:    
-            self._create_model(model_name)
-            self.model_parallel = False
-        except RuntimeError as e:
-            if 'CUDA out of memory' in str(e):
-                logger.debug('CUDA out of memory')
-                del self.model
-                gc.collect()
-                torch.cuda.empty_cache()
-                logger.info('retry with model parallelism')
-                self._create_model(model_name, use_model_parallel=True)
-                self.model_parallel = True
-            else:
-                raise e
+        
+        self._create_model(model_name, use_model_parallel=use_model_parallel)
+        self.model_parallel = use_model_parallel
+        
+        # deparecated, because it can not free cuda memory that used when initialize model.
+        # try:    
+        #     self._create_model(model_name)
+        #     self.model_parallel = False
+        # except RuntimeError as e:
+        #     if 'CUDA out of memory' in str(e):
+        #         logger.debug('CUDA out of memory')
+        #         gc.collect()
+        #         torch.cuda.empty_cache()
+        #         logger.info('retry with model parallelism')
+        #         self._create_model(model_name, use_model_parallel=True)
+        #         self.model_parallel = True
+        #     else:
+        #         raise e
         
         # Set the model to evaluation mode
         self.model.eval()
         torch.set_grad_enabled(False)
 
-        # self.tokenizer = AutoTokenizer.from_pretrained(model_name)
-        self.tokenizer = AutoTokenizer.from_pretrained(model_name, padding_side='left')
+        # Fixed: Should not set tokenizer padding side to left if default as right, because the model may not support left padding, e.g., meta-llama/Llama-2-7b-chat-hf will generate empty answer for plain question with ? at end if left padding is used
+        # For decoder-only architecture, you don't want to have padding tokens on left because you are then asking the model to predict rest of the tokens given prefix tokens. If rest of the tokens is just padding tokens then model will happily learn just outputting padding tokens. So this is usually a mistake and Huggingface code detects this. (https://stackoverflow.com/questions/74748116/huggingface-automodelforcasuallm-decoder-only-architecture-warning-even-after)
+        # A example of AutoCausalLM: https://github.com/EleutherAI/lm-evaluation-harness/blob/main/lm_eval/models/huggingface.py#L768C23-L768C23
+        # self.tokenizer = AutoTokenizer.from_pretrained(model_name, legacy=False)
+        self.tokenizer = AutoTokenizer.from_pretrained(model_name)
+        
+        info_logger.info(f"tokenizer.padding_side: {self.tokenizer.padding_side}")
+        
+        # self.tokenizer.padding_side = 'left'
         # ValueError: Asking to pad but the tokenizer does not have a padding token. Please select a token to use as `pad_token` `(tokenizer.pad_token = tokenizer.eos_token e.g.)` or add a new pad token via `tokenizer.add_special_tokens({'pad_token': '[PAD]'})`.
         # ! What's the proper way to handle pad across multiple models
         # For now, use the preset pad_token and pad_token_id from the tokenizer, if not exist, use eos_token and eos_token_id
+        
         if self.tokenizer.pad_token is None:
             self.tokenizer.pad_token = self.tokenizer.eos_token
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
@@ -58,9 +70,14 @@ class AutoCausalLM(LM):
         # padding_side = self.tokenizer.padding_side
         # print(f"Padding side: {padding_side}")
             
-        self.max_batch_size = 1024
+        self.max_batch_size = 32
         self.max_new_tokens = 512
-        self.batch_size=None # None means auto detect batch_size, otherwise, use the given batch_size
+        
+        if model_name in ['chavinlo/alpaca-native', 'chavinlo/alpaca-13b']:
+            # ! not support batch mode for alpaca-native and alpaca-13b now.
+            self.batch_size=1
+        else:
+            self.batch_size=None # None means auto detect batch_size, otherwise, use the given batch_size
         
     def _create_model(self, model_name: str, use_model_parallel: bool = False):
         # Load pre-trained model and tokenizer
@@ -78,8 +95,10 @@ class AutoCausalLM(LM):
                 _torch_dtype = dtype
             return _torch_dtype
         torch_dtype=_get_dtype(None, self.config)
+
         if torch.cuda.device_count() > 1 and use_model_parallel:
             # use multiple gpus by model parallelism
+            logger.info(f'using model parallelism on {torch.cuda.device_count()} gpus')
             self.model = AutoModelForCausalLM.from_pretrained(model_name, device_map='auto', torch_dtype=torch_dtype)
         elif torch.cuda.is_available():
         # if torch.cuda.is_available():
@@ -163,13 +182,10 @@ class AutoCausalLM(LM):
         """
         if not torch.cuda.is_available():
             raise RuntimeError('CUDA is not available, unable to detect batch size')
-        
-        # Check if CUDA (GPU support) is available and move the model to GPU if it is
-        if self.model.device.type == 'cpu':
-            self.model = self.model.to('cuda')
             
         if self.model_parallel:
-            raise RuntimeError('model parallelism is enabled, unable to detect batch size')
+            info_logger.info('model parallelism is enabled, unable to detect batch size, set to 1')
+            return 1
             
         longest_question = max([self._decorate_prompt_for_qa(question) for question in questions], key=len)
         longest_question_length = len(self.tokenizer.encode(longest_question))
@@ -217,6 +233,11 @@ class AutoCausalLM(LM):
                 gc.collect()
                 torch.cuda.empty_cache()
                 gc.collect()
+            
+        # Let the batch size smaller, make more tolerance to avoid OOM    
+        if batch_size >= 32:
+            batch_size //= 2
+            
         self.batch_size = batch_size
         return batch_size
         
@@ -244,9 +265,12 @@ class AutoCausalLM(LM):
         answers = []
         for i in range(outputs.size(0)):
             prompt_length = len(self.tokenizer.encode(prompts[i]))
-        
-            # Remove padding tokens from the output
-            output = remove_padding_from_batch_left_padding(outputs[i])
+
+            if self.tokenizer.padding_side == 'left':
+                # Remove the additional tokens from the left side of the output
+                output = remove_padding_from_batch_left_padding(outputs[i])
+            else:
+                output = outputs[i]
                 
             continuation = output[prompt_length:]
 
@@ -257,7 +281,13 @@ class AutoCausalLM(LM):
             del self.model
             gc.collect()
             torch.cuda.empty_cache()
-            
+        
+        # free CUDA memory
+        del outputs
+        del inputs
+        gc.collect()
+        torch.cuda.empty_cache()
+        
         return answers
     
     def batch_generate_answer(self, questions: list, free_model_when_exit: bool = False):

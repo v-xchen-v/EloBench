@@ -13,8 +13,7 @@
 11,mosaicml/mpt-30b-chat
 12,WizardLM/WizardLM-7B-V1.0
 13,WizardLM/WizardLM-13B-V1.2
-14,WizardLM/WizardLM-70B-V1.0
-15,Xwin-LM/Xwin-LM-7B-V0.1
-16,Xwin-LM/Xwin-LM-13B-V0.1
-17,tiiuae/falcon-7b-instruct
-18,tiiuae/falcon-40b-instruct
+14,Xwin-LM/Xwin-LM-7B-V0.1
+15,Xwin-LM/Xwin-LM-13B-V0.1
+16,tiiuae/falcon-7b-instruct
+17,tiiuae/falcon-40b-instruct
