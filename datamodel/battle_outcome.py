@@ -71,7 +71,7 @@ class BattleOutcomes:
         self.battled_pairs_in_order = []
     
     @classmethod
-    def read_csv(cls, save_path):        
+    def read_csv(cls, save_path, nrows=None):        
         """
         Read battle outcomes from a CSV file.
 
@@ -81,7 +81,8 @@ class BattleOutcomes:
         Returns:
         - BattleOutcomes: BattleOutcomes object containing the battle outcomes read from the CSV file.
         """
-        df = pd.read_csv(save_path)
+        df = pd.read_csv(save_path, nrows=nrows)
+
         pairs = []
         for idx, row in df.iterrows():
             pairs.append(BattleOutcome(model_a=row[MODEL_A_COLUMN_NAME], model_b=row[MODEL_B_COLUMN_NAME], winner=row[WINNER_COLUMN_NAME]))
@@ -107,7 +108,9 @@ class BattleOutcomes:
         Returns:
         - dict: Dictionary containing the frequency of battle outcomes.
         """
-        return self.get_frequency(self.battled_pairs_in_order, despite_ab_order)
+        valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
+        valid_battled_pairs = [x for x in self.battled_pairs_in_order if x.winner in valid_winner]
+        return self.get_frequency(valid_battled_pairs, despite_ab_order)
         
     def preety_print_frequency(self, frequery_dict):
         """

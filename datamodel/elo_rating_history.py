@@ -1,6 +1,12 @@
+from __future__ import annotations
+
 from dataclasses import dataclass, asdict
 import pandas as pd
 from typing import List
+from datamodel.battle_outcome import BattleOutcomes
+from tqdm import tqdm
+from elo_rating import rating_helper
+from pathlib import Path
 
 @dataclass
 class EloRatingHistoryPoint:
@@ -14,12 +20,44 @@ class EloRatingHistory:
         self.elo_rating_history = []
         self.recorded_battle_num = []
         
+    @classmethod
+    def gen_history(self, save_dir, use_bootstrap=False, nrows=None) -> EloRatingHistory:
+        # create empty history
+        elo_rating_history = EloRatingHistory()
+        
+        # read battle outcomes
+        battled_pairs = BattleOutcomes.read_csv(Path(save_dir) / 'battled_pairs.csv', nrows=nrows)
+
+        battled_pairs_list = [asdict(obj) for obj in battled_pairs.battled_pairs_in_order]
+
+        
+        for idx_battle in tqdm(range(len(battled_pairs_list))):
+                num_battle = idx_battle + 1
+                if num_battle > 0 and (num_battle % 100 == 0 or idx_battle == len(battled_pairs_list)-1):
+                    historypoint_battles_df = pd.DataFrame.from_dict(battled_pairs_list[:idx_battle+1])
+                    if use_bootstrap:                     
+                        historypoint_rating_df = rating_helper.get_bootstrap_medium_elo(historypoint_battles_df, K=4, BOOTSTRAP_ROUNDS=100)
+                    else:
+                        historypoint_rating_df = rating_helper.get_elo_results_from_battles_data(historypoint_battles_df, K=4)
+                    # elo_rating_history_logger.debug(historypoint_rating_df)
+                    elo_rating_history.add_point(historypoint_rating_df, idx_battle+1)
+        return elo_rating_history
+        
     def _add_row(self, rank: int, model: str, elo_rating: float, num_battle: int):
         self.elo_rating_history.append(EloRatingHistoryPoint(rank, model, elo_rating, num_battle))
         
     def add_point(self, elo_rating_data: pd.DataFrame, num_battle: int):
-        for idx, row in elo_rating_data.iterrows():
-            self._add_row(idx, row['model'], row['elo_rating'], num_battle)
+        def get_rank(rating, all_ratings: list):
+            """assign the rank based on the descending order of the numbers, ensuring that the largest number gets the rank 1, and the smallest number gets the rank equal to the number of unique elements in the list. Rank of numbers in a list where the same numbers have the same rank"""
+            rank = 1
+            for item in all_ratings:
+                if rating < item:
+                    rank+=1
+            return rank
+        
+        for _, row in elo_rating_data.iterrows():
+            rank = get_rank(row['elo_rating'], elo_rating_data['elo_rating'].tolist())
+            self._add_row(rank, row['model'], row['elo_rating'], num_battle)
         self.recorded_battle_num.append(num_battle)
     
     def get_point(self, num_battle: int) -> pd.DataFrame:

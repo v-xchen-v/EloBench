@@ -54,7 +54,13 @@ def gpt_4_eval_and_score(question, model_a_ans, model_b_ans, judger_name):
     
     gpt4_response_text = gpt4_response['response']
     
-    gpt_4_winner, gpt_4_score = _extract_winner_from_response(gpt4_response_text)
+    # handle none response, return None
+    if gpt4_response_text is None:
+        gpt_as_judger_logger.debug("No response found.")
+        return gpt4_response, gpt_4_score, gpt_4_winner
     
     gpt_as_judger_logger.debug(gpt4_response)
+    
+    gpt_4_winner, gpt_4_score = _extract_winner_from_response(gpt4_response_text)
+    
     return gpt4_response, str(gpt_4_score), gpt_4_winner

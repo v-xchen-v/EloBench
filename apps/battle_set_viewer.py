@@ -132,6 +132,21 @@ def battle_set_tabs(result_dir: Path, dataset_dir: Path):
         with gr.Tab('Model') as battle_set_model_tab:
             battle_set_model_df = pd.read_csv(result_dir/'models.csv')
             gr.Dataframe(battle_set_model_df, wrap=True)
+            
+            arrange_df = pd.read_csv(result_dir/'battle_arrangement.csv')
+            
+            models = battle_set_model_df['model'].tolist()
+            model_questionnum = defaultdict(int)
+            for model in models:
+                questions = arrange_df[(arrange_df['model_a']==model) | (arrange_df['model_b']==model)]['question'].unique()
+                model_questionnum[model] = len(questions)
+                
+            model_questionnum_df = pd.DataFrame.from_dict(model_questionnum, orient='index', columns=['question_num'])
+            
+            model_question_num_fig = px.bar(model_questionnum_df, title="Question Count for Each Model", text_auto=True)
+            model_question_num_fig.update_layout(xaxis_title="model", yaxis_title="Question Count", height=400, showlegend=False)
+            
+            gr.Plot(model_question_num_fig)
         
         arrangement_df = pd.read_csv(result_dir/'battle_arrangement.csv')
         with gr.Tab('Model/Pair To Battle') as battle_set_to_battle_tab:
@@ -147,8 +162,8 @@ def battle_set_tabs(result_dir: Path, dataset_dir: Path):
             gr.Dataframe(arrangement_df, wrap=True)
 if __name__ == '__main__':
     with gr.Blocks() as demo:
-        dataset_dir = Path('data/google_quora_alpaca_10630')
-        result_dir = Path('results/google_quora_alpaca_10630_test1')
+        dataset_dir = Path('data/google_quora_alpaca_10629')
+        result_dir = Path('results/google_quora_alpaca_10629_test2')
         battle_set_tabs(result_dir, dataset_dir)
             
     demo.launch()

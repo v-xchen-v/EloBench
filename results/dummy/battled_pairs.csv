@@ -1,0 +1,7 @@
+,model_a,model_b,winner
+0,meta-llama/Llama-2-7b-hf,huggyllama/llama-7b,tie(all bad)
+1,huggyllama/llama-7b,mosaicml/mpt-7b,tie(all bad)
+2,mosaicml/mpt-7b,meta-llama/Llama-2-7b-hf,tie(all bad)
+3,huggyllama/llama-7b,meta-llama/Llama-2-7b-hf,tie(all bad)
+4,huggyllama/llama-7b,mosaicml/mpt-7b,tie(all bad)
+5,mosaicml/mpt-7b,meta-llama/Llama-2-7b-hf,tie(all bad)

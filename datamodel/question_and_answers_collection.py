@@ -107,7 +107,7 @@ class QuestionAndAnswersCollection:
         
     @classmethod
     def read_csv(cls, save_path) -> QuestionAndAnswersCollection:
-        df = pd.read_csv(save_path, index_col=0, keep_default_na=False)
+        df = pd.read_csv(save_path, index_col=0, keep_default_na=False, engine='python')
         # Convert DataFrame to dictionary
         result_dict = defaultdict(list)
         for key, group in df.groupby(QUESTION_COLUMN_NAME):

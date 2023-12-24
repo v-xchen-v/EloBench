@@ -11,7 +11,7 @@ from datamodel import LLMAnswer
 from datamodel import PairToBattle
 from datamodel import QuestionAndAnswersCollection
 from tqdm import tqdm
-from logger import logger
+from logger import logger, info_logger
 import gc
 import torch
 from models.hf_local_lm import AutoCausalLM
@@ -52,7 +52,8 @@ class BattlePipeline(DumpyPipeline):
         
             lm = get_model(model_name)
 
-            if not batch_mode:
+            if not batch_mode or len(questions) == 1:
+
                 answers = []
                 for q in tqdm(questions, desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
                     answer = lm.generate_answer(q, free_model_when_exit=False)
@@ -69,9 +70,16 @@ class BattlePipeline(DumpyPipeline):
                 answers = []
                 while len(answers) < len(questions):
                     try:
+                        # avoid repeat generating answers when retry
+                        num_gen_ans = len(answers)
+                        questions = questions[num_gen_ans:]
+                        if num_gen_ans > 0:
+                            info_logger.info(f'retry with remaining {len(questions)} questions')
+                        
                         for answer in tqdm(lm.batch_generate_answer(questions, free_model_when_exit=False), total=len(questions), desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
                             answers.append(answer)
-                            q = questions[len(answers)-1]
+                            q = questions[len(answers)-1-num_gen_ans]
+
                             self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
                             
                             if not self.no_cache and (len(answers) % lm.batch_size == 0 or len(answers) == len(questions)):

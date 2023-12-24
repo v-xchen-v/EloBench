@@ -2,11 +2,13 @@ import pandas as pd
 import numpy as np
 from collections import defaultdict
 from scipy import stats
-from datamodel.elo_rating_history import EloRatingHistory
+from datamodel.elo_rating_history import EloRatingHistory, BattleOutcomes
 def evaluate_rank_consistency(elo_rating_history: EloRatingHistory, num_battle1: int, num_battle2: int):
+    # ! does the order of num_batlle1 and num_battle2 matter?
     # Ensure models are the same
     if not set(elo_rating_history.get_point(num_battle1)['model'].tolist()) == set(elo_rating_history.get_point(num_battle2)['model'].tolist()):
-        raise Exception("The models of elo_rating_history1 and elo_rating_history2 are not the same")
+        # raise Exception("The models of elo_rating_history1 and elo_rating_history2 are not the same")
+        return None
     
     elo_rating_history_point1 = elo_rating_history.get_point(num_battle1)
     elo_rating_history_point2 = elo_rating_history.get_point(num_battle2)
@@ -18,6 +20,12 @@ def evaluate_rank_consistency(elo_rating_history: EloRatingHistory, num_battle1:
     # print(res.statistic)
     return res.correlation
 
+def evaluate_winrate_at_historypoint(elo_rating_history: EloRatingHistory, battle_outcomes: BattleOutcomes,  num_battle: int):
+    history_point = elo_rating_history.get_point(num_battle)
+    actual_winrate = compute_acutal_winrate(battle_outcomes.to_df())
+    predict_winrate = compute_predict_winrate(history_point)
+    return evaluate_winrate(actual_winrate, predict_winrate)
+    
 def evaluate_winrate(actual_winrate: pd.DataFrame, predicted_winrate: pd.DataFrame):
     """
     Evaluates the mean squared error (mse) and mean absolute error (mae) between the actual winrate and predicted winrate.

@@ -57,15 +57,37 @@ class AutoCausalLM(LM):
         self.tokenizer = AutoTokenizer.from_pretrained(model_name)
         
         info_logger.info(f"tokenizer.padding_side: {self.tokenizer.padding_side}")
-        
+        self.old_tokenizer_padding_side = self.tokenizer.padding_side
+
         # self.tokenizer.padding_side = 'left'
         # ValueError: Asking to pad but the tokenizer does not have a padding token. Please select a token to use as `pad_token` `(tokenizer.pad_token = tokenizer.eos_token e.g.)` or add a new pad token via `tokenizer.add_special_tokens({'pad_token': '[PAD]'})`.
         # ! What's the proper way to handle pad across multiple models
         # For now, use the preset pad_token and pad_token_id from the tokenizer, if not exist, use eos_token and eos_token_id
         
-        if self.tokenizer.pad_token is None:
-            self.tokenizer.pad_token = self.tokenizer.eos_token
+        # https://github.com/EleutherAI/lm-evaluation-harness/blob/9e03d9d024be9bc3e92f8c63b5595c1e12c119da/lm_eval/models/huggingface.py#L234
+        self.old_pad_token = self.tokenizer.pad_token
+        if self.tokenizer.pad_token:
+            pass
+        elif self.tokenizer.unk_token:
+            # if self.tokenizer.unk_token_id == self.tokenizer.eos_token_id:
+            #     self.tokenizer.add_special_tokens({"pad_token": "<|pad|>"})
+            # else:
+            self.tokenizer.pad_token_id = self.tokenizer.unk_token_id
+        elif self.tokenizer.eos_token:
             self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+        else:
+            self.tokenizer.add_special_tokens({"pad_token": "<|pad|>"})
+
+        # if self.tokenizer.pad_token is None:
+        #     if self.tokenizer.padding_side != 'right':
+        #         raise "text generate should padding right when setting missing pad_token as eos_token"
+        #     self.tokenizer.pad_token = self.tokenizer.eos_token
+        #     self.tokenizer.pad_token_id = self.tokenizer.eos_token_id
+        # else:
+        # self.tokenizer.padding_side = 'left'
+        # if self.tokenizer.padding_side != self.old_tokenizer_padding_side:
+        #     info_logger.info(f"changed tokenizer.padding_side: {self.old_tokenizer_padding_side}->{self.tokenizer.padding_side}")
+
         # # Access the padding side from the tokenizer's configuration
         # padding_side = self.tokenizer.padding_side
         # print(f"Padding side: {padding_side}")
@@ -73,11 +95,35 @@ class AutoCausalLM(LM):
         self.max_batch_size = 32
         self.max_new_tokens = 512
         
-        if model_name in ['chavinlo/alpaca-native', 'chavinlo/alpaca-13b']:
-            # ! not support batch mode for alpaca-native and alpaca-13b now.
-            self.batch_size=1
-        else:
+        # if model_name in [\
+        #     'chavinlo/alpaca-native', 
+        #     'chavinlo/alpaca-13b', 
+        #     'WizardLM/WizardLM-7B-V1.0',
+        #     # 'WizardLM/WizardLM-13B-V1.2' # almost no speed up on batch mode
+        # ]:
+        #     # ! not support batch mode for alpaca-native and alpaca-13b now.
+        #     # ! incredible slow for WizardLM/WizardLM-7B-V1.0 when greedy with new tokens = 512 on batch mode
+        #     self.batch_size=1
+        # else:
+        #     self.batch_size=None # None means auto detect batch_size, otherwise, use the given batch_size
+            
+        if model_name in [ \
+            'meta-llama/Llama-2-7b-chat-hf', 
+            'meta-llama/Llama-2-13b-chat-hf', 
+            'WizardLM/WizardLM-7B-V1.0',
+            'lmsys/vicuna-7b-v1.5',
+            'lmsys/vicuna-13b-v1.5',
+            'lmsys/vicuna-33b-v1.3',
+            'chavinlo/alpaca-native',
+            'chavinlo/alpaca-13b',
+            'WizardLM/WizardLM-7B-V1.0',
+            'WizardLM/WizardLM-13B-V1.2',
+            'Xwin-LM/Xwin-LM-7B-V0.1',
+            'Xwin-LM/Xwin-LM-13B-V0.1',
+        ]:
             self.batch_size=None # None means auto detect batch_size, otherwise, use the given batch_size
+        else:
+            self.batch_size=1
         
     def _create_model(self, model_name: str, use_model_parallel: bool = False):
         # Load pre-trained model and tokenizer
@@ -128,7 +174,7 @@ class AutoCausalLM(LM):
         """some model like lmsys/vicuna-7b-v1.5, chavinlo/alpaca-13b, chavinlo/native will generate empty answer for plain question with ? at end so that need this decorating to gen ans."""
         return f"Question: {prompt}\nAnswer: "
         
-    def generate_answer(self, question: str, free_model_when_exit: bool = True):
+    def generate_answer(self, question: str, free_model_when_exit: bool = False):
         """
         Generates an answer for the given question.
 
@@ -248,11 +294,19 @@ class AutoCausalLM(LM):
         # Prepare the prompt
         prompts = [self._decorate_prompt_for_qa(question) for question in questions]
         
+        self.tokenizer.padding_side = 'left'
+        if self.tokenizer.padding_side != self.old_tokenizer_padding_side:
+            info_logger.info(f"changed tokenizer.padding_side: {self.old_tokenizer_padding_side}->{self.tokenizer.padding_side}")
+
         # Encode the prompt and generate text
         inputs = self.tokenizer(prompts, return_tensors='pt', padding=True, truncation=True).to(self.model.device)
         
-        outputs = self.model.generate(**inputs, max_new_tokens=512, do_sample=False)
+        # self.tokenizer.padding_side = self.old_tokenizer_padding_side
+        # padded_length = inputs['input_ids'].shape[1]
         
+        outputs = self.model.generate(**inputs, max_new_tokens=512, pad_token_id=self.tokenizer.pad_token_id, use_cache=True, do_sample=False)
+        
+        # padding question on right side, then the generated output will have padding left side
         def remove_padding_from_batch_left_padding(output):
             # Find the index of the first non-padding token
             first_non_pad_token_index = next((i for i, token in enumerate(output) if token != self.tokenizer.pad_token_id), None)
@@ -262,6 +316,7 @@ class AutoCausalLM(LM):
             return output
         
         # Decode and process generated text
+        # discard context + left-padding toks if using causal decoder-only LM
         answers = []
         for i in range(outputs.size(0)):
             prompt_length = len(self.tokenizer.encode(prompts[i]))
@@ -273,6 +328,10 @@ class AutoCausalLM(LM):
                 output = outputs[i]
                 
             continuation = output[prompt_length:]
+            
+            # Remove the padding tokens comes from question right padding
+            if self.tokenizer.padding_side == 'right':
+                continuation = remove_padding_from_batch_left_padding(continuation)
 
             generated_text = self.tokenizer.decode(continuation, skip_special_tokens=True)
             answers.append(generated_text)

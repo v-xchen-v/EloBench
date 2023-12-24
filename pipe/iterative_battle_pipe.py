@@ -23,9 +23,11 @@ class IterativeBattlePipeline(BattlePipeline):
         # initial battle 
         super().battle(saving_per)
     
-    def iterative_battle(self):        
+    def iterative_battle(self, saving_per=50):        
         # iterative battle
-        self._iterative_to_n_no_tie(self.target_n_notie, None)
+        # The initial battle arrangement should be done(got winner for each pair) before calling this function
+        # Then, iteratively arrange more battles, gen ans, do pairwise battle with judger until the no-tie battle count is reached
+        self._iterative_to_n_no_tie(self.target_n_notie, None, save_per=saving_per)
     
     def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, num_need_add, no_tie_target):
         # Replace NaN values with zero (or a small value) before inversion
@@ -83,8 +85,8 @@ class IterativeBattlePipeline(BattlePipeline):
         #         new_pairs.append(PairToBattle(random.choices(qs)[0], model_a_name, model_b_name))
                 
         for model_a_name, model_b_name in zip(model_as, model_bs):
-            qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name)
-            if q == None:
+            qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name, size=1)
+            if qs == None:
                 continue
             else:
                 q = qs[0]

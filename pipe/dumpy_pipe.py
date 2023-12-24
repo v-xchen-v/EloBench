@@ -21,6 +21,7 @@ from pathlib import Path
 from logger import logger, battle_pipeline_logger, elo_rating_history_logger, info_logger
 from openai import OpenAIError
 from typing import Optional
+from concurrent.futures import ThreadPoolExecutor
 
 
 class DumpyPipeline:
@@ -217,6 +218,13 @@ class DumpyPipeline:
         new_battles_counter = 0
 
         # clear battle pairs before battle
+        # TODO: change it to parallel processing to get winner with gpt-4 as judger
+        m_as = []
+        m_bs = []
+        qs = []
+        ans_as = []
+        ans_bs = []
+        to_battles = []
         for idx, rnd in tqdm(enumerate(self.battle_arrangements.battles_in_order), total=len(self.battle_arrangements.battles_in_order)):
             record = None
 
@@ -236,27 +244,59 @@ class DumpyPipeline:
 
             ans_a = self.question_and_answers_collection.get_answer(q, m_a)
             ans_b = self.question_and_answers_collection.get_answer(q, m_b)
+            
+            # all the questions with answers should have winner
+            m_as.append(m_a)
+            m_bs.append(m_b)
+            qs.append(q)
+            ans_as.append(ans_a)
+            ans_bs.append(ans_b)
+            to_battles = list(zip(m_as, m_bs, qs, ans_as, ans_bs))
 
-            new_battles_counter += 1
-            self._evaluate_and_record_battle(m_a, m_b, q, ans_a, ans_b, records)
-
-            if new_battles_counter % saving_per == 0:
-                self._save_records(records, tempcache_records)
-                
-        self._finalize_records(records, tempcache_records)
+        if len(to_battles) > 0:
+            num_thread = 4
+            with ThreadPoolExecutor(max_workers=num_thread) as executor:
+                for batch_start in tqdm(range(0, len(to_battles), num_thread)):
+                    batch_end = min(batch_start+num_thread, len(to_battles))
+                    batch_to_battles = to_battles[batch_start:batch_end]
+                    
+                    new_records = executor.map(lambda to_battle: self._evaluate_and_record_battle(to_battle[0], to_battle[1], to_battle[2], to_battle[3], to_battle[4]), batch_to_battles)
+                    for new_record in new_records:
+                        records.add_record(new_record)
+                    
+                    new_battles_counter += 1*num_thread
+                    
+                    if new_battles_counter % saving_per < num_thread:
+                        self._save_records(records, tempcache_records)
+                    
+            self._finalize_records(records, tempcache_records)
+            
+        # print information
         battle_pipeline_logger.debug(f'{new_battles_counter} new battles, {len(self.battle_arrangements.battles_in_order)-new_battles_counter} restored from cache.')
         battle_pipeline_logger.info('Battles conducted.')
             
-    def _evaluate_and_record_battle(self, m_a, m_b, q, ans_a, ans_b, records):
+    def _evaluate_and_record_battle(self, m_a, m_b, q, ans_a, ans_b):
+        
         # evaluate
+        is_valid = True
+        gpt4_response = None
+        gpt_4_score = None
+        gpt_4_winner = None
         try:
             gpt4_response, gpt_4_score, gpt_4_winner = gpt_4_eval_and_score(question=q, model_a_ans=ans_a, model_b_ans=ans_b, judger_name=GPT_JUDGER_NAME)
-            self.battled_pairs.add_pair(m_a, m_b, gpt_4_winner)
+            
+            if gpt4_response is not None:
+                # gpt reponse is none, is a in design but not expect return, so that record it, but only in full logs not the valid batted pairs
+                self.battled_pairs.add_pair(m_a, m_b, gpt_4_winner)
         except OpenAIError as e:
-            records.add_record(BattleRecord(model_a=m_a, model_b=m_b, winner=None, tstamp=datetime.now(), question=q, answer_a=ans_a, answer_b=ans_b, gpt_4_response=None, gpt_4_score=None, is_valid=False, judger=GPT_JUDGER_NAME))
+            is_valid = False
+            
+        # record:
+        # - openai error triggered record: is_valid=False, and None winner, score, reponse
+        # - None reponse: is_valid=True, and None winner, score, reponse
+        record = BattleRecord(model_a=m_a, model_b=m_b, winner=gpt_4_winner, tstamp=datetime.now(), question=q, answer_a=ans_a, answer_b=ans_b, gpt_4_response=str(gpt4_response), gpt_4_score=str(gpt_4_score), is_valid=is_valid, judger=GPT_JUDGER_NAME)
 
-        # record
-        records.add_record(BattleRecord(model_a=m_a, model_b=m_b, winner=gpt_4_winner, tstamp=datetime.now(), question=q, answer_a=ans_a, answer_b=ans_b, gpt_4_response=str(gpt4_response), gpt_4_score=str(gpt_4_score), is_valid=True, judger=GPT_JUDGER_NAME))
+        return record
         
     def _save_records(self, records, tempcache_records):
         logger.debug('caching gpt-4 eval and score result...')

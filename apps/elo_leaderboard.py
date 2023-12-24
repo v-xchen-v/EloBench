@@ -214,7 +214,7 @@ def predict_win_rate(elo_ratings, SCALE=400, BASE=10, INIT_RATING=1000):
     # ratings = elo_ratings['Elo Rating']
     ratings_dict = {}
     for idx, row in elo_ratings.iterrows():
-        ratings_dict[row['Model']] = row['Elo Rating']
+        ratings_dict[row['model']] = row['elo_rating']
         
     
     names = sorted(list(ratings_dict.keys()))
@@ -248,7 +248,7 @@ def vis_predict_win_rate(win_rate):
                     "Model A: %{y}<br>Model B: %{x}<br>Win Rate: %{z}<extra></extra>")
     return fig
 
-def get_gpt4_judger_elo_on_arena(filepath=r'results/quora_100_test5_iterative_80_no_tie/battle_records.csv', use_bootstrap=True):
+def get_gpt4_judger_elo_on_arena(filepath=r'results/google_quora_alpaca_10629_test2/battle_records.csv', use_bootstrap=True):
     df = pd.read_csv(filepath)
     columns_to_inclusive = ['model_a', 'model_b', 'winner']
     data = df[columns_to_inclusive]
@@ -277,34 +277,34 @@ with gr.Blocks() as demo:
     gr.Markdown('🏆Elo Bench Leadboard')
     gr.Markdown('AI Dueling Arena with GPT-4 Adjudication')
     
-    result_data = None
+    # result_data = None
     
-    # # dummy data from arena
-    # # TODO: add real eval result here
-    # arena_battles_data = get_arena_battles_20230717_data()
-    # dummy_data = get_elo_results_from_battles_data(arena_battles_data, K=ARENA_K)
-    # result_data = dummy_data
+    # # # dummy data from arena
+    # # # TODO: add real eval result here
+    # # arena_battles_data = get_arena_battles_20230717_data()
+    # # dummy_data = get_elo_results_from_battles_data(arena_battles_data, K=ARENA_K)
+    # # result_data = dummy_data
     
-    result_data, fig, fig2, fig3, no_tie_battle_count_fig, fig5 = get_gpt4_judger_elo_on_arena()
+    # result_data, fig, fig2, fig3, no_tie_battle_count_fig, fig5 = get_gpt4_judger_elo_on_arena()
     
-    # Calculate an approximate height for the DataFrame output
-    # You might need to adjust the multiplier based on your specific row height
-    height_per_row = 40  # This is an approximate pixel height per row
-    total_height = height_per_row * len(result_data) + 60  # Add some extra space for headers and padding
+    # # Calculate an approximate height for the DataFrame output
+    # # You might need to adjust the multiplier based on your specific row height
+    # height_per_row = 40  # This is an approximate pixel height per row
+    # total_height = height_per_row * len(result_data) + 60  # Add some extra space for headers and padding
 
 
-    gr.DataFrame(result_data, height=total_height)
+    # gr.DataFrame(result_data, height=total_height)
     
-    with gr.Row():
-        gr.Plot(fig)
-        gr.Plot(fig2)
+    # with gr.Row():
+    #     gr.Plot(fig)
+    #     gr.Plot(fig2)
         
-    with gr.Row():
-        gr.Plot(no_tie_battle_count_fig)
+    # with gr.Row():
+    #     gr.Plot(no_tie_battle_count_fig)
         
-    with gr.Row():
-        gr.Plot(fig3)
-        gr.Plot(fig5)
+    # with gr.Row():
+    #     gr.Plot(fig3)
+    #     gr.Plot(fig5)
     
 demo.launch()
     

@@ -1,0 +1,4 @@
+,model,elo_rating
+1,meta-llama/Llama-2-7b-hf,1000.0
+2,huggyllama/llama-7b,1000.0
+3,mosaicml/mpt-7b,1000.0

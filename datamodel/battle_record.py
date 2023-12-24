@@ -5,6 +5,7 @@ import pandas as pd
 from datamodel import PairToBattle
 from logger import logger
 from typing import Optional
+from threading import Lock
 
 # TODO: store the battle records in a database instead of a CSV file for performance considerations
 
@@ -49,6 +50,8 @@ class BattleRecords:
         # initialized by initial records
         self.record_pair_set = set([PairToBattle(x.question, x.model_a, x.model_b) for x in records]) # A set to keep track of unique items
         self.record_map = {PairToBattle(x.question, x.model_a, x.model_b):x for x in records}
+        
+        self.lock = Lock()
     
     def add_record(self, record: BattleRecord):
         """
@@ -57,10 +60,11 @@ class BattleRecords:
         Args:
         - record (BattleRecord): The battle record to be added.
         """
-        if not self.record_exists(PairToBattle(question=record.question, model_a=record.model_a, model_b=record.model_b)):
-            self.records.append(record)
-            self.record_pair_set.add(PairToBattle(record.question, record.model_a, record.model_b))
-            self.record_map[PairToBattle(record.question, record.model_a, record.model_b)] = record
+        with self.lock:
+            if not self.record_exists(PairToBattle(question=record.question, model_a=record.model_a, model_b=record.model_b)):
+                self.records.append(record)
+                self.record_pair_set.add(PairToBattle(record.question, record.model_a, record.model_b))
+                self.record_map[PairToBattle(record.question, record.model_a, record.model_b)] = record
             
     def add_records(self, records: List[BattleRecord]):
         """
