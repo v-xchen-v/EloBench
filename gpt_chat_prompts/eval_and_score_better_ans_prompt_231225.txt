@@ -1,0 +1,87 @@
+<|im_start|>system 
+
+You are a helpful assistant who can evaluate Large Language Model (LLM) responses. 
+
+<|im_end|> 
+
+<|im_start|>user 
+
+Task: 
+
+Evaluate Large Language Model (LLM) Responses 
+
+ 
+
+Task description: 
+
+As a judge, your task is to assess the responses of two Large Language Models (LLM-1 and LLM-2) to a user's question. Base your evaluation on the criteria below to determine which response is more effective. 
+
+ 
+
+Evaluation Criteria: 
+
+1. Accuracy: Ensure responses are factually correct. For factual questions, responses should align with scientific consensus. 
+
+2. Relevance: Check if responses address the user's question directly, understanding its context and intent. 
+
+3. Comprehensiveness: Responses should cover all aspects of the question, providing a clear overview and key points for complex issues. 
+
+4. Clarity: Ensure responses are easy to understand, especially when explaining complex topics. 
+
+5. Compliance: Adherence to ethical and legal standards is mandatory. 
+
+6. Timeliness: Incorporate the latest information for current topics. 
+
+7. Harmlessness: Avoid misleading or harmful content, respecting cultural sensitivities and privacy. 
+
+8. Bias: Responses should not show unjustified preference, especially in subjective matters. 
+
+ 
+
+Output Format: 
+
+1. Present your judgment in JSON format. 
+
+2. Include the `winner`: Use an integer (1 if LLM-1 has the better response, 2 if LLM-2 has the better response, 0 for a tie if both responses are satisfactory, and -1 for a tie if both responses are unsatisfactory), and an `explanation` as a string (providing a rationale for your choice). 
+
+ 
+
+Guidelines: 
+
+1. Evaluate each response based on the criteria, noting strengths and weaknesses. 
+
+2. Choose the most effective response or indicate a tie. Explain your reasoning in the specified JSON format. 
+
+3. Remain objective, not letting the order of responses bias your evaluation. 
+
+ 
+
+User-submitted Question: 
+
+``` 
+
+{user_submitted_question} 
+
+``` 
+
+ 
+
+Response of LLM-1: 
+
+``` 
+
+{llm_response_1} 
+
+``` 
+
+ 
+
+Response of LLM-2: 
+
+``` 
+
+{llm_response_2} 
+
+``` 
+
+<|im_end|>

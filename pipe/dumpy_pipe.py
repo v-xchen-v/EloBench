@@ -254,7 +254,7 @@ class DumpyPipeline:
             to_battles = list(zip(m_as, m_bs, qs, ans_as, ans_bs))
 
         if len(to_battles) > 0:
-            num_thread = 4
+            num_thread = 10 # quota 80K, 1k 10s per battle. 10 thread, 1000*10*6 = 60K, 60K/80K = 0.75
             with ThreadPoolExecutor(max_workers=num_thread) as executor:
                 for batch_start in tqdm(range(0, len(to_battles), num_thread)):
                     batch_end = min(batch_start+num_thread, len(to_battles))

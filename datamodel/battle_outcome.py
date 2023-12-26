@@ -85,6 +85,7 @@ class BattleOutcomes:
 
         pairs = []
         for idx, row in df.iterrows():
+            # TODO: check if the row is valid
             pairs.append(BattleOutcome(model_a=row[MODEL_A_COLUMN_NAME], model_b=row[MODEL_B_COLUMN_NAME], winner=row[WINNER_COLUMN_NAME]))
             
         return BattleOutcomes(pairs)

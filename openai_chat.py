@@ -97,7 +97,8 @@ def chat_completion(template_file_path, gpt_name='gpt-4-turbo', temperature=0.7,
                 model=gpt_name,
                 messages=prompt,
                 max_tokens=max_tokens,
-                temperature=0)
+                temperature=0,
+                response_format={'type': 'json_object'})
             response_content = response.choices[0].message.content
             usage = response.usage
             break

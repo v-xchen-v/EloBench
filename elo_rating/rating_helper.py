@@ -83,7 +83,7 @@ def get_bootstrap_result(battles, func_compute_elo, K, num_round):
     df = pd.DataFrame(rows)
     return df[df.median().sort_values(ascending=False).index]
 
-def get_bootstrap_medium_elo(battles, K=4, BOOTSTRAP_ROUNDS=1000):
+def get_bootstrap_medium_elo(battles, K=4, BOOTSTRAP_ROUNDS=1000, with_fullset=False):
     """
     Calculate the bootstrap medium Elo rating for a given set of battles.
 
@@ -99,8 +99,10 @@ def get_bootstrap_medium_elo(battles, K=4, BOOTSTRAP_ROUNDS=1000):
     bootstrap_lu_median = bootstrap_elo_lu.median().reset_index().set_axis(["model", "elo_rating"], axis=1)
     bootstrap_lu_median["elo_rating"] = (bootstrap_lu_median["elo_rating"] + 0.5).astype(int)
     # print(bootstrap_lu_median)
-    return bootstrap_lu_median
-
+    if with_fullset:
+        return bootstrap_lu_median, bootstrap_elo_lu
+    else:
+        return bootstrap_lu_median
 # if __name__ == '__main__':
 #     battles_data = pd.read_csv(r'/elo_bench/results/quora_100_test1_shuffle_ab/battled_pairs.csv')
 #     print(get_bootstrap_medium_elo(battles_data))

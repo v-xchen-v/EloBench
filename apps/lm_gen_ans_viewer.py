@@ -37,7 +37,7 @@ with gr.Blocks() as demo:
     gr.Dataframe(ans_df, wrap=True)
     gr.Plot(show_missing_data(ans_df))
     gr.Plot(show_empty_ans_data(ans_df))
-    gr.Plot(average_ans_length(ans_df))
+    # gr.Plot(average_ans_length(ans_df))
     # gr.Plot(show_missing_data3(ans_df))
 
 if __name__ == '__main__':
