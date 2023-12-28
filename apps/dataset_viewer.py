@@ -7,6 +7,7 @@ import gradio as gr
 import pandas as pd
 from pathlib import Path
 from matplotlib import pyplot as plt
+import json
 
 def show_dataset_tab(dataset_dir: Path):
     QUESTION_LIST = True
@@ -26,11 +27,17 @@ def show_dataset_tab(dataset_dir: Path):
         dataset_question_unique_df = dataset_question_unique_df.set_index('index').reset_index()
         
         if QUESTION_LIST:
+            if QUESTION_LENGTH:  
+                # vis the distribution of question length
+                question_length = dataset_question_unique_df['question'].str.len()
+                # Map the counts back to the original DataFrame
+                dataset_question_unique_df['question_length'] = question_length
             gr.Markdown('## Question')
-            gr.Dataframe(dataset_question_unique_df, wrap=True)
+            gr.Dataframe(dataset_question_unique_df, wrap=True, interactive=True)
         
         if SOURCE_DISTRIBUTION:
-            gr.Markdown('## Source Distribution')
+            gr.Markdown('## Question Source Distribution')
+            gr.Markdown('Questions from different sources are shown in the pie chart below. The question count is better roughly even across all sources.')
             if 'source' in dataset_question_unique_df.columns:
                 value_counts = dataset_question_unique_df['source'].value_counts()
                 # Create a pie chart
@@ -41,10 +48,6 @@ def show_dataset_tab(dataset_dir: Path):
               
         if QUESTION_LENGTH:  
             gr.Markdown('## Question Length')
-            # vis the distribution of question length
-            question_length = dataset_question_unique_df['question'].str.len()
-            # Map the counts back to the original DataFrame
-            dataset_question_unique_df['question_length'] = question_length
             # use histogram to show the distribution of question length
             question_length_fig = plt.figure(figsize=(10, 6))
             plt.hist(question_length, color='skyblue')
@@ -53,8 +56,11 @@ def show_dataset_tab(dataset_dir: Path):
             plt.title('Distribution of Question Length')
             gr.Plot(question_length_fig)
                 
-        # with gr.Tab('Issue') as datset_question_issue_tab:
-        #     gr.Dataframe(dataset_question_unique_df[dataset_question_unique_df['question'].isna()])
+        # TODO: handle the issue questions later
+        if os.path.exists(dataset_dir/'issue_questions.json'):
+            issue_questions = json.load(open(dataset_dir/'issue_questions.json'))
+            gr.Markdown('## Issue Question')
+            gr.Dataframe(dataset_question_unique_df[dataset_question_unique_df['question'].isin(issue_questions)], wrap=True, interactive=True)
 
 if __name__ == '__main__':
     with gr.Blocks() as demo:
