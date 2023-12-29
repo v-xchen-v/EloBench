@@ -473,7 +473,10 @@ def elo_history():
         def vis_rating_delta_history(history: EloRatingHistory):
             rating_history = []
             
-            battled_pairs = BattleOutcomes.read_csv(Path(result_dir) / 'battled_pairs.csv').battled_pairs_in_order                
+            battled_pairs = BattleOutcomes.read_csv(Path(result_dir) / 'battled_pairs.csv').battled_pairs_in_order   
+            # TODO: handle the invalid winner when dump files and loading
+            # valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
+            # battled_pairs = [x for x in battled_pairs if x.winner in valid_winner]             
             
             for idx, battle_num in tqdm(enumerate(history.recorded_battle_num), desc='calculate rating delta'):
                 if idx == 0:
@@ -492,11 +495,18 @@ def elo_history():
                 else:
                     model_b_ratting = point_prev[point_prev['model']==point_prev_battled_pair.model_b]['elo_rating'].values[0]
                 winner = point_prev_battled_pair.winner
+                valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
+                if winner not in valid_winner:
+                    continue
+                # if winner != 'model_a' and winner != 'model_b':
+                #     continue
                 delta = get_elo_delta(model_a_rating, model_b_ratting, winner)
+                model_ab_names = sorted([point_prev_battled_pair.model_a,  point_prev_battled_pair.model_b])
                 rating_history.append({
                     # 'model': row['model'],
-                    'model_a_rating': min(model_a_rating, model_b_ratting),
-                    'model_b_rating': max(model_a_rating, model_b_ratting),
+                    'models': f'{model_ab_names[0]} vs {model_ab_names[1]}',
+                    # 'model_a_rating': min(model_a_rating, model_b_ratting),
+                    # 'model_b_rating': max(model_a_rating, model_b_ratting),
                     'elo_rating_delta': delta,
                     'num_battle': battle_num,
                 })
@@ -506,17 +516,17 @@ def elo_history():
             rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
             
-            # plotting
-            rating_history_fig2 = px.line(rating_history_pd, x="num_battle", y="model_a_rating", markers=True)
+            # # plotting
+            rating_history_fig2 = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color='models', markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
             
-                       # plotting
-            rating_history_fig3 = px.line(rating_history_pd, x="num_battle", y="model_b_rating", markers=True)
-            rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            #            # plotting
+            # rating_history_fig3 = px.line(rating_history_pd, x="num_battle", y="model_b_rating", markers=True)
+            # rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
             gr.Plot(rating_history_fig) 
             gr.Plot(rating_history_fig2)
-            gr.Plot(rating_history_fig3)  
+            # gr.Plot(rating_history_fig3)  
             
         def vis_rating_delta_history2(history: EloRatingHistory):
             rating_history = []
@@ -553,7 +563,7 @@ def elo_history():
             gr.Plot(rating_history_fig) 
             
         history = EloRatingHistory.gen_history(result_dir, use_bootstrap=
-                                               False, nrows=FIRST_N_BATTLES)
+                                               False, nrows=FIRST_N_BATTLES, step=10)
         elo_rating_history_df = history.to_df()
 
 
