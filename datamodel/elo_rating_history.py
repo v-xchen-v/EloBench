@@ -21,7 +21,7 @@ class EloRatingHistory:
         self.recorded_battle_num = []
         
     @classmethod
-    def gen_history(self, save_dir, use_bootstrap=False, nrows=None) -> EloRatingHistory:
+    def gen_history(self, save_dir, use_bootstrap=False, BOOTSTRAP_ROUNDS = 100, nrows=None) -> EloRatingHistory:
         # create empty history
         elo_rating_history = EloRatingHistory()
         
@@ -36,7 +36,7 @@ class EloRatingHistory:
                 if num_battle > 0 and (num_battle % 100 == 0 or idx_battle == len(battled_pairs_list)-1):
                     historypoint_battles_df = pd.DataFrame.from_dict(battled_pairs_list[:idx_battle+1])
                     if use_bootstrap:                     
-                        historypoint_rating_df = rating_helper.get_bootstrap_medium_elo(historypoint_battles_df, K=4, BOOTSTRAP_ROUNDS=100)
+                        historypoint_rating_df = rating_helper.get_bootstrap_medium_elo(historypoint_battles_df, K=4, BOOTSTRAP_ROUNDS=BOOTSTRAP_ROUNDS)
                     else:
                         historypoint_rating_df = rating_helper.get_elo_results_from_battles_data(historypoint_battles_df, K=4)
                     # elo_rating_history_logger.debug(historypoint_rating_df)
