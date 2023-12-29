@@ -95,7 +95,7 @@ class DumpyPipeline:
         if reload == False:
             self.model_collection = ModelCollection(models)
             self.model_collection.to_csv(Path(self.save_dir) / 'models.csv')
-            info_logger.info(f'f{len(self.model_collection)} models registered.')
+            info_logger.info(f'{len(self.model_collection)} models registered.')
         else:
             # Reload models from csv file
             file_path = Path(self.save_dir) / 'models.csv'
