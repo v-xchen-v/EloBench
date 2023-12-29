@@ -20,8 +20,8 @@ result_dir = r'results/google_quora_alpaca_10629_test3'
 record_file = Path(result_dir)/'battle_records.csv'
 
 USE_BOOTSTRAP_ON_ELO = False
-USE_BOOTSTRAP_ON_HISTORY = True
-FIRST_N_BATTLES = None
+USE_BOOTSTRAP_ON_HISTORY = False
+FIRST_N_BATTLES = 3000
 records_df = pd.read_csv(record_file, nrows=FIRST_N_BATTLES)
 
 # get winner data
@@ -432,13 +432,13 @@ def elo_history():
                 for _, row in point.iterrows():
                     rating_history.append({
                         'model': row['model'],
-                        'elo_rating': row['elo_rating'],
+                        'elo_rating_delta': row['elo_rating'],
                         'num_battle': battle_num,
                     })
             rating_history_pd = pd.DataFrame.from_dict(rating_history)
             
             # plotting
-            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating", color="model", markers=True)
+            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color="model", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
             gr.Plot(rating_history_fig)   
@@ -455,13 +455,13 @@ def elo_history():
                         continue
                     rating_history.append({
                         'model': row['model'],
-                        'elo_rating': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
+                        'elo_rating_delta': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
                         'num_battle': battle_num,
                     })
             rating_history_pd = pd.DataFrame.from_dict(rating_history)
             
             # plotting
-            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating", color="model", markers=True)
+            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color="model", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
             gr.Plot(rating_history_fig) 
@@ -489,13 +489,13 @@ def elo_history():
                         continue
                     rating_history.append({
                         'model': row['model'],
-                        'elo_rating': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
+                        'elo_rating_delta': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
                         'num_battle': n_battles_model,
                     })
             rating_history_pd = pd.DataFrame.from_dict(rating_history)
             
             # plotting
-            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating", color="model", markers=True)
+            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color="model", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
             gr.Plot(rating_history_fig) 
@@ -508,7 +508,7 @@ def elo_history():
         # Show the bootstrap result first
         if USE_BOOTSTRAP_ON_HISTORY:
             with gr.Tab("bootstrap=100"):
-                history_bootstrap = EloRatingHistory.gen_history(result_dir, use_bootstrap=USE_BOOTSTRAP_ON_HISTORY, nrows=FIRST_N_BATTLES)
+                history_bootstrap = EloRatingHistory.gen_history(result_dir, use_bootstrap=USE_BOOTSTRAP_ON_HISTORY, nrows=FIRST_N_BATTLES, BOOTSTRAP_ROUNDS=10)
                 elo_rating_history_bootstrap_df = history_bootstrap.to_df()
                 gr.Markdown(f"Rank History")
                 ranking_history_bootstrap_fig = plot_ranking_history(elo_rating_history_bootstrap_df)
@@ -518,7 +518,7 @@ def elo_history():
                 vis_rating_history(history_bootstrap)
                 
                 gr.Markdown(f'Elo Rating Delta History')
-                vis_rating_delta_history(history_bootstrap)
+                # vis_rating_delta_history(history_bootstrap)
                 vis_rating_delta_history2(history_bootstrap)
                 
                 gr.Markdown("Rank Consistency History")
@@ -541,7 +541,7 @@ def elo_history():
             vis_rating_history(history)
                             
             gr.Markdown(f'Elo Rating Delta History')
-            vis_rating_delta_history(history)
+            # vis_rating_delta_history(history)
             vis_rating_delta_history2(history)
             
             gr.Markdown("Rank Consistency History")
@@ -615,7 +615,7 @@ if __name__ == '__main__':
         elo_history()
         
         # details
-        # battle_outcomes()
+        battle_outcomes()
         # ab_bias()
         # question_tie_review()
         demo.launch()
