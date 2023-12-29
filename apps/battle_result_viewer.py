@@ -13,6 +13,7 @@ from datamodel.elo_rating_history import EloRatingHistory, BattleOutcomes
 import numpy as np
 from collections import defaultdict
 from elo_rating.rating_evaluator import evaluate_rank_consistency, evaluate_winrate_at_historypoint
+from elo_rating import RatingEntity
 
 from tqdm import tqdm
 
@@ -21,7 +22,7 @@ record_file = Path(result_dir)/'battle_records.csv'
 
 USE_BOOTSTRAP_ON_ELO = False
 USE_BOOTSTRAP_ON_HISTORY = False
-FIRST_N_BATTLES = 3000
+FIRST_N_BATTLES = None
 records_df = pd.read_csv(record_file, nrows=FIRST_N_BATTLES)
 
 # get winner data
@@ -35,6 +36,8 @@ model_ordering = None
 
 def elo_leaderboard():
     global model_ordering
+    
+    
     def predict_win_rate(elo_ratings, SCALE=400, BASE=10, INIT_RATING=1000):
         # names = sorted(list(elo_ratings['Model']))
         # ratings = elo_ratings['Elo Rating']
@@ -372,6 +375,30 @@ def ab_bias():
 
 def elo_history():
     with gr.Tab("Elo History"):
+        def get_elo_delta(model_a_rating, model_b_rating, winner):
+            entity_a = RatingEntity(model_a_rating, K = 4)
+            entity_b = RatingEntity(model_b_rating, K = 4)
+
+            expected_score_a = entity_a.expected_score(entity_b)
+            expected_score_b = entity_b.expected_score(entity_a)
+
+            if winner == 'model_a':
+                actual_score_a = 1.0
+                actual_score_b = 0.0
+            elif winner == 'tie' or winner == 'tie(all bad)':
+                actual_score_a = 0.5
+                actual_score_b = 0.5
+            elif winner == 'model_b':
+                actual_score_a = 0.0
+                actual_score_b = 1.0
+            else:
+                raise Exception("unexpected winner: ", winner)
+            
+            a_delta = entity_a.rating_delta(expected_score_a, actual_score_a)
+            # b_delta = -a_delta
+            
+            return np.abs(a_delta)
+    
         # Plotting
         def plot_ranking_history(df):
             ranking_fig = px.line(df, x="num_battle", y="rank", color="model", markers=True)
@@ -445,26 +472,51 @@ def elo_history():
             
         def vis_rating_delta_history(history: EloRatingHistory):
             rating_history = []
+            
+            battled_pairs = BattleOutcomes.read_csv(Path(result_dir) / 'battled_pairs.csv').battled_pairs_in_order                
+            
             for idx, battle_num in tqdm(enumerate(history.recorded_battle_num), desc='calculate rating delta'):
                 if idx == 0:
                     continue
-                point_cur = history.get_point(battle_num)
+                # point_cur = history.get_point(battle_num)
                 point_prev = history.get_point(history.recorded_battle_num[idx-1])
-                for _, row in point_cur.iterrows():
-                    if row['model'] not in point_prev['model'].values:
-                        continue
-                    rating_history.append({
-                        'model': row['model'],
-                        'elo_rating_delta': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
-                        'num_battle': battle_num,
-                    })
+                point_prev_battled_pair = battled_pairs[history.recorded_battle_num[idx-1]]
+                ranked_models = point_prev['model'].tolist()
+                initial_rating = 1000
+                if point_prev_battled_pair.model_a not in ranked_models:
+                    model_a_rating = initial_rating
+                else:
+                    model_a_rating = point_prev[point_prev['model']==point_prev_battled_pair.model_a]['elo_rating'].values[0]
+                if point_prev_battled_pair.model_b not in ranked_models:
+                    model_b_ratting = initial_rating
+                else:
+                    model_b_ratting = point_prev[point_prev['model']==point_prev_battled_pair.model_b]['elo_rating'].values[0]
+                winner = point_prev_battled_pair.winner
+                delta = get_elo_delta(model_a_rating, model_b_ratting, winner)
+                rating_history.append({
+                    # 'model': row['model'],
+                    'model_a_rating': min(model_a_rating, model_b_ratting),
+                    'model_b_rating': max(model_a_rating, model_b_ratting),
+                    'elo_rating_delta': delta,
+                    'num_battle': battle_num,
+                })
             rating_history_pd = pd.DataFrame.from_dict(rating_history)
             
             # plotting
-            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color="model", markers=True)
+            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", markers=True)
+            rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            
+            # plotting
+            rating_history_fig2 = px.line(rating_history_pd, x="num_battle", y="model_a_rating", markers=True)
+            rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            
+                       # plotting
+            rating_history_fig3 = px.line(rating_history_pd, x="num_battle", y="model_b_rating", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
             gr.Plot(rating_history_fig) 
+            gr.Plot(rating_history_fig2)
+            gr.Plot(rating_history_fig3)  
             
         def vis_rating_delta_history2(history: EloRatingHistory):
             rating_history = []
@@ -518,7 +570,7 @@ def elo_history():
                 vis_rating_history(history_bootstrap)
                 
                 gr.Markdown(f'Elo Rating Delta History')
-                # vis_rating_delta_history(history_bootstrap)
+                vis_rating_delta_history(history_bootstrap)
                 vis_rating_delta_history2(history_bootstrap)
                 
                 gr.Markdown("Rank Consistency History")
@@ -541,8 +593,8 @@ def elo_history():
             vis_rating_history(history)
                             
             gr.Markdown(f'Elo Rating Delta History')
-            # vis_rating_delta_history(history)
-            vis_rating_delta_history2(history)
+            vis_rating_delta_history(history)
+            # vis_rating_delta_history2(history)
             
             gr.Markdown("Rank Consistency History")
             rank_consistency_history_pd = calculate_rank_consistency_metrics(history)
