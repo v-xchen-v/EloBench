@@ -162,3 +162,35 @@ def compute_acutal_winrate(battle_outcomes_data: pd.DataFrame):
         # model_names = ordering
     row_beats_col = row_beats_col_freq.loc[model_names, model_names]
     return row_beats_col
+
+def compute_actual_winrate_awinb(battle_outcomes_data: pd.DataFrame, model_a: str, model_b: str):
+    """
+    Computes the actual win rate between model_a and model_b based on battle outcomes data.
+
+    Args:
+        battle_outcomes_data (pd.DataFrame): DataFrame containing battle outcomes data.
+        model_a (str): Name of model_a.
+        model_b (str): Name of model_b.
+
+    Returns:
+        float: The actual win rate between model_a and model_b.
+    """
+    valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
+    battle_outcomes_data_valid = battle_outcomes_data[battle_outcomes_data['winner'].isin(valid_winner)]
+    
+    # filter out no-tie battles
+    battle_outcomes_notie_data = battle_outcomes_data_valid[(battle_outcomes_data_valid['winner']=='model_a') | (battle_outcomes_data_valid['winner']=='model_b')].copy()
+    
+    # Define a function to apply
+    def get_value_from_column(row):
+        return row[row['winner']]
+
+    # Apply the function
+    battle_outcomes_notie_data.loc[:, 'winner_name'] = battle_outcomes_notie_data.apply(get_value_from_column, axis=1)
+    
+    ab_battles = battle_outcomes_notie_data[((battle_outcomes_notie_data['model_a']==model_a) & (battle_outcomes_notie_data['model_b']==model_b)) | (battle_outcomes_notie_data['model_a']==model_b) & (battle_outcomes_notie_data['model_b']==model_a)]
+    if ab_battles.shape[0] == 0:
+        return np.nan
+    
+    ab_awin_battles = ab_battles[ab_battles['winner_name']==model_a]
+    return ab_awin_battles.shape[0]/ab_battles.shape[0]
