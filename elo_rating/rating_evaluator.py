@@ -1,3 +1,6 @@
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pandas as pd
 import numpy as np
 from collections import defaultdict
@@ -194,3 +197,47 @@ def compute_actual_winrate_awinb(battle_outcomes_data: pd.DataFrame, model_a: st
     
     ab_awin_battles = ab_battles[ab_battles['winner_name']==model_a]
     return ab_awin_battles.shape[0]/ab_battles.shape[0]
+
+def compute_predict_winrate_awinb(elo_rating_data: pd.DataFrame, model_a: str, model_b: str):
+    """
+    Predicts the win rate between model_a and model_b based on their Elo ratings.
+
+    Args:
+        elo_rating_data (pd.DataFrame): DataFrame containing the Elo ratings of the models.
+        model_a (str): Name of model_a.
+        model_b (str): Name of model_b.
+
+    Returns:
+        float: The predicted win rate between model_a and model_b.
+    """
+    SCALE=400
+    BASE=10
+    # Get all the unique models in battles_data
+    all_models = sorted(elo_rating_data['model'].tolist())
+    
+    if model_a not in all_models or model_b not in all_models:
+        return np.nan
+    
+    ratings_dict = {}
+    for idx, row in elo_rating_data.iterrows():
+        ratings_dict[row['model']] = row['elo_rating']
+        
+    ea = 1 / (1 + BASE ** ((ratings_dict[model_b] - ratings_dict[model_a]) / SCALE))
+    # awinb = ea
+    # bwina = 1-ea
+    return ea
+
+
+if __name__ == '__main__':
+    ratings = [
+        {
+            'model': 'model_a',
+            'elo_rating': 1000,
+        },
+        {
+            'model': 'model_b',
+            'elo_rating': 2000,
+        }
+    ]
+    predict_wirnate_ab = compute_predict_winrate_awinb(pd.DataFrame.from_dict(ratings), 'model_a', 'model_b')
+    print(predict_wirnate_ab)

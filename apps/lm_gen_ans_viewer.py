@@ -14,9 +14,10 @@ with gr.Blocks() as demo:
         integer_matrix = ans_null_matrix.astype(int)
 
         # Creating a heatmap using plotly.express
-        fig = px.imshow(integer_matrix, color_continuous_scale='Viridis', 
-                        labels=dict(color="Boolean Value"), 
-                        title="Heatmap of missing data in the answer dataframe")
+        fig = px.imshow(integer_matrix, color_continuous_scale='Viridis', title="Heatmap of missing data in the answer dataframe")
+        
+        # Hiding the color bar
+        fig.update_layout(coloraxis_showscale=False)
 
         # Display the plot
         # fig.show()

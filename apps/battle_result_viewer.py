@@ -182,15 +182,15 @@ def elo_leaderboard():
             elo_df = elo_result.sort_values(by=['elo_rating'], ascending=False)
             gr.Dataframe(elo_df, wrap=True)
 
-            # actual_winrate_fig = visualize_pairwise_win_fraction(winner_no_ties,
-            #     title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
-            # predict_winrate_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+            actual_winrate_fig = visualize_pairwise_win_fraction(winner_no_ties,
+                title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
+            predict_winrate_fig = vis_predict_win_rate(predict_win_rate(elo_result))
             
-            # gr.Markdown("Predict winrate Should be close to actual to actual winrate")
+            gr.Markdown("Predict winrate Should be close to actual to actual winrate")
             
-            # with gr.Row():
-            #     gr.Plot(actual_winrate_fig)
-            #     gr.Plot(predict_winrate_fig)
+            with gr.Row():
+                gr.Plot(actual_winrate_fig)
+                gr.Plot(predict_winrate_fig)
     
 def battle_outcomes():
     with gr.Tab("Battle Outcomes"):
@@ -471,8 +471,12 @@ def elo_history():
             gr.Plot(rating_history_fig)   
             
         def vis_rating_delta_history(history: EloRatingHistory):
+            import plotly.graph_objects as go
+            from plotly.subplots import make_subplots
+            import math
             rating_history = []
             
+            battled_pairs_df = pd.read_csv(Path(result_dir) / 'battled_pairs.csv')
             battled_pairs = BattleOutcomes.read_csv(Path(result_dir) / 'battled_pairs.csv').battled_pairs_in_order   
             # TODO: handle the invalid winner when dump files and loading
             # valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
@@ -502,9 +506,12 @@ def elo_history():
                 #     continue
                 delta = get_elo_delta(model_a_rating, model_b_ratting, winner)
                 model_ab_names = sorted([point_prev_battled_pair.model_a,  point_prev_battled_pair.model_b])
+                from elo_rating.rating_evaluator import compute_actual_winrate_awinb
+                actual_winrate_awinb = compute_actual_winrate_awinb(battled_pairs_df.head(history.recorded_battle_num[idx]), model_ab_names[0], model_ab_names[1])
                 rating_history.append({
                     # 'model': row['model'],
                     'models': f'{model_ab_names[0]} vs {model_ab_names[1]}',
+                    'winrate': actual_winrate_awinb,
                     # 'model_a_rating': min(model_a_rating, model_b_ratting),
                     # 'model_b_rating': max(model_a_rating, model_b_ratting),
                     'elo_rating_delta': delta,
@@ -518,15 +525,63 @@ def elo_history():
             
             # # plotting
             rating_history_fig2 = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color='models', markers=True)
-            rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            rating_history_fig2.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            
+            # Directory to save the PNG files
+            output_dir = 'plots'
+            os.makedirs(output_dir, exist_ok=True)
+                        # # plotting
+                        
+            # Determine the number of unique models
+            unique_models = rating_history_pd['models'].unique()
+            num_models = len(unique_models)
+
+            # Define the layout of subplots (e.g., 3 columns)
+            num_columns = 1
+            num_rows = math.ceil(num_models / num_columns)
+
+            # rating_history_fig3 = px.line(rating_history_pd, 
+            #                               x="num_battle", 
+            #                               y="winrate", 
+            #                               color='models', 
+            #                               markers=True)
+            # rating_history_fig3.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            # # Set the y-axis range from 0 to 1
+            # rating_history_fig3.update_yaxes(range=[0, 1])
+            
+            # Create subplots
+            rating_history_fig3 = make_subplots(rows=num_rows, cols=num_columns, subplot_titles=unique_models)
+
+            # Populate each subplot
+            for i, model in enumerate(unique_models, start=1):
+                filtered_df = rating_history_pd[rating_history_pd['models'] == model]
+                row = math.ceil(i / num_columns)
+                col = i - (row - 1) * num_columns
+
+                rating_history_fig3.add_trace(
+                    go.Scatter(x=filtered_df['num_battle'], y=filtered_df['winrate'], mode='lines+markers', name=model),
+                    row=row, col=col
+                )
+
+            # Update layout
+            rating_history_fig3.update_layout(height=300*num_rows, width=900*num_columns, title_text="Model Comparisons")
+            rating_history_fig3.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')))
+            rating_history_fig3.update_yaxes(range=[0, 1])
+
+            # Save the figure
+            file_path = os.path.join(output_dir, f'actual_winrate_history.png')
+            rating_history_fig3.write_image(file_path)
             
             #            # plotting
             # rating_history_fig3 = px.line(rating_history_pd, x="num_battle", y="model_b_rating", markers=True)
             # rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
+            rating_history_fig.update_layout(autosize=True, width=None)
+            rating_history_fig2.update_layout(autosize=True, width=None)
+            rating_history_fig3.update_layout(autosize=True, width=None)
             gr.Plot(rating_history_fig) 
             gr.Plot(rating_history_fig2)
-            # gr.Plot(rating_history_fig3)  
+            gr.Plot(rating_history_fig3)  
             
         def vis_rating_delta_history2(history: EloRatingHistory):
             rating_history = []
@@ -563,7 +618,7 @@ def elo_history():
             gr.Plot(rating_history_fig) 
             
         history = EloRatingHistory.gen_history(result_dir, use_bootstrap=
-                                               False, nrows=FIRST_N_BATTLES, step=10)
+                                               False, nrows=FIRST_N_BATTLES, step=1)
         elo_rating_history_df = history.to_df()
 
 
