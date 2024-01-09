@@ -31,7 +31,7 @@ class EloRatingHistory:
         battled_pairs_list = [asdict(obj) for obj in battled_pairs.battled_pairs_in_order]
 
         
-        for idx_battle in tqdm(range(len(battled_pairs_list))):
+        for idx_battle in tqdm(range(len(battled_pairs_list)), desc="generating elo rating history"):
                 num_battle = idx_battle + 1
                 if num_battle > 0 and (num_battle % step == 0 or idx_battle == len(battled_pairs_list)-1):
                     historypoint_battles_df = pd.DataFrame.from_dict(battled_pairs_list[:idx_battle+1])

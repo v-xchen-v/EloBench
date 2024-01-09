@@ -9,6 +9,7 @@ from tqdm import tqdm
 import os
 from pathlib import Path
 import glob
+from elo_rating.rating_helper import get_elo_results_from_battles_data
 
 @dataclass
 class BattleOutcome:
@@ -192,6 +193,15 @@ class BattleOutcomes:
     def __getitem__ (self, idx):
         return self.battled_pairs_in_order[idx]
     
+    def get_leaderboard(self, K: int):
+        battled_outcomes_df = self.to_df()
+        
+        # filter valid battle outcomes        
+        caring_winner = ['model_a', 'model_b', 'tie', 'tie(all bad)']
+        battled_outcomes_df = battled_outcomes_df[battled_outcomes_df['winner'].isin(caring_winner)]
+
+        return get_elo_results_from_battles_data(battled_outcomes_df, K)
+    
 class BootstrapedBattleOutcomes:
     """
     Represents a collection of bootstraped battle outcomes.
@@ -261,6 +271,12 @@ class BootstrapedBattleOutcomes:
             battle_outcomes_df.to_csv(save_path)
             
     @classmethod
+    def is_cached(cls, save_dir: str, num_of_bootstrap: int):
+         # load cached bootstraped battle outcomes
+        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battle_outcomes_*.csv'))  
+        return len(bootstrap_outcomes_files) == num_of_bootstrap
+          
+    @classmethod
     def read_csv(cls, save_dir): 
         """
         Reads the bootstraped battle outcomes from CSV files.
@@ -278,10 +294,23 @@ class BootstrapedBattleOutcomes:
         bootstrap_outcomes_files.sort()  
         
         bootstrap_battle_outcomes.num_of_bootstrap = len(bootstrap_outcomes_files)
-        for bootstrap_outcomes_file in tqdm(bootstrap_outcomes_files):
+        for bootstrap_outcomes_file in tqdm(bootstrap_outcomes_files, desc='loading cached bootstraped battle outcomes'):
             bootstrap_battle_outcomes._bootstraped_battlecomes_dfs.append(pd.read_csv(bootstrap_outcomes_file))
             
         return bootstrap_battle_outcomes
         
     def __getitem__ (self, idx):
         return self._bootstraped_battlecomes_dfs[idx]
+    
+    def get_leaderboard(self, K: int):
+        elo_dfs = []
+        for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs), desc='calculating bootstrap elo ratings', total=len(self._bootstraped_battlecomes_dfs)):
+            elo_dfs.append(get_elo_results_from_battles_data(battle_outcomes_df, K))
+        
+        # calculate the median of elo ratings
+        elo_df = pd.concat(elo_dfs)
+        elo_df = elo_df.groupby('model').median().reset_index()
+        elo_df["elo_rating"] = (elo_df["elo_rating"] + 0.5).astype(int)
+        elo_df.sort_values(by=['elo_rating'], ascending=False, inplace=True)
+        elo_df.reset_index(drop=True)
+        return elo_df
