@@ -1,9 +1,14 @@
+from __future__ import annotations
 from dataclasses import dataclass, asdict
 from typing import List, Tuple
 import pandas as pd
 from .column_names import MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME, WINNER_COLUMN_NAME
 from collections import defaultdict
-from collections import defaultdict
+import numpy as np
+from tqdm import tqdm
+import os
+from pathlib import Path
+import glob
 
 @dataclass
 class BattleOutcome:
@@ -82,7 +87,10 @@ class BattleOutcomes:
         - BattleOutcomes: BattleOutcomes object containing the battle outcomes read from the CSV file.
         """
         df = pd.read_csv(save_path, nrows=nrows)
-
+        return cls.read_df(df)
+    
+    @classmethod
+    def read_df(cls, df: pd.DataFrame):
         pairs = []
         for idx, row in df.iterrows():
             # TODO: check if the row is valid
@@ -183,3 +191,97 @@ class BattleOutcomes:
         
     def __getitem__ (self, idx):
         return self.battled_pairs_in_order[idx]
+    
+class BootstrapedBattleOutcomes:
+    """
+    Represents a collection of bootstraped battle outcomes.
+
+    Key Features:
+    1. Bootstrap resampling on the nature battle outcomes.
+    2. Save the bootstraped battle outcomes as CSV files.
+    3. Reload the bootstraped battle outcomes from CSV files.
+    4. Access the bootstraped battle outcomes as DataFrame objects.
+    
+    Attributes:
+        nature_battle_outcomes (BattleOutcomes): The original nature battle outcomes.
+        num_of_bootstrap (int): The number of bootstrap iterations.
+        _bootstraped_battlecomes_dfs (list): A list of DataFrame objects representing the bootstraped battle outcomes.
+        save_path_pattern (str): The pattern used to generate the save path for each bootstraped battle outcome.
+    """
+
+    def __init__(self, nature_battle_outcomes: BattleOutcomes=None, num_of_bootstrap: int=None) -> None:
+        """
+        Initializes a new instance of the BootstrapedBattleOutcomes class.
+
+        Args:
+            nature_battle_outcomes (BattleOutcomes, optional): The original nature battle outcomes. Defaults to None.
+            num_of_bootstrap (int, optional): The number of bootstrap iterations. Defaults to None.
+        """
+        self.nature_battle_outcomes = nature_battle_outcomes
+        self.num_of_bootstrap = num_of_bootstrap
+        self._bootstraped_battlecomes_dfs = [] # list of dataframe
+        
+        if self.nature_battle_outcomes is not None and self.num_of_bootstrap is not None:
+            self._do_bootstrap(num_of_bootstrap)
+        
+        self.save_path_pattern = '.bootstrap/battle_outcomes_num_of_bootstrap.csv'
+        
+    def _do_bootstrap(self, num_of_bootstrap):
+        """
+        Performs bootstrap resampling on the nature battle outcomes.
+
+        Args:
+            num_of_bootstrap (int): The number of bootstrap iterations.
+        
+        Raises:
+            Exception: If nature_battle_outcomes is None.
+        """
+        if self.nature_battle_outcomes is None:
+            raise Exception('nature_battle_outcomes is None')
+        
+        nature_battle_comes_df = self.nature_battle_outcomes.to_df()
+        np.random.seed(42)
+        for _ in tqdm(range(num_of_bootstrap), desc="bootstrap"):
+            # performing a random shuffle of the entire DataFrame
+            bootstraped_battle_outcomes_df = nature_battle_comes_df.sample(frac=1.0, replace=False)
+            self._bootstraped_battlecomes_dfs.append(bootstraped_battle_outcomes_df)
+    
+    def to_csv(self, save_dir):
+        """
+        Saves the bootstraped battle outcomes as CSV files.
+
+        Args:
+            save_dir (str): The directory where the CSV files will be saved.
+        """
+        if not os.path.exists(Path(save_dir)/'.bootstrap'):
+            os.makedirs(Path(save_dir)/'.bootstrap')
+            
+        for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs)):
+            save_path = Path(save_dir)/self.save_path_pattern.replace('num_of_bootstrap', str(i+1).zfill(5))
+            battle_outcomes_df.to_csv(save_path)
+            
+    @classmethod
+    def read_csv(cls, save_dir): 
+        """
+        Reads the bootstraped battle outcomes from CSV files.
+
+        Args:
+            save_dir (str): The directory where the CSV files are located.
+        
+        Returns:
+            BootstrapedBattleOutcomes: An instance of the BootstrapedBattleOutcomes class with the loaded data.
+        """
+        bootstrap_battle_outcomes = BootstrapedBattleOutcomes()
+        
+        # load cached bootstraped battle outcomes
+        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battle_outcomes_*.csv'))  
+        bootstrap_outcomes_files.sort()  
+        
+        bootstrap_battle_outcomes.num_of_bootstrap = len(bootstrap_outcomes_files)
+        for bootstrap_outcomes_file in tqdm(bootstrap_outcomes_files):
+            bootstrap_battle_outcomes._bootstraped_battlecomes_dfs.append(pd.read_csv(bootstrap_outcomes_file))
+            
+        return bootstrap_battle_outcomes
+        
+    def __getitem__ (self, idx):
+        return self._bootstraped_battlecomes_dfs[idx]
