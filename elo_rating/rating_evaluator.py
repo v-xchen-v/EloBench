@@ -178,8 +178,10 @@ def compute_actual_winrate_awinb(battle_outcomes_data: pd.DataFrame, model_a: st
     Returns:
         float: The actual win rate between model_a and model_b.
     """
-    valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
+    valid_winner = set(['model_a', 'model_b'])
     battle_outcomes_data_valid = battle_outcomes_data[battle_outcomes_data['winner'].isin(valid_winner)]
+    if len(battle_outcomes_data_valid) == 0:
+        return np.nan
     
     # filter out no-tie battles
     battle_outcomes_notie_data = battle_outcomes_data_valid[(battle_outcomes_data_valid['winner']=='model_a') | (battle_outcomes_data_valid['winner']=='model_b')].copy()
