@@ -1,3 +1,36 @@
+"""Two key observations:
+1. The actual winrate should be stable, if it battled enough.
+2. The predicted winrate should reach the stable final actual winrate, if it battled enough.
+"""
+
+"""dataframe design
+actual_winrate_history_df:
+columns: models(model_pair), num_battles, actual_winrate, delta_actual_winrate"""
+
+"""drop data
+actual winrate
+columns:
+- num_battles: the battle number of the pair presents
+- actual_winrate: the actual winrate of the pair presents
+- models: the model pair presents
+- delta_winrate: the delta of actual winrate of the pair presents
+"""
+
+"""drop data:
+final winrate
+columns:
+- num_battles: the battle number of the pair presents
+- final_winrate: the final winrate of the pair presents
+- models: the model pair presents""
+"""
+
+"""drop data:
+predict winrate
+columns:
+- num_battles: the battle number of the pair presents
+- predict_winrate: the predict winrate of the pair presents
+- models: the model pair presents"""
+
 from elo_rating.rating_evaluator import compute_actual_winrate_awinb
 from pathlib import Path
 import pandas as pd
@@ -34,6 +67,7 @@ class NoTieBattleHistoryReport:
     def build(self):
         self.gen_actual_winrate_history()
         self.final_acutal_winrate = self.get_final_actual_winrate()
+        self.final_acutal_winrate[['models', 'model_a', 'model_b', 'actual_winrate']].to_csv(f'{self.result_dir}/final_actual_winrate.csv')
         pass
         self.gen_predict_winrate_history()
         
@@ -114,6 +148,7 @@ class NoTieBattleHistoryReport:
        
         
         # self.predict_winrate_history = winrate_history    
+        pd.concat(self.predict_winrate_history).to_csv(f'{self.result_dir}/predict_winrate_history.csv')
         
     def gen_actual_winrate_history(self):
         models = sorted(self.battled_outcome_df['model_a'].unique())
@@ -170,6 +205,9 @@ class NoTieBattleHistoryReport:
             
         # calcuated winrate history for each model pair(despite ab order)
         self.winrate_history = winrate_history
+        
+        clusive_columns = ['models', 'actual_winrate', 'num_battles', 'delta_actual_winrate']
+        pd.concat(self.winrate_history)[clusive_columns].to_csv(f'{self.result_dir}/actual_winrate_history.csv')
     
     def get_final_actual_winrate(self):
         last_winrates = []
