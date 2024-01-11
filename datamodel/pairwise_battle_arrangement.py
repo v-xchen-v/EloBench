@@ -113,17 +113,15 @@ class PairwiseBattleArrangement:
         battles = []
         # for question in selected_questiosn:
         for pair in tqdm(all_pairs, desc='comb pairs'):
-            num_question_batch = 10
-            for i in tqdm(range(0, num_of_battle, num_question_batch), desc='questions', leave=False):
-                model_a = pair[0]
-                model_b = pair[1]
-                questions = self.random_select_question_to_arrange_by_frequency(model_a, model_b, num_question_batch)
-                if questions is None:
-                    raise Exception('no more questions to arrange')
-                
-                for question in questions:
-                    battles.append(PairToBattle(question=question, model_a=model_a, model_b=model_b))
-                    self.question_frequency[question] += 1
+            model_a = pair[0]
+            model_b = pair[1]
+            questions = self.random_select_question_to_arrange_by_frequency(model_a, model_b, num_of_battle)
+            if questions is None:
+                raise Exception('no more questions to arrange')
+            
+            for question in questions:
+                battles.append(PairToBattle(question=question, model_a=model_a, model_b=model_b))
+                self.question_frequency[question] += 1
 
         if shuffle:
             battles = self._shuffle_battles_ab(battles)
