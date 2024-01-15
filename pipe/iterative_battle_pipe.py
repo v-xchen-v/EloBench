@@ -29,7 +29,7 @@ class IterativeBattlePipeline(BattlePipeline):
         # Then, iteratively arrange more battles, gen ans, do pairwise battle with judger until the no-tie battle count is reached
         self._iterative_to_n_no_tie(self.target_n_notie, None, save_per=saving_per)
     
-    def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, num_need_add, no_tie_target, exclude_pairs=[[]]):
+    def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, num_need_add, no_tie_target, exclude_pairs=[[]], exclude_noans_questions=True):
         # Create a Boolean DataFrame to mask exclude model pairs
         exclude_pair_mask_df = pd.DataFrame([[not (col_name in [x[0] for x in exclude_pairs] and index_name in [x[1] for x in exclude_pairs]) for col_name in df_frequency_with_aborder.columns] 
                         for index_name in df_frequency_with_aborder.index], 
@@ -93,8 +93,11 @@ class IterativeBattlePipeline(BattlePipeline):
         #     if len(qs)>0:
         #         new_pairs.append(PairToBattle(random.choices(qs)[0], model_a_name, model_b_name))
                 
+        no_ans_questions_for_model_aorb = None
+        if exclude_noans_questions:
+            no_ans_questions_for_model_aorb = np.unique(self.question_and_answers_collection.get_no_ans_questions(model_a_name) + self.question_and_answers_collection.get_no_ans_questions(model_b_name))
         for model_a_name, model_b_name in zip(model_as, model_bs):
-            qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name, size=1)
+            qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name, size=1, exclude_questions=no_ans_questions_for_model_aorb)
             if qs == None:
                 continue
             else:

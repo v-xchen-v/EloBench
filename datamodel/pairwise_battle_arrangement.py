@@ -4,6 +4,7 @@ import random
 from typing import List, Dict, Union
 import pandas as pd
 from datamodel.column_names import QUESTION_COLUMN_NAME, MODEL_A_COLUMN_NAME, MODEL_B_COLUMN_NAME
+from datamodel import QuestionAndAnswersCollection
 import itertools
 from enum import Enum
 from logger import logger, info_logger
@@ -102,7 +103,7 @@ class PairwiseBattleArrangement:
             shuffled_battles.append(PairToBattle(item[QUESTION_COLUMN_NAME], item[MODEL_A_COLUMN_NAME], item[MODEL_B_COLUMN_NAME]))
         return shuffled_battles
     
-    def arrange_randomly_by_battlecountnumpercombpair(self, num_of_battle: int, shuffle=True):
+    def arrange_randomly_by_battlecountnumpercombpair(self, num_of_battle: int, shuffle=True, have_ans_questions_only=True, q_and_as=None):
         # generate all unique pairs from the list
         all_pairs = list(itertools.combinations(self.models, 2))
         
@@ -115,7 +116,15 @@ class PairwiseBattleArrangement:
         for pair in tqdm(all_pairs, desc='comb pairs'):
             model_a = pair[0]
             model_b = pair[1]
-            questions = self.random_select_question_to_arrange_by_frequency(model_a, model_b, num_of_battle)
+            
+            no_ans_questions_for_model_aorb = None
+            if have_ans_questions_only:
+                if q_and_as is None:
+                    raise 'Should load answer first!'
+                else:
+                    no_ans_questions_for_model_aorb = np.unique(q_and_as.get_no_ans_questions(model_a) + q_and_as.get_no_ans_questions(model_b))
+            
+            questions = self.random_select_question_to_arrange_by_frequency(model_a, model_b, size=num_of_battle, exclude_questions=no_ans_questions_for_model_aorb)
             if questions is None:
                 raise Exception('no more questions to arrange')
             
@@ -344,7 +353,7 @@ class PairwiseBattleArrangement:
         return new_battle_counter
                 
         
-    def get_questions_to_arrange(self, model_a, model_b):
+    def get_questions_to_arrange(self, model_a, model_b, exclude_questions=None):
         """
         Gets the list of questions that need to be arranged for the specified model pair.
         
@@ -355,16 +364,19 @@ class PairwiseBattleArrangement:
         Returns:
             List[str]: The list of questions to be arranged for the model pair.
         """
+        to_arrange_questions = []
         df = pd.DataFrame.from_dict(self._battles_in_order_ele_as_dict)
         
         if df.shape[0] > 0:
             arranged_questions = df[((df[MODEL_A_COLUMN_NAME]==model_a) & (df[MODEL_B_COLUMN_NAME]==model_b)) | (df[MODEL_A_COLUMN_NAME]==model_b) & (df[MODEL_B_COLUMN_NAME]==model_a)][QUESTION_COLUMN_NAME].unique().tolist()
         
-            return list(set(self.questions) - set(arranged_questions))
+            to_arrange_questions = list(set(self.questions) - set(arranged_questions))
         else:
-            return self.questions
+            to_arrange_questions = self.questions
+        
+        return list(set(to_arrange_questions) - set(exclude_questions))
     
-    def random_select_question_to_arrange_by_frequency(self, model_a, model_b, size=1):
+    def random_select_question_to_arrange_by_frequency(self, model_a, model_b, size=1, exclude_questions = None):
         """
         Randomly selects a question to be arranged for the specified model pair based on the frequency of questions.
         
@@ -375,7 +387,7 @@ class PairwiseBattleArrangement:
         Returns:
             str: The selected question.
         """
-        questions_to_arrange = self.get_questions_to_arrange(model_a, model_b)
+        questions_to_arrange = self.get_questions_to_arrange(model_a, model_b, exclude_questions)
         
         if len(questions_to_arrange) == 0 or size > len(questions_to_arrange):
             return None

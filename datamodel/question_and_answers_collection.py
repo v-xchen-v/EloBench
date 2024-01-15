@@ -92,6 +92,10 @@ class QuestionAndAnswersCollection:
     def answer_exists(self, question: str, model: str) -> bool:
         return False if self.get_answer(question, model) is None else True
     
+    def get_no_ans_questions(self, model: str) -> List[str]:
+        questions = self.list_questions()
+        return [question for question in questions if not self.answer_exists(question, model)]
+        
     def get_question_and_answers(self, question: str) -> Dict[str, List[LLMAnswer]]:
         return { question: self.question_and_answers_collection[question] }
     
