@@ -11,6 +11,7 @@ import numpy as np
 from pathlib import Path
 from logger import logger, iterate_to_no_tie_logger
 from tqdm import tqdm
+from collections import defaultdict
 
 class IterativeBattlePipeline(BattlePipeline):
     # * Actually, It's only for iterative battle pipeline to reach no no-tie battle count for each model pairs.
@@ -93,19 +94,27 @@ class IterativeBattlePipeline(BattlePipeline):
         #     qs = self.battle_arrangements.get_questions_to_arrange(model_a=model_a_name, model_b=model_b_name)
         #     if len(qs)>0:
         #         new_pairs.append(PairToBattle(random.choices(qs)[0], model_a_name, model_b_name))
-                
-        for model_a_name, model_b_name in tqdm(zip(model_as, model_bs), desc='arranging new battles', total=len(model_as)):
-            # find out no answer questions
-            no_ans_questions_for_model_aorb = None
-            if exclude_noans_questions:
-                no_ans_questions_for_model_aorb = np.unique(self.question_and_answers_collection.get_no_ans_questions(model_a_name) + self.question_and_answers_collection.get_no_ans_questions(model_b_name))
-                
-            qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name, size=1, exclude_questions=no_ans_questions_for_model_aorb)
-            if qs == None:
-                continue
-            else:
-                q = qs[0]
-                new_pairs.append(PairToBattle(q, model_a_name, model_b_name))
+        
+        new_question_counter = defaultdict(lambda: defaultdict(lambda: 0))
+        for model_a_name, model_b_name in zip(model_as, model_bs):
+            new_question_counter[model_a_name][model_b_name] += 1
+            
+        # Using tqdm to iterate over the 2D dictionary
+        for model_a_name, row in tqdm(new_question_counter.items(), desc="arranging new battles", total=len(new_question_counter)):
+            for model_b_name, model_ab_num_question in row.items():
+                logger.debug(f"Processing {model_a_name}, {model_b_name}: {model_ab_num_question}")
+                # find out no answer questions
+                no_ans_questions_for_model_aorb = None
+                if exclude_noans_questions:
+                    no_ans_questions_for_model_aorb = np.unique(self.question_and_answers_collection.get_no_ans_questions(model_a_name) + self.question_and_answers_collection.get_no_ans_questions(model_b_name))
+                    
+                qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name, size=model_ab_num_question, exclude_questions=no_ans_questions_for_model_aorb)
+                if qs == None:
+                    continue
+                else:
+                    # q = qs[0]
+                    for q in qs:
+                        new_pairs.append(PairToBattle(q, model_a_name, model_b_name))
                 
         num_try_add = len(new_pairs)
         iterate_to_no_tie_logger.debug(f'trying add {num_try_add} more.')        
