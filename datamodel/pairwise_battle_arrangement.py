@@ -103,7 +103,7 @@ class PairwiseBattleArrangement:
             shuffled_battles.append(PairToBattle(item[QUESTION_COLUMN_NAME], item[MODEL_A_COLUMN_NAME], item[MODEL_B_COLUMN_NAME]))
         return shuffled_battles
     
-    def arrange_randomly_by_battlecountnumpercombpair(self, num_of_battle: int, shuffle=True, have_ans_questions_only=True, q_and_as=None):
+    def  arrange_randomly_by_battlecountnumpercombpair(self, num_of_battle: int, shuffle=True, have_ans_questions_only=True, q_and_as=None):
         # generate all unique pairs from the list
         all_pairs = list(itertools.combinations(self.models, 2))
         
@@ -392,7 +392,9 @@ class PairwiseBattleArrangement:
         if len(questions_to_arrange) == 0 or size > len(questions_to_arrange):
             return None
         
-        probabilities = list(self.question_frequency.values())
+        question_to_arrange_set = set(questions_to_arrange)
+        to_arrange_question_frequency = {k:v for (k,v) in self.question_frequency.items() if k in question_to_arrange_set}
+        probabilities = list(to_arrange_question_frequency.values())
         
         # Add 1 to each probability to avoid zero probability
         # Invert to form a probability distribution that favors questions with lower frequency
@@ -404,7 +406,7 @@ class PairwiseBattleArrangement:
 
         selected_indexs = np.random.choice(len(probabilities), p=probabilities, replace=True, size=size)
         
-        return list(np.array(list(self.question_frequency.keys()))[selected_indexs])
+        return list(np.array(questions_to_arrange)[selected_indexs])
         
         
     
