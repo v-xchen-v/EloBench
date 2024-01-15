@@ -120,6 +120,9 @@ class AutoCausalLM(LM):
             'WizardLM/WizardLM-13B-V1.2',
             'Xwin-LM/Xwin-LM-7B-V0.1',
             'Xwin-LM/Xwin-LM-13B-V0.1',
+            'huggyllama/llama-7b',
+            'huggyllama/llama-13b',
+            'huggyllama/llama-30b'
         ]:
             self.batch_size=None # None means auto detect batch_size, otherwise, use the given batch_size
         else:
