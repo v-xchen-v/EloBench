@@ -9,6 +9,7 @@ from pathlib import Path
 import pandas as pd
 import random
 from datamodel import ArrangementStrategy
+from logger import info_logger
 
 if __name__ == '__main__':
     dataset_dir = Path('data')/'google_quora_alpaca_sharegpt_chatlm_clean_20772'
@@ -58,3 +59,4 @@ if __name__ == '__main__':
     iterative_battle_pipe.battle(saving_per=50)    
     iterative_battle_pipe.iterative_battle(saving_per=50) 
     iterative_battle_pipe.gen_elo()
+    info_logger.info('Done.')
