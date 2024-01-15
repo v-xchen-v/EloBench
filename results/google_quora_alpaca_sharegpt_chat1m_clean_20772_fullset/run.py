@@ -12,12 +12,12 @@ from datamodel import ArrangementStrategy
 
 if __name__ == '__main__':
     dataset_dir = Path('data')/'google_quora_alpaca_sharegpt_chatlm_clean_20772'
-    iterative_battle_pipe = IterativeBattlePipeline(tempcache_dir=r'tempcache/google_quora_alpaca_sharegpt_chatlm_clean_20772', save_dir='results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset', no_cache=False, target_n_notie=5)
+    iterative_battle_pipe = IterativeBattlePipeline(tempcache_dir=r'tempcache/google_quora_alpaca_sharegpt_chat1m_clean_20772', save_dir='results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset', no_cache=False, target_n_notie=10)
     
     # Register questions to battle pipeline
-    all_questions = pd.read_csv(dataset_dir/'questions.csv')['question'].tolist()
-    iterative_battle_pipe.register_questions(all_questions)
-    # iterative_battle_pipe.register_questions(reload=True)
+    # all_questions = pd.read_csv(dataset_dir/'questions.csv')['question'].tolist()
+    # iterative_battle_pipe.register_questions(all_questions)
+    iterative_battle_pipe.register_questions(reload=True)
     
     # Regiester the initial models, register the top models on alpaca eval leaderboard later
     # Register models to battle pipeline
@@ -48,12 +48,13 @@ if __name__ == '__main__':
         'gemini',
     ]
     
-    iterative_battle_pipe.register_models(models)
-    # iterative_battle_pipe.register_models(reload=True)
+    # iterative_battle_pipe.register_models(models)
+    iterative_battle_pipe.register_models(reload=True)
 
 
-    iterative_battle_pipe.arrange_battles(ArrangementStrategy.Random_N_BattleCount_Each_CombPair, num_of_battle=1)
-    # iterative_battle_pipe.arrange_battles(ArrangementStrategy.Reload_Existing_Arrangement)
+    # iterative_battle_pipe.arrange_battles(ArrangementStrategy.Random_N_BattleCount_Each_CombPair, num_of_battle=1)
+    iterative_battle_pipe.arrange_battles(ArrangementStrategy.Reload_Existing_Arrangement)
     iterative_battle_pipe.gen_model_answers()
     iterative_battle_pipe.battle(saving_per=50)    
     iterative_battle_pipe.iterative_battle(saving_per=50) 
+    iterative_battle_pipe.gen_elo()

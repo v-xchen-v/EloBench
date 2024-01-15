@@ -130,8 +130,8 @@ class IterativeBattlePipeline(BattlePipeline):
                     battle_all_n = no_tie_with_aborder[model_1][model_2]
                     # print(f'Cell at Row {model_1}, Column {model_2}: {battle_notie_n}')
                     # print(f'Cell at Row {model_1}, Column {model_2}: {battle_all_n}')
-                    tie = battle_notie_n-battle_all_n
-                    tie_percentage = tie/battle_notie_n
+                    tie = N-battle_all_n
+                    tie_percentage = tie/N
                     # print(f'Cell at Row {model_1}, Column {model_2}: {tie} {tie_percentage}')
                     # TODO: add tie_percentage threshold
                     # TODO: temporary solution, need to refactor
