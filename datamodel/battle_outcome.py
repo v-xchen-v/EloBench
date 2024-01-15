@@ -302,13 +302,17 @@ class BootstrapedBattleOutcomes:
     def __getitem__ (self, idx):
         return self._bootstraped_battlecomes_dfs[idx]
     
-    def get_leaderboard(self, K: int):
+    def get_leaderboards(self, K: int):
         elo_dfs = []
         for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs), desc='calculating bootstrap elo ratings', total=len(self._bootstraped_battlecomes_dfs)):
             elo_dfs.append(get_elo_results_from_battles_data(battle_outcomes_df, K))
         
-        # calculate the median of elo ratings
         elo_df = pd.concat(elo_dfs)
+        return elo_df
+    
+    def get_leaderboard(self, K: int):
+        elo_df = self.get_leaderboards(K)
+        # calculate the median of elo ratings
         elo_df = elo_df.groupby('model').median().reset_index()
         elo_df["elo_rating"] = (elo_df["elo_rating"] + 0.5).astype(int)
         elo_df.sort_values(by=['elo_rating'], ascending=False, inplace=True)
