@@ -53,7 +53,7 @@ short_formater = logging.Formatter('[%(levelname)s] %(message)s')
 # # Add formatter to console_handler
 console_handler.setFormatter(short_formater)
 info_console_handler.setFormatter(short_formater)
-
+issue_question_file_handler.setFormatter(short_formater)
 # Add console_handler to logger
 logger.addHandler(console_handler)
 iterate_to_no_tie_logger.addHandler(console_handler)
