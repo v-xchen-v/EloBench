@@ -10,6 +10,7 @@ from datamodel import PairToBattle, ArrangementStrategy
 import numpy as np
 from pathlib import Path
 from logger import logger, iterate_to_no_tie_logger
+from tqdm import tqdm
 
 class IterativeBattlePipeline(BattlePipeline):
     # * Actually, It's only for iterative battle pipeline to reach no no-tie battle count for each model pairs.
@@ -93,10 +94,12 @@ class IterativeBattlePipeline(BattlePipeline):
         #     if len(qs)>0:
         #         new_pairs.append(PairToBattle(random.choices(qs)[0], model_a_name, model_b_name))
                 
-        no_ans_questions_for_model_aorb = None
-        if exclude_noans_questions:
-            no_ans_questions_for_model_aorb = np.unique(self.question_and_answers_collection.get_no_ans_questions(model_a_name) + self.question_and_answers_collection.get_no_ans_questions(model_b_name))
-        for model_a_name, model_b_name in zip(model_as, model_bs):
+        for model_a_name, model_b_name in tqdm(zip(model_as, model_bs), desc='arranging new battles', total=len(model_as)):
+            # find out no answer questions
+            no_ans_questions_for_model_aorb = None
+            if exclude_noans_questions:
+                no_ans_questions_for_model_aorb = np.unique(self.question_and_answers_collection.get_no_ans_questions(model_a_name) + self.question_and_answers_collection.get_no_ans_questions(model_b_name))
+                
             qs = self.battle_arrangements.random_select_question_to_arrange_by_frequency(model_a=model_a_name, model_b=model_b_name, size=1, exclude_questions=no_ans_questions_for_model_aorb)
             if qs == None:
                 continue
@@ -122,20 +125,22 @@ class IterativeBattlePipeline(BattlePipeline):
         retry_counter=0
         while True:
             all_with_aborder, no_tie_with_aborder = self.battled_pairs.frequency(despite_ab_order=False)
+            all_without_aborder, no_tie_without_aborder = self.battled_pairs.frequency(despite_ab_order=True)
             
             exclude_pairs = []
             for model_1, inner_dict in all_with_aborder.items():
                 for model_2, battle_notie_n in inner_dict.items():
                     # cell_value = inner_dict[inner_key]
-                    battle_all_n = no_tie_with_aborder[model_1][model_2]
+                    battle_all_n = all_without_aborder[model_1][model_2]
+                    battle_all_notie = no_tie_without_aborder[model_1][model_2]
                     # print(f'Cell at Row {model_1}, Column {model_2}: {battle_notie_n}')
                     # print(f'Cell at Row {model_1}, Column {model_2}: {battle_all_n}')
-                    tie = N-battle_all_n
-                    tie_percentage = tie/N
+                    tie = battle_all_n-battle_all_notie
+                    # tie_percentage = tie/battle_all_n
                     # print(f'Cell at Row {model_1}, Column {model_2}: {tie} {tie_percentage}')
                     # TODO: add tie_percentage threshold
                     # TODO: temporary solution, need to refactor
-                    if tie >= N:
+                    if tie >= N and tie >= 10:
                         exclude_pairs.append([model_1, model_2])
                     pass
                     
