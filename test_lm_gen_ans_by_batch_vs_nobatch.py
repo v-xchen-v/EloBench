@@ -10,6 +10,9 @@ from models.hf_local_lm import AutoCausalLM
 # model = AutoCausalLM("WizardLM/WizardLM-13B-V1.2") # √
 # model = AutoCausalLM("Xwin-LM/Xwin-LM-7B-V0.1") # √
 # model = AutoCausalLM("chavinlo/alpaca-13b") # √
+# model = AutoCausalLM("huggyllama/llama-7b") # √
+# model = AutoCausalLM("huggyllama/llama-13b") # √
+model = AutoCausalLM("huggyllama/llama-30b")
 
 questions = [ \
     "Does light travel forever or does it eventually fade?",
