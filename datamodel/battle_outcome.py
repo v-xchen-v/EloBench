@@ -234,7 +234,7 @@ class BootstrapedBattleOutcomes:
         if self.nature_battle_outcomes is not None and self.num_of_bootstrap is not None:
             self._do_bootstrap(num_of_bootstrap)
         
-        self.save_path_pattern = '.bootstrap/battle_outcomes_num_of_bootstrap.csv'
+        self.save_path_pattern = '.bootstrap/battled_pairs_num_of_bootstrap.csv'
         
     def _do_bootstrap(self, num_of_bootstrap):
         """
@@ -266,14 +266,14 @@ class BootstrapedBattleOutcomes:
         if not os.path.exists(Path(save_dir)/'.bootstrap'):
             os.makedirs(Path(save_dir)/'.bootstrap')
             
-        for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs)):
+        for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs), desc='saving bootstrap battled pairs...'):
             save_path = Path(save_dir)/self.save_path_pattern.replace('num_of_bootstrap', str(i+1).zfill(5))
             battle_outcomes_df.to_csv(save_path)
             
     @classmethod
     def is_cached(cls, save_dir: str, num_of_bootstrap: int):
          # load cached bootstraped battle outcomes
-        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battle_outcomes_*.csv'))  
+        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battled_pairs_*.csv'))  
         return len(bootstrap_outcomes_files) == num_of_bootstrap
           
     @classmethod
@@ -290,7 +290,7 @@ class BootstrapedBattleOutcomes:
         bootstrap_battle_outcomes = BootstrapedBattleOutcomes()
         
         # load cached bootstraped battle outcomes
-        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battle_outcomes_*.csv'))  
+        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battled_pairs_*.csv'))  
         bootstrap_outcomes_files.sort()  
         
         bootstrap_battle_outcomes.num_of_bootstrap = len(bootstrap_outcomes_files)
@@ -302,19 +302,33 @@ class BootstrapedBattleOutcomes:
     def __getitem__ (self, idx):
         return self._bootstraped_battlecomes_dfs[idx]
     
-    def get_leaderboards(self, K: int):
+    def get_leaderboards(self, K: int) -> pd.DataFrame:
         elo_dfs = []
-        for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs), desc='calculating bootstrap elo ratings', total=len(self._bootstraped_battlecomes_dfs)):
-            elo_dfs.append(get_elo_results_from_battles_data(battle_outcomes_df, K))
-        
+        # for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs), desc='calculating bootstrap elo ratings', total=len(self._bootstraped_battlecomes_dfs)):
+        for i, battle_outcomes_df in enumerate(self._bootstraped_battlecomes_dfs):
+            elo_df = get_elo_results_from_battles_data(battle_outcomes_df, K)
+            # Adding a new column with the same value for all rows
+            elo_df['round_bootstrap'] = i+1
+            elo_dfs.append(elo_df)
+
         elo_df = pd.concat(elo_dfs)
         return elo_df
     
     def get_leaderboard(self, K: int):
         elo_df = self.get_leaderboards(K)
+        inclusive_columns = ['model', 'elo_rating']
+        elo_df = elo_df[inclusive_columns]
+        
         # calculate the median of elo ratings
         elo_df = elo_df.groupby('model').median().reset_index()
         elo_df["elo_rating"] = (elo_df["elo_rating"] + 0.5).astype(int)
         elo_df.sort_values(by=['elo_rating'], ascending=False, inplace=True)
         elo_df.reset_index(drop=True)
         return elo_df
+    
+    def get_first_n_rows(self, n_rows):
+        first_n_rows_bootstrap_battle_outcomes =  BootstrapedBattleOutcomes()
+        first_n_rows_bootstrap_battle_outcomes.nature_battle_outcomes = self.nature_battle_outcomes
+        first_n_rows_bootstrap_battle_outcomes.num_of_bootstrap = self.num_of_bootstrap
+        first_n_rows_bootstrap_battle_outcomes._bootstraped_battlecomes_dfs = [x.head(n_rows) for x in self._bootstraped_battlecomes_dfs] # list of dataframe
+        return first_n_rows_bootstrap_battle_outcomes
