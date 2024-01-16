@@ -9,6 +9,9 @@ info_logger.setLevel(logging.INFO)
 info_console_handler = logging.StreamHandler()
 info_console_handler.setLevel(logging.INFO)
 
+issue_question_file_handler = logging.FileHandler(r'/elo_bench/logs/issue_question.log')
+issue_question_file_handler.setLevel(logging.INFO)
+
 # Step 5: Create a formatter and set it to the handler
 info_formatter = logging.Formatter('[%(levelname)s] - %(message)s')
 info_console_handler.setFormatter(info_formatter)
@@ -37,7 +40,11 @@ elo_rating_history_logger.setLevel(logging.DEBUG)
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.DEBUG)
 
-
+# Create a logger to record issue questions in questions et
+issue_question_logger = logging.getLogger('issue_question_logger')
+issue_question_logger.setLevel(logging.DEBUG)
+issue_question_logger.addHandler(console_handler)
+issue_question_logger.addHandler(issue_question_file_handler)
 
 # # Create formatter
 formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
@@ -46,7 +53,7 @@ short_formater = logging.Formatter('[%(levelname)s] %(message)s')
 # # Add formatter to console_handler
 console_handler.setFormatter(short_formater)
 info_console_handler.setFormatter(short_formater)
-
+issue_question_file_handler.setFormatter(short_formater)
 # Add console_handler to logger
 logger.addHandler(console_handler)
 iterate_to_no_tie_logger.addHandler(console_handler)

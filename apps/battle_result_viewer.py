@@ -13,14 +13,15 @@ from datamodel.elo_rating_history import EloRatingHistory, BattleOutcomes
 import numpy as np
 from collections import defaultdict
 from elo_rating.rating_evaluator import evaluate_rank_consistency, evaluate_winrate_at_historypoint
+from elo_rating import RatingEntity
 
 from tqdm import tqdm
-
-result_dir = r'results/google_quora_alpaca_10629_test3'
+save_dir = r'/elo_bench/reports/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset'
+result_dir = r'results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset'
 record_file = Path(result_dir)/'battle_records.csv'
 
-USE_BOOTSTRAP_ON_ELO = False
-USE_BOOTSTRAP_ON_HISTORY = True
+USE_BOOTSTRAP_ON_ELO = True
+USE_BOOTSTRAP_ON_HISTORY = False
 FIRST_N_BATTLES = None
 records_df = pd.read_csv(record_file, nrows=FIRST_N_BATTLES)
 
@@ -35,6 +36,8 @@ model_ordering = None
 
 def elo_leaderboard():
     global model_ordering
+    
+    
     def predict_win_rate(elo_ratings, SCALE=400, BASE=10, INIT_RATING=1000):
         # names = sorted(list(elo_ratings['Model']))
         # ratings = elo_ratings['Elo Rating']
@@ -117,6 +120,7 @@ def elo_leaderboard():
         model_names = list(prop_wins.keys())
         row_beats_col = row_beats_col_freq.loc[model_names, model_names]
         return row_beats_col
+    
     def visualize_pairwise_win_fraction(battles, title):
         row_beats_col = compute_pairwise_win_fraction(battles)
         fig = px.imshow(row_beats_col, color_continuous_scale='RdBu',
@@ -132,8 +136,8 @@ def elo_leaderboard():
         
     with gr.Tab('Elo Leaderboard'):
         if USE_BOOTSTRAP_ON_ELO:
-            with gr.Tab("Elo rating (bootstrap=1000)"):
-                elo_result, elo_result_median_all = get_bootstrap_medium_elo(winner_data_valid, ARENA_K, with_fullset=True)
+            with gr.Tab("Elo rating (bootstrap=100)"):
+                elo_result, elo_result_median_all = get_bootstrap_medium_elo(winner_data_valid, ARENA_K, with_fullset=True, BOOTSTRAP_ROUNDS=100)
                 
                 def visualize_bootstrap_scores(df, title):
                     bars = pd.DataFrame(dict(
@@ -158,18 +162,19 @@ def elo_leaderboard():
             
                 bootstrap_of_elo_fig = visualize_bootstrap_scores(elo_result_median_all, "Bootstrap of Elo Estimates")
                 gr.Plot(bootstrap_of_elo_fig)
-            
+                bootstrap_of_elo_fig.write_image(Path(save_dir)/f'bootstrap_of_elo_rating.pdf')
         
         
-                actual_winrate_fig = visualize_pairwise_win_fraction(winner_no_ties,
+                actual_winrate_matrix_fig = visualize_pairwise_win_fraction(winner_no_ties,
                     title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
-                predict_winrate_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+                predict_winrate_matrix_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+                predict_winrate_matrix_fig.write_image(Path(save_dir)/f'predict_winrate_matrix_100_bootstrap.pdf')
                 
                 gr.Markdown("Predict winrate Should be close to actual to actual winrate")
                 
                 with gr.Row():
-                    gr.Plot(actual_winrate_fig)
-                    gr.Plot(predict_winrate_fig)
+                    gr.Plot(actual_winrate_matrix_fig)
+                    gr.Plot(predict_winrate_matrix_fig)
                     
         with gr.Tab("Elo rating (without bootstrap)"):
             elo_result = get_elo_results_from_battles_data(winner_data_valid, K=ARENA_K)
@@ -177,17 +182,19 @@ def elo_leaderboard():
             model_ordering= elo_result['model'].tolist()   
             
             elo_df = elo_result.sort_values(by=['elo_rating'], ascending=False)
-            gr.Dataframe(elo_df, wrap=True)
+            gr.Dataframe(elo_df, wrap=True, interactive=True)
 
-            # actual_winrate_fig = visualize_pairwise_win_fraction(winner_no_ties,
-            #     title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
-            # predict_winrate_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+            actual_winrate_matrix_fig = visualize_pairwise_win_fraction(winner_no_ties,
+                title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
+            actual_winrate_matrix_fig.write_image(Path(save_dir)/'actual_winrate_matrix.pdf')
+            predict_winrate_matrix_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+            predict_winrate_matrix_fig.write_image(Path(save_dir)/'predict_winrate_matrix_without_bootstrap.pdf')
             
-            # gr.Markdown("Predict winrate Should be close to actual to actual winrate")
+            gr.Markdown("Predict winrate Should be close to actual to actual winrate")
             
-            # with gr.Row():
-            #     gr.Plot(actual_winrate_fig)
-            #     gr.Plot(predict_winrate_fig)
+            with gr.Row():
+                gr.Plot(actual_winrate_matrix_fig)
+                gr.Plot(predict_winrate_matrix_fig)
     
 def battle_outcomes():
     with gr.Tab("Battle Outcomes"):
@@ -372,6 +379,30 @@ def ab_bias():
 
 def elo_history():
     with gr.Tab("Elo History"):
+        def get_elo_delta(model_a_rating, model_b_rating, winner):
+            entity_a = RatingEntity(model_a_rating, K = 4)
+            entity_b = RatingEntity(model_b_rating, K = 4)
+
+            expected_score_a = entity_a.expected_score(entity_b)
+            expected_score_b = entity_b.expected_score(entity_a)
+
+            if winner == 'model_a':
+                actual_score_a = 1.0
+                actual_score_b = 0.0
+            elif winner == 'tie' or winner == 'tie(all bad)':
+                actual_score_a = 0.5
+                actual_score_b = 0.5
+            elif winner == 'model_b':
+                actual_score_a = 0.0
+                actual_score_b = 1.0
+            else:
+                raise Exception("unexpected winner: ", winner)
+            
+            a_delta = entity_a.rating_delta(expected_score_a, actual_score_a)
+            # b_delta = -a_delta
+            
+            return np.abs(a_delta)
+    
         # Plotting
         def plot_ranking_history(df):
             ranking_fig = px.line(df, x="num_battle", y="rank", color="model", markers=True)
@@ -432,39 +463,129 @@ def elo_history():
                 for _, row in point.iterrows():
                     rating_history.append({
                         'model': row['model'],
-                        'elo_rating': row['elo_rating'],
+                        'elo_rating_delta': row['elo_rating'],
                         'num_battle': battle_num,
                     })
             rating_history_pd = pd.DataFrame.from_dict(rating_history)
             
             # plotting
-            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating", color="model", markers=True)
+            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color="model", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
             gr.Plot(rating_history_fig)   
             
         def vis_rating_delta_history(history: EloRatingHistory):
+            import plotly.graph_objects as go
+            from plotly.subplots import make_subplots
+            import math
             rating_history = []
+            
+            battled_pairs_df = pd.read_csv(Path(result_dir) / 'battled_pairs.csv')
+            battled_pairs = BattleOutcomes.read_csv(Path(result_dir) / 'battled_pairs.csv').battled_pairs_in_order   
+            # TODO: handle the invalid winner when dump files and loading
+            # valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
+            # battled_pairs = [x for x in battled_pairs if x.winner in valid_winner]             
+            
             for idx, battle_num in tqdm(enumerate(history.recorded_battle_num), desc='calculate rating delta'):
                 if idx == 0:
                     continue
-                point_cur = history.get_point(battle_num)
+                # point_cur = history.get_point(battle_num)
                 point_prev = history.get_point(history.recorded_battle_num[idx-1])
-                for _, row in point_cur.iterrows():
-                    if row['model'] not in point_prev['model'].values:
-                        continue
-                    rating_history.append({
-                        'model': row['model'],
-                        'elo_rating': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
-                        'num_battle': battle_num,
-                    })
+                point_prev_battled_pair = battled_pairs[history.recorded_battle_num[idx-1]]
+                ranked_models = point_prev['model'].tolist()
+                initial_rating = 1000
+                if point_prev_battled_pair.model_a not in ranked_models:
+                    model_a_rating = initial_rating
+                else:
+                    model_a_rating = point_prev[point_prev['model']==point_prev_battled_pair.model_a]['elo_rating'].values[0]
+                if point_prev_battled_pair.model_b not in ranked_models:
+                    model_b_ratting = initial_rating
+                else:
+                    model_b_ratting = point_prev[point_prev['model']==point_prev_battled_pair.model_b]['elo_rating'].values[0]
+                winner = point_prev_battled_pair.winner
+                valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
+                if winner not in valid_winner:
+                    continue
+                # if winner != 'model_a' and winner != 'model_b':
+                #     continue
+                delta = get_elo_delta(model_a_rating, model_b_ratting, winner)
+                model_ab_names = sorted([point_prev_battled_pair.model_a,  point_prev_battled_pair.model_b])
+                from elo_rating.rating_evaluator import compute_actual_winrate_awinb
+                actual_winrate_awinb = compute_actual_winrate_awinb(battled_pairs_df.head(history.recorded_battle_num[idx]), model_ab_names[0], model_ab_names[1])
+                rating_history.append({
+                    # 'model': row['model'],
+                    'models': f'{model_ab_names[0]} vs {model_ab_names[1]}',
+                    'winrate': actual_winrate_awinb,
+                    # 'model_a_rating': min(model_a_rating, model_b_ratting),
+                    # 'model_b_rating': max(model_a_rating, model_b_ratting),
+                    'elo_rating_delta': delta,
+                    'num_battle': battle_num,
+                })
             rating_history_pd = pd.DataFrame.from_dict(rating_history)
             
             # plotting
-            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating", color="model", markers=True)
+            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            
+            # # plotting
+            rating_history_fig2 = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color='models', markers=True)
+            rating_history_fig2.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            
+            # Directory to save the PNG files
+            output_dir = 'plots'
+            os.makedirs(output_dir, exist_ok=True)
+                        # # plotting
+                        
+            # Determine the number of unique models
+            unique_models = rating_history_pd['models'].unique()
+            num_models = len(unique_models)
 
+            # Define the layout of subplots (e.g., 3 columns)
+            num_columns = 1
+            num_rows = math.ceil(num_models / num_columns)
+
+            # rating_history_fig3 = px.line(rating_history_pd, 
+            #                               x="num_battle", 
+            #                               y="winrate", 
+            #                               color='models', 
+            #                               markers=True)
+            # rating_history_fig3.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+            # # Set the y-axis range from 0 to 1
+            # rating_history_fig3.update_yaxes(range=[0, 1])
+            
+            # Create subplots
+            rating_history_fig3 = make_subplots(rows=num_rows, cols=num_columns, subplot_titles=unique_models)
+
+            # Populate each subplot
+            for i, model in enumerate(unique_models, start=1):
+                filtered_df = rating_history_pd[rating_history_pd['models'] == model]
+                row = math.ceil(i / num_columns)
+                col = i - (row - 1) * num_columns
+
+                rating_history_fig3.add_trace(
+                    go.Scatter(x=filtered_df['num_battle'], y=filtered_df['winrate'], mode='lines+markers', name=model),
+                    row=row, col=col
+                )
+
+            # Update layout
+            rating_history_fig3.update_layout(height=300*num_rows, width=900*num_columns, title_text="Model Comparisons")
+            rating_history_fig3.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')))
+            rating_history_fig3.update_yaxes(range=[0, 1])
+
+            # Save the figure
+            file_path = os.path.join(output_dir, f'actual_winrate_history.png')
+            rating_history_fig3.write_image(file_path)
+            
+            #            # plotting
+            # rating_history_fig3 = px.line(rating_history_pd, x="num_battle", y="model_b_rating", markers=True)
+            # rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
+
+            rating_history_fig.update_layout(autosize=True, width=None)
+            rating_history_fig2.update_layout(autosize=True, width=None)
+            rating_history_fig3.update_layout(autosize=True, width=None)
             gr.Plot(rating_history_fig) 
+            gr.Plot(rating_history_fig2)
+            gr.Plot(rating_history_fig3)  
             
         def vis_rating_delta_history2(history: EloRatingHistory):
             rating_history = []
@@ -489,43 +610,45 @@ def elo_history():
                         continue
                     rating_history.append({
                         'model': row['model'],
-                        'elo_rating': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
+                        'elo_rating_delta': row['elo_rating']-point_prev[point_prev['model']==row['model']]['elo_rating'].values[0],
                         'num_battle': n_battles_model,
                     })
             rating_history_pd = pd.DataFrame.from_dict(rating_history)
             
             # plotting
-            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating", color="model", markers=True)
+            rating_history_fig = px.line(rating_history_pd, x="num_battle", y="elo_rating_delta", color="model", markers=True)
             rating_history_fig.update_traces(marker=dict(size=8, line=dict(width=2, color='DarkSlateGrey')), selector=dict(mode='markers'))
 
             gr.Plot(rating_history_fig) 
             
         history = EloRatingHistory.gen_history(result_dir, use_bootstrap=
-                                               False, nrows=FIRST_N_BATTLES)
+                                               False, nrows=FIRST_N_BATTLES, step=10)
         elo_rating_history_df = history.to_df()
 
 
         # Show the bootstrap result first
         if USE_BOOTSTRAP_ON_HISTORY:
             with gr.Tab("bootstrap=100"):
-                history_bootstrap = EloRatingHistory.gen_history(result_dir, use_bootstrap=USE_BOOTSTRAP_ON_HISTORY, nrows=FIRST_N_BATTLES)
+                history_bootstrap = EloRatingHistory.gen_history(result_dir, use_bootstrap=USE_BOOTSTRAP_ON_HISTORY, nrows=FIRST_N_BATTLES, BOOTSTRAP_ROUNDS=10, step=10)
                 elo_rating_history_bootstrap_df = history_bootstrap.to_df()
                 gr.Markdown(f"Rank History")
                 ranking_history_bootstrap_fig = plot_ranking_history(elo_rating_history_bootstrap_df)
                 gr.Plot(ranking_history_bootstrap_fig)
+                ranking_history_bootstrap_fig.write_image(Path(save_dir)/f'bootstrap_ranking_history.pdf')
 
-                gr.Markdown(f'Elo Rating History')
-                vis_rating_history(history_bootstrap)
+                # gr.Markdown(f'Elo Rating History')
+                # vis_rating_history(history_bootstrap)
                 
-                gr.Markdown(f'Elo Rating Delta History')
-                vis_rating_delta_history(history_bootstrap)
-                vis_rating_delta_history2(history_bootstrap)
+                # gr.Markdown(f'Elo Rating Delta History')
+                # vis_rating_delta_history(history_bootstrap)
+                # vis_rating_delta_history2(history_bootstrap)
                 
                 gr.Markdown("Rank Consistency History")
                 rank_consistency_bootstrap_history_pd = calculate_rank_consistency_metrics(history_bootstrap)
                 # gr.Dataframe(rank_consistency_bootstrap_history_pd, wrap=True)
                 bootstrap_rank_consistency_history_fig = plot_rank_consistency(rank_consistency_bootstrap_history_pd)
                 gr.Plot(bootstrap_rank_consistency_history_fig)
+                bootstrap_rank_consistency_history_fig.write_image(Path(save_dir)/f'bootstrap_rank_consistency_history.pdf')
                 
                 # gr.Markdown("WinRate MAE History")
                 # winrate_bootstrap_history_pd = calculate_winrate_metrics(history_bootstrap)
@@ -535,18 +658,20 @@ def elo_history():
         with gr.Tab("without bootstrap"):
             gr.Markdown(f"Rank History")
             ranking_history_fig = plot_ranking_history(elo_rating_history_df)
-            gr.Plot(ranking_history_fig)        
+            gr.Plot(ranking_history_fig)  
+            ranking_history_fig.write_image(Path(save_dir)/f'ranking_history.pdf')      
             
-            gr.Markdown(f'Elo rating history)')
-            vis_rating_history(history)
+            # gr.Markdown(f'Elo rating history)')
+            # vis_rating_history(history)
                             
-            gr.Markdown(f'Elo Rating Delta History')
-            vis_rating_delta_history(history)
-            vis_rating_delta_history2(history)
+            # gr.Markdown(f'Elo Rating Delta History')
+            # vis_rating_delta_history(history)
+            # # vis_rating_delta_history2(history)
             
             gr.Markdown("Rank Consistency History")
             rank_consistency_history_pd = calculate_rank_consistency_metrics(history)
             rank_consistency_history_fig = plot_rank_consistency(rank_consistency_history_pd)
+            rank_consistency_history_fig.write_image(Path(save_dir)/f'rank_consistency_history.pdf')
             gr.Plot(rank_consistency_history_fig)
             # gr.Dataframe(rank_consistency_history_pd, wrap=True)
             

@@ -3,12 +3,14 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import gradio as gr
 import pandas as pd
-import re
 from pathlib import Path
 
 # battle_arrangement = pd.read_csv(Path(r'results/google_quora_alpaca_10629_test3')/'battle_arrangement.csv')
 # question_and_answers = pd.read_csv(Path(r'tempcache/google_quora_alpaca_10629')/'q_and_as.csv')
-battle_records = pd.read_csv(Path(r'results/google_quora_alpaca_10629_test3')/'battle_records.csv')
+battle_records = pd.read_csv(Path(r'results/google_quora_alpaca_10629_test3')/'battle_records.csv', engine='python')
+# inclusive_cols = ['question'm ]
+target_models = ['WizardLM/WizardLM-7B-V1.0', 'chavinlo/alpaca-13b']
+target_battle_records = battle_records[battle_records['model_a'].isin(target_models) & battle_records['model_b'].isin(target_models)]
 
 pass
 # battle_arrangement = pd.read_csv(Path('data')/'arena_data'/'chatbot_arena_conversations'/'battle_arrangement.csv')
@@ -41,17 +43,17 @@ def pick_gpt_4_score(battle_records, index=0):
 def pick_gpt_4_winner(battle_records, index=0):
     return battle_records.iloc[index]['winner']
 
-filtered_records = battle_records.copy()
+# filtered_records = battle_records.copy()
 # callback = gr.CSVLogger()
 
 
     
 if __name__ == '__main__':
     with gr.Blocks() as demo:
-        with gr.Row():
-            specific_model_a = gr.Textbox(label="filter by model_a", interactive=True)
-            specific_model_b = gr.Textbox(label="filter by model_b", interactive=True)
-            filter_btn = gr.Button('Filter')
+        # with gr.Row():
+        #     specific_model_a = gr.Textbox(label="filter by model_a", interactive=True)
+        #     specific_model_b = gr.Textbox(label="filter by model_b", interactive=True)
+        #     filter_btn = gr.Button('Filter')
 
         btn = gr.Button('Next')
         battle_index = gr.Textbox(label="battle_index", value="-1", interactive=True)
@@ -73,7 +75,8 @@ if __name__ == '__main__':
         
         # msg = gr.Textbox()
         clear = gr.ClearButton([model_a_name, model_b_name, model_a_answer, model_b_answer, gpt_4_reponse, gpt_4_score])
-        filtered_records_df = gr.Dataframe(filtered_records)
+        # filtered_records_df = gr.Dataframe(filtered_records)
+        target_battle_records_df = gr.DataFrame(target_battle_records)
         
         # def filter_records_by_model_names(model_a, model_b, filtered_records):
         #     filtered_records = battle_records.copy()
@@ -110,7 +113,7 @@ if __name__ == '__main__':
         # This needs to be called at some point prior to the first call to callback.flag()
         # callback.setup(components=[battle_index, question, model_a_name, model_b_name, model_a_answer, model_b_answer, gpt_4_reponse, gpt_4_score, gpt_4_winner], flagging_dir="flagged_data_points")
         
-        btn.click(response, inputs=[filtered_records_df, battle_index], outputs=[battle_index, question, model_a_name, model_b_name, model_a_answer, model_b_answer, gpt_4_reponse, gpt_4_score, gpt_4_winner])
+        btn.click(response, inputs=[target_battle_records_df, battle_index], outputs=[battle_index, question, model_a_name, model_b_name, model_a_answer, model_b_answer, gpt_4_reponse, gpt_4_score, gpt_4_winner])
         
         # filter_btn.click(filter_records_by_model_names, inputs=[specific_model_a, specific_model_b, filtered_records_df], outputs=[filtered_records_df])
         

@@ -1,0 +1,1 @@
+battle no-tie 100->150

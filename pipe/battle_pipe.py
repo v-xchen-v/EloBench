@@ -18,8 +18,67 @@ from models.hf_local_lm import AutoCausalLM
 from models.gpt_online_lm import GPTOnlineLM
 from models import get_model
 from elo_rating.rating_evaluator import compute_predict_winrate, compute_acutal_winrate, evaluate_winrate, evaluate_rank_consistency
+from typing import List
 
 class BattlePipeline(DumpyPipeline):
+    def _gen_model_answers(self, model_name: str, questions: List[str], batch_mode):
+        """Generate answers for each question with the given model"""
+        lm = get_model(model_name)
+
+        if not batch_mode or len(questions) == 1:
+            info_logger.info(f'generate answers for {len(questions)} questions on {model_name} in non-batch mode')
+            answers = []
+            for q in tqdm(questions, desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
+                answer = lm.generate_answer(q, free_model_when_exit=False)
+                answers.append(answer)
+                self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
+                
+                if not self.no_cache:
+                    # caching generated answers per ans
+                    self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
+                
+                # logger.debug(f'Question:\n{q}')
+                # logger.debug(f'Answer:\n{answer}')
+        else:
+            answers = []
+            info_logger.info(f'generate answers for {len(questions)} questions on {model_name} in batch mode')
+            while len(answers) < len(questions):
+                try:
+                    # avoid repeat generating answers when retry
+                    num_gen_ans = len(answers)
+                    questions = questions[num_gen_ans:]
+                    if num_gen_ans > 0:
+                        info_logger.info(f'retry with remaining {len(questions)} questions')
+                    
+                    for answer in tqdm(lm.batch_generate_answer(questions, free_model_when_exit=False), total=len(questions), desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
+                        answers.append(answer)
+                        q = questions[len(answers)-1-num_gen_ans]
+
+                        self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
+                        
+                        if not self.no_cache and (len(answers) % lm.batch_size == 0 or len(answers) == len(questions)):
+                            # caching generated answers per ans
+                            self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
+                        
+                        # logger.debug(f'Question:\n{q}')
+                        # logger.debug(f'Answer:\n{answer}') 
+                except RuntimeError as e:
+                    if 'CUDA out of memory' in str(e):
+                        logger.warning(f'OOM error on {model_name}, free gpu resource and try again.')
+                        
+                        lm.batch_size = int(lm.batch_size / 2)
+                        if lm.batch_size < 1:
+                            raise e
+                        logger.info(f'retry with half batch size: {int(lm.batch_size / 2)}')
+                    else:
+                        raise e
+        
+        if isinstance(lm, AutoCausalLM):
+            # free gpu resource
+            del lm.model
+            gc.collect()
+            torch.cuda.empty_cache()
+                
     def gen_model_answers(self, batch_mode=True) -> None:
         """
         Generate answers for each model based on the given questions.
@@ -49,69 +108,7 @@ class BattlePipeline(DumpyPipeline):
             questions_by_model = {k: v for k, v in questions_by_model.items() if len(v) > 0}
         
         for model_name, questions in tqdm(questions_by_model.items(), desc="Loop models and gen ans"):
-        
-            lm = get_model(model_name)
-
-            if not batch_mode or len(questions) == 1:
-
-                answers = []
-                for q in tqdm(questions, desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
-                    answer = lm.generate_answer(q, free_model_when_exit=False)
-                    answers.append(answer)
-                    self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
-                    
-                    if not self.no_cache:
-                        # caching generated answers per ans
-                        self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
-                    
-                    logger.debug(f'Question:\n{q}')
-                    logger.debug(f'Answer:\n{answer}')
-            else:
-                answers = []
-                while len(answers) < len(questions):
-                    try:
-                        # avoid repeat generating answers when retry
-                        num_gen_ans = len(answers)
-                        questions = questions[num_gen_ans:]
-                        if num_gen_ans > 0:
-                            info_logger.info(f'retry with remaining {len(questions)} questions')
-                        
-                        for answer in tqdm(lm.batch_generate_answer(questions, free_model_when_exit=False), total=len(questions), desc=f'loop {len(questions)} questions on {model_name}', leave=False, position=1):
-                            answers.append(answer)
-                            q = questions[len(answers)-1-num_gen_ans]
-
-                            self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, answer))
-                            
-                            if not self.no_cache and (len(answers) % lm.batch_size == 0 or len(answers) == len(questions)):
-                                # caching generated answers per ans
-                                self.question_and_answers_collection.to_csv(Path(self.tempcache_dir)/'q_and_as.csv')
-                            
-                            logger.debug(f'Question:\n{q}')
-                            logger.debug(f'Answer:\n{answer}') 
-                    except RuntimeError as e:
-                        if 'CUDA out of memory' in str(e):
-                            logger.warning(f'OOM error on {model_name}, free gpu resource and try again.')
-                            
-                            lm.batch_size = int(lm.batch_size / 2)
-                            if lm.batch_size < 1:
-                                raise e
-                            logger.info(f'retry with half batch size: {int(lm.batch_size / 2)}')
-                        else:
-                            raise e
-            
-            if isinstance(lm, AutoCausalLM):
-                # free gpu resource
-                del lm.model
-                gc.collect()
-                torch.cuda.empty_cache()
-            
-            # deprecated batch mode for get ability to caching per ans
-            # generate ans
-            # answers = AnswerGenerator.generate_answers(hf_model_id=model_name, questions=questions, progress_bar_class=tqdm)
-            
-            # for q, ans in zip(questions, answers):
-            #     self.question_and_answers_collection.add_answer(q, LLMAnswer(model_name, ans))
-
+            self._gen_model_answers(model_name, questions, batch_mode)
                 
 if __name__ == "__main__":
     # TODOs: design and dump config of battle in save folder with results

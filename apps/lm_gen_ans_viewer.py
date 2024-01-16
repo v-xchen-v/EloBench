@@ -7,13 +7,28 @@ import plotly.express as px
 
 with gr.Blocks() as demo:
     def show_missing_data(df):
-        ans_null_matrix = df.applymap(lambda x: x == 'NULL')
-        plt.figure(figsize=(10,6))
-        sns.heatmap(ans_null_matrix, cbar=False, yticklabels=False, cmap='viridis')
-        plt.title('Heatmap of Missing Data')
-        plt.tight_layout()
+        # ans_null_matrix = df.applymap(lambda x: x == 'NULL')
+        ans_null_matrix = df.isna()
         
-        return plt
+        # Converting the boolean matrix to integers for visualization
+        integer_matrix = ans_null_matrix.astype(int)
+
+        # Creating a heatmap using plotly.express
+        fig = px.imshow(integer_matrix, color_continuous_scale='Viridis', title="Heatmap of missing data in the answer dataframe")
+        
+        # Hiding the color bar
+        fig.update_layout(coloraxis_showscale=False)
+
+        # Display the plot
+        # fig.show()
+        
+        
+        # plt.figure(figsize=(10,6))
+        # sns.heatmap(ans_null_matrix, cbar=False, yticklabels=False, cmap='viridis')
+        # plt.title('Heatmap of Missing Data')
+        # plt.tight_layout()
+        
+        return fig
     
     def show_empty_ans_data(df):
         ans_empty_matrix = df.applymap(lambda x: x == '')
@@ -32,9 +47,13 @@ with gr.Blocks() as demo:
         plt.tight_layout()
         
         return plt
-    
-    ans_df = pd.read_csv(Path('tempcache/google_quora_alpaca_10629')/'q_and_as.csv', keep_default_na=False)
-    gr.Dataframe(ans_df, wrap=True)
+    # keep_default_na=False: This parameter tells Pandas not to automatically convert certain sets of strings (like the empty string '', '#N/A', '#N/A N/A', '-1.#IND', '-1.#QNAN', '-NaN', '-nan', '1.#IND', '1.#QNAN', 'N/A', 'NA', 'NULL', 'NaN', 'n/a', 'nan', 'null') to NaN. When set to False, it prevents the automatic conversion of these strings to NaN, treating them as regular strings instead.
+    # na_values=['NaN']: This explicitly tells Pandas to treat only the string 'NaN' as a NaN value.
+    # Putting it all together, the command reads the specified CSV file into a DataFrame (ans_df), treating only the string 'NaN' as a missing value and keeping all other potential NaN strings (like empty strings) as they are.
+    ans_df = pd.read_csv(Path('tempcache/google_quora_alpaca_sharegpt_chat1m_22012')/'q_and_as.csv', keep_default_na=False, na_values=['NaN'])
+    # gr.Dataframe(ans_df)
+    gr.Markdown('## Missing Data')
+    gr.Markdown('Also the progress of generate all questions and answers, if there are still some missing data in the answer dataframe. The missing data is shown in the heatmap below.')
     gr.Plot(show_missing_data(ans_df))
     gr.Plot(show_empty_ans_data(ans_df))
     # gr.Plot(average_ans_length(ans_df))

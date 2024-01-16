@@ -9,6 +9,7 @@ MODEL_REGIESTRY = {
 
 USE_MODEL_PARALLEL = {
     "meta-llama/Llama-2-70b-chat-hf": True,
+    "tiiuae/falcon-40b-instruct": True,
 }
 
 def get_model(model_name):

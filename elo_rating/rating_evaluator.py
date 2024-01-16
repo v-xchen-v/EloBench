@@ -1,3 +1,6 @@
+import os,sys
+sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
 import pandas as pd
 import numpy as np
 from collections import defaultdict
@@ -162,3 +165,81 @@ def compute_acutal_winrate(battle_outcomes_data: pd.DataFrame):
         # model_names = ordering
     row_beats_col = row_beats_col_freq.loc[model_names, model_names]
     return row_beats_col
+
+def compute_actual_winrate_awinb(battle_outcomes_data: pd.DataFrame, model_a: str, model_b: str):
+    """
+    Computes the actual win rate between model_a and model_b based on battle outcomes data.
+
+    Args:
+        battle_outcomes_data (pd.DataFrame): DataFrame containing battle outcomes data.
+        model_a (str): Name of model_a.
+        model_b (str): Name of model_b.
+
+    Returns:
+        float: The actual win rate between model_a and model_b.
+    """
+    valid_winner = set(['model_a', 'model_b'])
+    battle_outcomes_data_valid = battle_outcomes_data[battle_outcomes_data['winner'].isin(valid_winner)]
+    if len(battle_outcomes_data_valid) == 0:
+        return np.nan
+    
+    # filter out no-tie battles
+    battle_outcomes_notie_data = battle_outcomes_data_valid[(battle_outcomes_data_valid['winner']=='model_a') | (battle_outcomes_data_valid['winner']=='model_b')].copy()
+    
+    # Define a function to apply
+    def get_value_from_column(row):
+        return row[row['winner']]
+
+    # Apply the function
+    battle_outcomes_notie_data.loc[:, 'winner_name'] = battle_outcomes_notie_data.apply(get_value_from_column, axis=1)
+    
+    ab_battles = battle_outcomes_notie_data[((battle_outcomes_notie_data['model_a']==model_a) & (battle_outcomes_notie_data['model_b']==model_b)) | (battle_outcomes_notie_data['model_a']==model_b) & (battle_outcomes_notie_data['model_b']==model_a)]
+    if ab_battles.shape[0] == 0:
+        return np.nan
+    
+    ab_awin_battles = ab_battles[ab_battles['winner_name']==model_a]
+    return ab_awin_battles.shape[0]/ab_battles.shape[0]
+
+def compute_predict_winrate_awinb(elo_rating_data: pd.DataFrame, model_a: str, model_b: str):
+    """
+    Predicts the win rate between model_a and model_b based on their Elo ratings.
+
+    Args:
+        elo_rating_data (pd.DataFrame): DataFrame containing the Elo ratings of the models.
+        model_a (str): Name of model_a.
+        model_b (str): Name of model_b.
+
+    Returns:
+        float: The predicted win rate between model_a and model_b.
+    """
+    SCALE=400
+    BASE=10
+    # Get all the unique models in battles_data
+    all_models = sorted(elo_rating_data['model'].tolist())
+    
+    if model_a not in all_models or model_b not in all_models:
+        return np.nan
+    
+    ratings_dict = {}
+    for idx, row in elo_rating_data.iterrows():
+        ratings_dict[row['model']] = row['elo_rating']
+        
+    ea = 1 / (1 + BASE ** ((ratings_dict[model_b] - ratings_dict[model_a]) / SCALE))
+    # awinb = ea
+    # bwina = 1-ea
+    return ea
+
+
+if __name__ == '__main__':
+    ratings = [
+        {
+            'model': 'model_a',
+            'elo_rating': 1000,
+        },
+        {
+            'model': 'model_b',
+            'elo_rating': 2000,
+        }
+    ]
+    predict_wirnate_ab = compute_predict_winrate_awinb(pd.DataFrame.from_dict(ratings), 'model_a', 'model_b')
+    print(predict_wirnate_ab)
