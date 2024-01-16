@@ -16,11 +16,11 @@ from elo_rating.rating_evaluator import evaluate_rank_consistency, evaluate_winr
 from elo_rating import RatingEntity
 
 from tqdm import tqdm
-
-result_dir = r'results/google_quora_alpaca_10629_test3'
+save_dir = r'/elo_bench/reports/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset'
+result_dir = r'results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset'
 record_file = Path(result_dir)/'battle_records.csv'
 
-USE_BOOTSTRAP_ON_ELO = False
+USE_BOOTSTRAP_ON_ELO = True
 USE_BOOTSTRAP_ON_HISTORY = False
 FIRST_N_BATTLES = None
 records_df = pd.read_csv(record_file, nrows=FIRST_N_BATTLES)
@@ -120,6 +120,7 @@ def elo_leaderboard():
         model_names = list(prop_wins.keys())
         row_beats_col = row_beats_col_freq.loc[model_names, model_names]
         return row_beats_col
+    
     def visualize_pairwise_win_fraction(battles, title):
         row_beats_col = compute_pairwise_win_fraction(battles)
         fig = px.imshow(row_beats_col, color_continuous_scale='RdBu',
@@ -135,8 +136,8 @@ def elo_leaderboard():
         
     with gr.Tab('Elo Leaderboard'):
         if USE_BOOTSTRAP_ON_ELO:
-            with gr.Tab("Elo rating (bootstrap=1000)"):
-                elo_result, elo_result_median_all = get_bootstrap_medium_elo(winner_data_valid, ARENA_K, with_fullset=True)
+            with gr.Tab("Elo rating (bootstrap=100)"):
+                elo_result, elo_result_median_all = get_bootstrap_medium_elo(winner_data_valid, ARENA_K, with_fullset=True, BOOTSTRAP_ROUNDS=100)
                 
                 def visualize_bootstrap_scores(df, title):
                     bars = pd.DataFrame(dict(
@@ -161,18 +162,19 @@ def elo_leaderboard():
             
                 bootstrap_of_elo_fig = visualize_bootstrap_scores(elo_result_median_all, "Bootstrap of Elo Estimates")
                 gr.Plot(bootstrap_of_elo_fig)
-            
+                bootstrap_of_elo_fig.write_image(Path(save_dir)/f'bootstrap_of_elo_rating.pdf')
         
         
-                actual_winrate_fig = visualize_pairwise_win_fraction(winner_no_ties,
+                actual_winrate_matrix_fig = visualize_pairwise_win_fraction(winner_no_ties,
                     title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
-                predict_winrate_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+                predict_winrate_matrix_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+                predict_winrate_matrix_fig.write_image(Path(save_dir)/f'predict_winrate_matrix_100_bootstrap.pdf')
                 
                 gr.Markdown("Predict winrate Should be close to actual to actual winrate")
                 
                 with gr.Row():
-                    gr.Plot(actual_winrate_fig)
-                    gr.Plot(predict_winrate_fig)
+                    gr.Plot(actual_winrate_matrix_fig)
+                    gr.Plot(predict_winrate_matrix_fig)
                     
         with gr.Tab("Elo rating (without bootstrap)"):
             elo_result = get_elo_results_from_battles_data(winner_data_valid, K=ARENA_K)
@@ -180,17 +182,19 @@ def elo_leaderboard():
             model_ordering= elo_result['model'].tolist()   
             
             elo_df = elo_result.sort_values(by=['elo_rating'], ascending=False)
-            gr.Dataframe(elo_df, wrap=True)
+            gr.Dataframe(elo_df, wrap=True, interactive=True)
 
-            actual_winrate_fig = visualize_pairwise_win_fraction(winner_no_ties,
+            actual_winrate_matrix_fig = visualize_pairwise_win_fraction(winner_no_ties,
                 title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
-            predict_winrate_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+            actual_winrate_matrix_fig.write_image(Path(save_dir)/'actual_winrate_matrix.pdf')
+            predict_winrate_matrix_fig = vis_predict_win_rate(predict_win_rate(elo_result))
+            predict_winrate_matrix_fig.write_image(Path(save_dir)/'predict_winrate_matrix_without_bootstrap.pdf')
             
             gr.Markdown("Predict winrate Should be close to actual to actual winrate")
             
             with gr.Row():
-                gr.Plot(actual_winrate_fig)
-                gr.Plot(predict_winrate_fig)
+                gr.Plot(actual_winrate_matrix_fig)
+                gr.Plot(predict_winrate_matrix_fig)
     
 def battle_outcomes():
     with gr.Tab("Battle Outcomes"):
@@ -618,31 +622,33 @@ def elo_history():
             gr.Plot(rating_history_fig) 
             
         history = EloRatingHistory.gen_history(result_dir, use_bootstrap=
-                                               False, nrows=FIRST_N_BATTLES, step=1)
+                                               False, nrows=FIRST_N_BATTLES, step=10)
         elo_rating_history_df = history.to_df()
 
 
         # Show the bootstrap result first
         if USE_BOOTSTRAP_ON_HISTORY:
             with gr.Tab("bootstrap=100"):
-                history_bootstrap = EloRatingHistory.gen_history(result_dir, use_bootstrap=USE_BOOTSTRAP_ON_HISTORY, nrows=FIRST_N_BATTLES, BOOTSTRAP_ROUNDS=10)
+                history_bootstrap = EloRatingHistory.gen_history(result_dir, use_bootstrap=USE_BOOTSTRAP_ON_HISTORY, nrows=FIRST_N_BATTLES, BOOTSTRAP_ROUNDS=10, step=10)
                 elo_rating_history_bootstrap_df = history_bootstrap.to_df()
                 gr.Markdown(f"Rank History")
                 ranking_history_bootstrap_fig = plot_ranking_history(elo_rating_history_bootstrap_df)
                 gr.Plot(ranking_history_bootstrap_fig)
+                ranking_history_bootstrap_fig.write_image(Path(save_dir)/f'bootstrap_ranking_history.pdf')
 
-                gr.Markdown(f'Elo Rating History')
-                vis_rating_history(history_bootstrap)
+                # gr.Markdown(f'Elo Rating History')
+                # vis_rating_history(history_bootstrap)
                 
-                gr.Markdown(f'Elo Rating Delta History')
-                vis_rating_delta_history(history_bootstrap)
-                vis_rating_delta_history2(history_bootstrap)
+                # gr.Markdown(f'Elo Rating Delta History')
+                # vis_rating_delta_history(history_bootstrap)
+                # vis_rating_delta_history2(history_bootstrap)
                 
                 gr.Markdown("Rank Consistency History")
                 rank_consistency_bootstrap_history_pd = calculate_rank_consistency_metrics(history_bootstrap)
                 # gr.Dataframe(rank_consistency_bootstrap_history_pd, wrap=True)
                 bootstrap_rank_consistency_history_fig = plot_rank_consistency(rank_consistency_bootstrap_history_pd)
                 gr.Plot(bootstrap_rank_consistency_history_fig)
+                bootstrap_rank_consistency_history_fig.write_image(Path(save_dir)/f'bootstrap_rank_consistency_history.pdf')
                 
                 # gr.Markdown("WinRate MAE History")
                 # winrate_bootstrap_history_pd = calculate_winrate_metrics(history_bootstrap)
@@ -652,18 +658,20 @@ def elo_history():
         with gr.Tab("without bootstrap"):
             gr.Markdown(f"Rank History")
             ranking_history_fig = plot_ranking_history(elo_rating_history_df)
-            gr.Plot(ranking_history_fig)        
+            gr.Plot(ranking_history_fig)  
+            ranking_history_fig.write_image(Path(save_dir)/f'ranking_history.pdf')      
             
-            gr.Markdown(f'Elo rating history)')
-            vis_rating_history(history)
+            # gr.Markdown(f'Elo rating history)')
+            # vis_rating_history(history)
                             
-            gr.Markdown(f'Elo Rating Delta History')
-            vis_rating_delta_history(history)
-            # vis_rating_delta_history2(history)
+            # gr.Markdown(f'Elo Rating Delta History')
+            # vis_rating_delta_history(history)
+            # # vis_rating_delta_history2(history)
             
             gr.Markdown("Rank Consistency History")
             rank_consistency_history_pd = calculate_rank_consistency_metrics(history)
             rank_consistency_history_fig = plot_rank_consistency(rank_consistency_history_pd)
+            rank_consistency_history_fig.write_image(Path(save_dir)/f'rank_consistency_history.pdf')
             gr.Plot(rank_consistency_history_fig)
             # gr.Dataframe(rank_consistency_history_pd, wrap=True)
             
@@ -732,7 +740,7 @@ if __name__ == '__main__':
         elo_history()
         
         # details
-        battle_outcomes()
+        # battle_outcomes()
         # ab_bias()
         # question_tie_review()
         demo.launch()

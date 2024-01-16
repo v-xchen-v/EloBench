@@ -9,7 +9,7 @@ info_logger.setLevel(logging.INFO)
 info_console_handler = logging.StreamHandler()
 info_console_handler.setLevel(logging.INFO)
 
-issue_question_file_handler = logging.FileHandler(r'logs/issue_question.log')
+issue_question_file_handler = logging.FileHandler(r'/elo_bench/logs/issue_question.log')
 issue_question_file_handler.setLevel(logging.INFO)
 
 # Step 5: Create a formatter and set it to the handler

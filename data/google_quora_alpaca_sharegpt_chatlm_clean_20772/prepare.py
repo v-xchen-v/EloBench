@@ -29,5 +29,25 @@ filtered_questions.to_csv(r'/elo_bench/data/google_quora_alpaca_sharegpt_chatlm_
 
 # no_duplicated_filtered_questions.to_csv(r'/elo_bench/data/google_quora_alpaca_sharegpt_chatlm_clean_20772/questions.excel')
 
+# import os, sys
+# sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+
+# import pandas as pd
+# quesitons = pd.read_csv('data/google_quora_alpaca_sharegpt_chat1m_xxx/questions.csv')
+# print(quesitons.shape) # (10629+11383, 2)
+# print(quesitons.groupby('source').count()) 
+# '''
+#                        question
+# source                         
+# Google Trends              5409
+# Quora                      4415
+# lysms_chat_1m              5969
+# sharegpt                   5414
+# tatsu-lab/alpaca_eval       805
+# '''
+# from datamodel import QuestionCollection
+# cleaned_questions = QuestionCollection.read_csv(r'data/google_quora_alpaca_sharegpt_chat1m_xxx/questions.csv').questions
+# # 22011 - 49 = 21962
+
 
                  
