@@ -16,8 +16,8 @@ from elo_rating.rating_evaluator import evaluate_rank_consistency, evaluate_winr
 from elo_rating import RatingEntity
 
 from tqdm import tqdm
-save_dir = r'/elo_bench/reports/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset'
-result_dir = r'results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset'
+# save_dir = r'/elo_bench/reports/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset'
+result_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset'
 record_file = Path(result_dir)/'battle_records.csv'
 
 USE_BOOTSTRAP_ON_ELO = True
@@ -162,13 +162,13 @@ def elo_leaderboard():
             
                 bootstrap_of_elo_fig = visualize_bootstrap_scores(elo_result_median_all, "Bootstrap of Elo Estimates")
                 gr.Plot(bootstrap_of_elo_fig)
-                bootstrap_of_elo_fig.write_image(Path(save_dir)/f'bootstrap_of_elo_rating.pdf')
+                # bootstrap_of_elo_fig.write_image(Path(save_dir)/f'bootstrap_of_elo_rating.pdf')
         
         
                 actual_winrate_matrix_fig = visualize_pairwise_win_fraction(winner_no_ties,
                     title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
                 predict_winrate_matrix_fig = vis_predict_win_rate(predict_win_rate(elo_result))
-                predict_winrate_matrix_fig.write_image(Path(save_dir)/f'predict_winrate_matrix_100_bootstrap.pdf')
+                # predict_winrate_matrix_fig.write_image(Path(save_dir)/f'predict_winrate_matrix_100_bootstrap.pdf')
                 
                 gr.Markdown("Predict winrate Should be close to actual to actual winrate")
                 
@@ -186,9 +186,9 @@ def elo_leaderboard():
 
             actual_winrate_matrix_fig = visualize_pairwise_win_fraction(winner_no_ties,
                 title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
-            actual_winrate_matrix_fig.write_image(Path(save_dir)/'actual_winrate_matrix.pdf')
+            # actual_winrate_matrix_fig.write_image(Path(save_dir)/'actual_winrate_matrix.pdf')
             predict_winrate_matrix_fig = vis_predict_win_rate(predict_win_rate(elo_result))
-            predict_winrate_matrix_fig.write_image(Path(save_dir)/'predict_winrate_matrix_without_bootstrap.pdf')
+            # predict_winrate_matrix_fig.write_image(Path(save_dir)/'predict_winrate_matrix_without_bootstrap.pdf')
             
             gr.Markdown("Predict winrate Should be close to actual to actual winrate")
             
@@ -634,7 +634,7 @@ def elo_history():
                 gr.Markdown(f"Rank History")
                 ranking_history_bootstrap_fig = plot_ranking_history(elo_rating_history_bootstrap_df)
                 gr.Plot(ranking_history_bootstrap_fig)
-                ranking_history_bootstrap_fig.write_image(Path(save_dir)/f'bootstrap_ranking_history.pdf')
+                # ranking_history_bootstrap_fig.write_image(Path(save_dir)/f'bootstrap_ranking_history.pdf')
 
                 # gr.Markdown(f'Elo Rating History')
                 # vis_rating_history(history_bootstrap)
@@ -648,7 +648,7 @@ def elo_history():
                 # gr.Dataframe(rank_consistency_bootstrap_history_pd, wrap=True)
                 bootstrap_rank_consistency_history_fig = plot_rank_consistency(rank_consistency_bootstrap_history_pd)
                 gr.Plot(bootstrap_rank_consistency_history_fig)
-                bootstrap_rank_consistency_history_fig.write_image(Path(save_dir)/f'bootstrap_rank_consistency_history.pdf')
+                # bootstrap_rank_consistency_history_fig.write_image(Path(save_dir)/f'bootstrap_rank_consistency_history.pdf')
                 
                 # gr.Markdown("WinRate MAE History")
                 # winrate_bootstrap_history_pd = calculate_winrate_metrics(history_bootstrap)
@@ -659,7 +659,7 @@ def elo_history():
             gr.Markdown(f"Rank History")
             ranking_history_fig = plot_ranking_history(elo_rating_history_df)
             gr.Plot(ranking_history_fig)  
-            ranking_history_fig.write_image(Path(save_dir)/f'ranking_history.pdf')      
+            # ranking_history_fig.write_image(Path(save_dir)/f'ranking_history.pdf')      
             
             # gr.Markdown(f'Elo rating history)')
             # vis_rating_history(history)
@@ -671,7 +671,7 @@ def elo_history():
             gr.Markdown("Rank Consistency History")
             rank_consistency_history_pd = calculate_rank_consistency_metrics(history)
             rank_consistency_history_fig = plot_rank_consistency(rank_consistency_history_pd)
-            rank_consistency_history_fig.write_image(Path(save_dir)/f'rank_consistency_history.pdf')
+            # rank_consistency_history_fig.write_image(Path(save_dir)/f'rank_consistency_history.pdf')
             gr.Plot(rank_consistency_history_fig)
             # gr.Dataframe(rank_consistency_history_pd, wrap=True)
             
@@ -683,64 +683,16 @@ def elo_history():
         # gr.Markdown("Elo rating history board (without bootstrap)")
         # gr.Dataframe(elo_rating_history_df, wrap=True)
 
-def question_tie_review():
-    with gr.Tab("Question Review"):
-        # get question with winner data
-        question_columns_to_inclusive = ['question', 'model_a', 'model_b', 'winner']
-        question_data = records_df[question_columns_to_inclusive]
-        # remove nan
-        question_data_valid = question_data[(question_data['winner'].isna()==False) & (question_data['winner']!='invalid')]
-        
-        def get_tie_count_and_percentage(df, winner_name='tie'):
-            # Group by 'question' and count 'tie' occurrences
-            tie_count = df[df['winner'] == winner_name].groupby('question').size()
-            
-            tie_questions = tie_count.reset_index()['question']
 
-            # Group by 'question' and count total occurrences
-            total_count = df[df['question'].isin(tie_questions)].groupby('question').size()
-
-            # Calculate percentage
-            tie_percentage = np.round((tie_count / total_count) * 100, decimals=0)
-
-            # Combine the counts and percentages into a single DataFrame
-            result = pd.DataFrame({'question': tie_questions.tolist(), 'tie_count': tie_count, 'tie_percentage': tie_percentage})
-            
-            result.sort_values(by=['tie_percentage'], ascending=False, inplace=True)
-            
-            # ignore the rows of column 'tie_count' is null or 0
-            result = result[(result['tie_percentage'] > 50) & (result['tie_count']!=0)]
-            
-            # add index column
-            result.reset_index(drop=True, inplace=True)
-            
-            return result
-        
-        gr.Markdown('Question Tie Review: Question too easy?')
-        tie_question_df = get_tie_count_and_percentage(question_data_valid, 'tie')
-        gr.DataFrame(tie_question_df, wrap=True)
-        
-        gr.Markdown('Question Tie(all bad) Review: Questio too hard?')
-        tie_allbad_question_df = get_tie_count_and_percentage(question_data_valid, 'tie(all bad)')
-        gr.DataFrame(tie_allbad_question_df, wrap=True)
-        
-        all_question_count = len(question_data_valid['question'].unique())
-        tie_count = len(tie_question_df)
-        tie_all_bad_count = len(tie_allbad_question_df)
-        normal_question_count = all_question_count - tie_count - tie_all_bad_count
-        
-        fig = px.pie(names=['other','tie', 'tie(allbad)'], values=[normal_question_count, tie_count, tie_all_bad_count], title='Question Tie Percentage > 50%')
-        gr.Plot(fig)
         
 if __name__ == '__main__':
     with gr.Blocks() as demo:
         gr.Markdown('Result Report')
         # shows the most important information first.
         elo_leaderboard()
-        elo_history()
+        # elo_history()
         
         # details
         # battle_outcomes()
         # ab_bias()
-        # question_tie_review()
         demo.launch()

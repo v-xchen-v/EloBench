@@ -31,7 +31,7 @@ iterate_to_no_tie_logger = logging.getLogger('iterate_to_n_no_tie')
 iterate_to_no_tie_logger.setLevel(logging.DEBUG)
 
 battle_pipeline_logger = logging.getLogger('battle_pipeline_logger')
-iterate_to_no_tie_logger.setLevel(logging.INFO)
+battle_pipeline_logger.setLevel(logging.INFO)
 
 elo_rating_history_logger = logging.getLogger('elo_rating_history_logger')
 elo_rating_history_logger.setLevel(logging.DEBUG)

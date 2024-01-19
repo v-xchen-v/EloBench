@@ -7,9 +7,10 @@ from pathlib import Path
 
 # battle_arrangement = pd.read_csv(Path(r'results/google_quora_alpaca_10629_test3')/'battle_arrangement.csv')
 # question_and_answers = pd.read_csv(Path(r'tempcache/google_quora_alpaca_10629')/'q_and_as.csv')
-battle_records = pd.read_csv(Path(r'results/google_quora_alpaca_10629_test3')/'battle_records.csv', engine='python')
+battle_records = pd.read_csv(Path(r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset')/'battle_records.csv', engine='python')
 # inclusive_cols = ['question'm ]
-target_models = ['WizardLM/WizardLM-7B-V1.0', 'chavinlo/alpaca-13b']
+# target_models = ['WizardLM/WizardLM-7B-V1.0', 'chavinlo/alpaca-13b']
+target_models = ['huggyllama/llama-13b', 'huggyllama/llama-7b']
 target_battle_records = battle_records[battle_records['model_a'].isin(target_models) & battle_records['model_b'].isin(target_models)]
 
 pass

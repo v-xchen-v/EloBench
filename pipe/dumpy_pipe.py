@@ -120,7 +120,7 @@ class DumpyPipeline:
             self.battle_arrangements.arrange(arrange_strategy, file=Path(self.save_dir) / 'battle_arrangement.csv')
         else:
             if arrange_strategy == ArrangementStrategy.Random_N_BattleCount_Each_CombPair:
-                info_logger.info('Load')
+                info_logger.info('Loading cached answers, to avoid arranging no answer question battles...')
                 kwargs['q_and_as'] = QuestionAndAnswersCollection.read_csv(Path(self.tempcache_dir)/'q_and_as.csv')
             self.battle_arrangements.arrange(arrange_strategy, **kwargs)
         

@@ -26,6 +26,17 @@ def get_players_elo_result(llm_players: list[LLMPlayer], rating_places=0) -> pd.
     pd.DataFrame: DataFrame containing the player IDs and their rounded elo rating scores, sorted in descending order.
     """
     df = pd.DataFrame([[x.id, np.round(x.rating, rating_places)] for x in llm_players], columns=[MODEL_HEADER, ELO_RATING_HEADER]).sort_values(ELO_RATING_HEADER, ascending=False).reset_index(drop=True)
+    
+    def get_rank(rating, all_ratings: list):
+        """assign the rank based on the descending order of the numbers, ensuring that the largest number gets the rank 1, and the smallest number gets the rank equal to the number of unique elements in the list. Rank of numbers in a list where the same numbers have the same rank"""
+        rank = 1
+        for item in all_ratings:
+            if rating < item:
+                rank+=1
+        return rank
+    
+    # adding rank column, same elo rating will have same rank
+    df['rank'] = df['elo_rating'].apply(lambda x: get_rank(x, df['elo_rating'].tolist()))
     df.index = df.index+1
     return df
 
@@ -58,6 +69,38 @@ def get_elo_results_from_battles_data(battles_data: pd.DataFrame, K: int) -> pd.
         PairwiseRatingEntity(model_a_player, model_b_player).battle(winner=battle_winner)
         
     return get_players_elo_result(list(llm_players.values()))
+
+def get_elo_results_from_battles_data_each_rnd(battles_data: pd.DataFrame, K: int) -> pd.DataFrame:
+    """
+    Get elo ranking and rating scores of players by the arranged order of battles.
+
+    Args:
+        battles_data (pd.DataFrame): DataFrame containing the battles data.
+        K (int): The K-factor used in the Elo rating system.
+
+    Returns:
+        pd.DataFrame: DataFrame containing the elo results of the players.
+    """
+    battle_models = pd.concat([battles_data['model_a'], battles_data['model_b']]).unique().tolist()
+    llm_players = {x: LLMPlayer(x, K=K) for x in battle_models}
+
+    elo_ratings_each_rnd = {}
+    for rd, model_a, model_b, winner in battles_data[['model_a', 'model_b', 'winner']].itertuples():
+        model_a_player = llm_players[model_a]
+        model_b_player = llm_players[model_b]
+        
+        battle_winner = None
+        if winner == 'model_a':
+            battle_winner = PairwiseBattleWinner.WINNER_IS_A
+        elif winner == 'model_b':
+            battle_winner = PairwiseBattleWinner.WINNER_IS_B
+        else:
+            battle_winner = PairwiseBattleWinner.TIE
+            
+        PairwiseRatingEntity(model_a_player, model_b_player).battle(winner=battle_winner)
+        elo_ratings_each_rnd[rd+1] = get_players_elo_result(list(llm_players.values()))
+        
+    return elo_ratings_each_rnd
 
 
 def get_bootstrap_result(battles, func_compute_elo, K, num_round):

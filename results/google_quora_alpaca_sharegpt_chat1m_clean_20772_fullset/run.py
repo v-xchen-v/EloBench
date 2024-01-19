@@ -13,7 +13,7 @@ from logger import info_logger
 
 if __name__ == '__main__':
     dataset_dir = Path('data')/'google_quora_alpaca_sharegpt_chatlm_clean_20772'
-    iterative_battle_pipe = IterativeBattlePipeline(tempcache_dir=r'tempcache/google_quora_alpaca_sharegpt_chat1m_clean_20772', save_dir='results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset', no_cache=False, target_n_notie=40)
+    iterative_battle_pipe = IterativeBattlePipeline(tempcache_dir=r'tempcache/google_quora_alpaca_sharegpt_chat1m_clean_20772', save_dir='results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset', no_cache=False, target_n_notie=150)
     
     # Register questions to battle pipeline
     # all_questions = pd.read_csv(dataset_dir/'questions.csv')['question'].tolist()

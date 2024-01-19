@@ -13,6 +13,9 @@ def show_dataset_tab(dataset_dir: Path):
     QUESTION_LIST = True
     QUESTION_LENGTH = True
     SOURCE_DISTRIBUTION = True
+    KEYWORD_FILTER_ON=True
+    
+    keywords = ['toxic']
     
     with gr.Tab('Dataset'):
         dataset_question_df = pd.read_csv(dataset_dir/'questions.csv')
@@ -56,6 +59,10 @@ def show_dataset_tab(dataset_dir: Path):
             plt.title('Distribution of Question Length')
             gr.Plot(question_length_fig)
                 
+        if KEYWORD_FILTER_ON:
+            keywords_questions = dataset_question_unique_df[dataset_question_unique_df['question'].str.contains(keywords[0])]
+            gr.DataFrame(keywords_questions)
+            
         # TODO: handle the issue questions later
         if os.path.exists(dataset_dir/'issue_questions.json'):
             issue_questions = json.load(open(dataset_dir/'issue_questions.json'))
@@ -64,7 +71,7 @@ def show_dataset_tab(dataset_dir: Path):
 
 if __name__ == '__main__':
     with gr.Blocks() as demo:
-        dataset_dir = Path('data/google_quora_alpaca_sharegpt_chat1m_22012')
+        dataset_dir = Path('data/google_quora_alpaca_sharegpt_chatlm_clean_20772')
         show_dataset_tab(dataset_dir)
             
     demo.launch()

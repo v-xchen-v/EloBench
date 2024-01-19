@@ -89,8 +89,11 @@ def battle_set_tabs(result_dir: Path):
             model_battled_count_fig.update_layout(xaxis_title="model", yaxis_title="Battle Count", height=400, showlegend=False)
             
             gr.Plot(model_battled_count_fig)
-            model_battled_count_fig.write_image(str(save_dir/'model_battled_count.pdf'))
+            # model_battled_count_fig.write_image(str(save_dir/'model_battled_count.pdf'))
 
+            valid_battled_pairs_df.sort_values(by=['model_a', 'model_b'])
+            notie_valid_battled_pairs_df.sort_values(by=['model_a', 'model_b'])
+             
             pair_battled_count_fig = visualize_battle_count(valid_battled_pairs_df, title="Battle Count of Each Combination of Models")
             
             pair_battled_notie_count_fig = visualize_battle_count(notie_valid_battled_pairs_df, title="No-Tie Battle Count of Each Combination of Models")
@@ -99,13 +102,13 @@ def battle_set_tabs(result_dir: Path):
 
             # gr.Dataframe(battled_pairs_df, wrap=True)
             
-            pair_battled_count_fig.write_image(str(save_dir/'pair_battled_count.pdf'))
-            pair_battled_notie_count_fig.write_image(str(save_dir/'pair_battled_notie_count.pdf'))
+            # pair_battled_count_fig.write_image(str(save_dir/'pair_battled_count.pdf'))
+            # pair_battled_notie_count_fig.write_image(str(save_dir/'pair_battled_notie_count.pdf'))
             
 if __name__ == '__main__':
     with gr.Blocks() as demo:
-        result_dir = Path('/elo_bench/results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset')
-        save_dir = Path('/elo_bench/reports/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset')
+        result_dir = Path('/elo_bench/results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset')
+        # save_dir = Path('/elo_bench/reports/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset')
         battle_set_tabs(result_dir)
             
     demo.launch()

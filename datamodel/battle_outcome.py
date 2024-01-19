@@ -234,7 +234,7 @@ class BootstrapedBattleOutcomes:
         if self.nature_battle_outcomes is not None and self.num_of_bootstrap is not None:
             self._do_bootstrap(num_of_bootstrap)
         
-        self.save_path_pattern = '.bootstrap/battled_pairs_num_of_bootstrap.csv'
+        self.save_path_pattern = 'battled_pairs_num_of_bootstrap.csv'
         
     def _do_bootstrap(self, num_of_bootstrap):
         """
@@ -263,8 +263,8 @@ class BootstrapedBattleOutcomes:
         Args:
             save_dir (str): The directory where the CSV files will be saved.
         """
-        if not os.path.exists(Path(save_dir)/'.bootstrap'):
-            os.makedirs(Path(save_dir)/'.bootstrap')
+        if not os.path.exists(Path(save_dir)):
+            os.makedirs(Path(save_dir))
             
         for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs), desc='saving bootstrap battled pairs...'):
             save_path = Path(save_dir)/self.save_path_pattern.replace('num_of_bootstrap', str(i+1).zfill(5))
@@ -273,7 +273,7 @@ class BootstrapedBattleOutcomes:
     @classmethod
     def is_cached(cls, save_dir: str, num_of_bootstrap: int):
          # load cached bootstraped battle outcomes
-        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battled_pairs_*.csv'))  
+        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'battled_pairs_*.csv'))  
         return len(bootstrap_outcomes_files) == num_of_bootstrap
           
     @classmethod

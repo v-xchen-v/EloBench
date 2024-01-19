@@ -31,7 +31,7 @@ class IterativeBattlePipeline(BattlePipeline):
         # Then, iteratively arrange more battles, gen ans, do pairwise battle with judger until the no-tie battle count is reached
         self._iterative_to_n_no_tie(self.target_n_notie, None, save_per=saving_per)
     
-    def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, num_need_add, no_tie_target, exclude_pairs=[[]], exclude_noans_questions=True):
+    def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, no_tie_target,num_need_add=None,  exclude_pairs=[[]], exclude_noans_questions=True):
         # Create a Boolean DataFrame to mask exclude model pairs
         exclude_pair_mask_df = pd.DataFrame([[not (col_name in [x[0] for x in exclude_pairs] and index_name in [x[1] for x in exclude_pairs]) for col_name in df_frequency_with_aborder.columns] 
                         for index_name in df_frequency_with_aborder.index], 
@@ -121,15 +121,15 @@ class IterativeBattlePipeline(BattlePipeline):
         
         return new_pairs, num_need_add, num_try_add    
     
-    def _get_new_iteration_battles(self, no_tie_with_ab_order, NUM_NEW_BATTLES_PER_ITER, no_tie_target, exclude_pairs=[[]]):
+    def _get_new_iteration_battles(self, no_tie_with_ab_order, no_tie_target, exclude_pairs=[[]]):
         """arrange more battles on the no-tie battle count across multiple model pairs"""
 
         # no_more_iteration = False
-        new_pairs = self._select_pairs_with_lower_frequency(pd.DataFrame.from_dict(no_tie_with_ab_order, orient='index'), num_need_add=NUM_NEW_BATTLES_PER_ITER,no_tie_target=no_tie_target, exclude_pairs=exclude_pairs)
+        new_pairs = self._select_pairs_with_lower_frequency(pd.DataFrame.from_dict(no_tie_with_ab_order, orient='index'), num_need_add=None,no_tie_target=no_tie_target, exclude_pairs=exclude_pairs)
         
         return new_pairs
         
-    def _iterative_to_n_no_tie(self, N, NUM_NEW_BATTLES_PER_ITER, stop_num_tryadd=1, save_per=50):
+    def _iterative_to_n_no_tie(self, N, stop_num_tryadd=1, save_per=50):
         # arrange num_new_battles more battles, unless no more can arrange or reach setting
         retry_counter=0
         while True:
@@ -153,7 +153,7 @@ class IterativeBattlePipeline(BattlePipeline):
                         exclude_pairs.append([model_1, model_2])
                     pass
                     
-            new_pairs, num_needadd_battles, num_tryadd_battles = self._get_new_iteration_battles(no_tie_with_aborder, NUM_NEW_BATTLES_PER_ITER=NUM_NEW_BATTLES_PER_ITER, no_tie_target=N, exclude_pairs=exclude_pairs)
+            new_pairs, num_needadd_battles, num_tryadd_battles = self._get_new_iteration_battles(no_tie_with_aborder, no_tie_target=N, exclude_pairs=exclude_pairs)
             
             if num_needadd_battles == 0:
                 return True
