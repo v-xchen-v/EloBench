@@ -8,19 +8,22 @@ import plotly.graph_objects as go
 import plotly.express as px
 from scipy import stats
 
-battled_pairs_csv_file = r'/elo_bench/results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset/battled_pairs.csv'
-
-save_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset/.analysis'
-battled_pairs_csv_file_list = glob.glob(str(Path(save_dir)/'.bootstrap/battled_pairs_*.csv'))[:10]
+battle_outcome_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset'
+analysis_data_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset/.analysis'
+battled_pairs_csv_file_list = glob.glob(str(Path(analysis_data_dir)/'.bootstrap/battled_pairs_*.csv'))[:10]
 # agg_df = get_aggregate_leaderboard_history(battled_pairs_csv_file_list, FIRST_N=None, step=100)
 # agg_df.to_csv(r'/elo_bench/battle_outcome_analysis/output/agg_df.csv')
 
-agg_df = pd.read_csv(r'/elo_bench/battle_outcome_analysis/output/data/elo_rank_rating_agg_df.csv')
+agg_df = pd.read_csv(Path(battle_outcome_dir)/'output/data/elo_rank_rating_agg_df.csv')
 
+save_dir = Path(battle_outcome_dir)/'output/plot/rank'
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
+    
 fig = px.line(agg_df, x='num_battle', y='rank_median', color='model', title='elo rank history')
 # reverse y axis
 fig.update_yaxes(autorange="reversed")
-fig.write_image(f'/elo_bench/battle_outcome_analysis/output/rank_trend.png')
+fig.write_image(Path(save_dir)/'rank_trend.png')
 
 
 
@@ -54,4 +57,4 @@ def cal_rank_kendalltau(df: pd.DataFrame):
 
 rank_kendalltau = cal_rank_kendalltau(agg_df)
 fig = px.line(rank_kendalltau, x='num_battle', y='rank_kendalltau', title='rank kendalltau')
-fig.write_image(f'/elo_bench/battle_outcome_analysis/output/plot/rank/rank_kandelltau.png')
+fig.write_image(Path(save_dir)/'rank_kandelltau.png')

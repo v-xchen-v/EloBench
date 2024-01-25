@@ -120,7 +120,8 @@ class BattleOutcomes:
         """
         valid_winner = set(['model_a', 'model_b', 'tie', 'tie(all bad)'])
         valid_battled_pairs = [x for x in self.battled_pairs_in_order if x.winner in valid_winner]
-        return self.get_frequency(valid_battled_pairs, despite_ab_order)
+        frequency_on_battled_pairs =  self.get_frequency(valid_battled_pairs, despite_ab_order)
+        return frequency_on_battled_pairs
         
     def preety_print_frequency(self, frequery_dict):
         """
@@ -290,7 +291,7 @@ class BootstrapedBattleOutcomes:
         bootstrap_battle_outcomes = BootstrapedBattleOutcomes()
         
         # load cached bootstraped battle outcomes
-        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'.bootstrap/battled_pairs_*.csv'))  
+        bootstrap_outcomes_files = glob.glob(str(Path(save_dir)/'battled_pairs_*.csv'))  
         bootstrap_outcomes_files.sort()  
         
         bootstrap_battle_outcomes.num_of_bootstrap = len(bootstrap_outcomes_files)
@@ -323,6 +324,7 @@ class BootstrapedBattleOutcomes:
         elo_df = elo_df.groupby('model').median().reset_index()
         elo_df["elo_rating"] = (elo_df["elo_rating"] + 0.5).astype(int)
         elo_df.sort_values(by=['elo_rating'], ascending=False, inplace=True)
+        elo_df['rank'] = elo_df['elo_rating'].rank(method='dense', ascending=False).astype(int)
         elo_df.reset_index(drop=True)
         return elo_df
     

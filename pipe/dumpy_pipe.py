@@ -272,7 +272,7 @@ class DumpyPipeline:
                     if new_battles_counter % saving_per < num_thread:
                         self._save_records(records, tempcache_records)
                     
-            self._finalize_records(records, tempcache_records)
+        self._finalize_records(records, tempcache_records)
             
         # print information
         battle_pipeline_logger.debug(f'{new_battles_counter} new battles, {len(self.battle_arrangements.battles_in_order)-new_battles_counter} restored from cache.')

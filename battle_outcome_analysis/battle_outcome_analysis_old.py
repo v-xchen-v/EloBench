@@ -8,17 +8,17 @@ from elo_rating.rating_evaluator import compute_actual_winrate_awinb
 from tqdm import tqdm
 from collections import defaultdict
 
-result_dir = r'/elo_bench/results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset'
+battle_outcome_dir = r'/elo_bench/results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset_add_mistral_notie200'
 NUM_BOOTSTRAP = 100
 
 
-analysis_dump_dir = Path(result_dir)/'.analysis'
+analysis_dump_dir = Path(battle_outcome_dir)/'.analysis'
 if not os.path.exists(analysis_dump_dir):
     os.makedirs(analysis_dump_dir)
 bootstrap_n_elo_rating_file = Path(analysis_dump_dir)/'bootstrap_n_elo_rating.csv'
 bootstrap_aggregate_elo_rating_file = Path(analysis_dump_dir)/'bootstrap_aggregate_elo_rating.csv'
 
-battled_pairs_file = Path(result_dir)/'battled_pairs.csv'
+battled_pairs_file = Path(battle_outcome_dir)/'battled_pairs.csv'
 # battled_pairs_file = Path(analysis_dump_dir/'battled_pairs.csv')
 
 # setting for elo ratings

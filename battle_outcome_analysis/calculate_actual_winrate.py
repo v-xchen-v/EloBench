@@ -8,9 +8,9 @@ from tqdm import tqdm
 from collections import defaultdict
 
 
-result_dir = r'/elo_bench/results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset'
-analysis_dump_dir = Path(result_dir)/'.analysis'
-cleaned_battled_pairs_file = Path(analysis_dump_dir/'battled_pairs.csv')
+battle_outcome_dir = r'/elo_bench/results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset_register_model_later_1'
+analysis_dump_dir = Path(battle_outcome_dir)/'.analysis'
+cleaned_battled_pairs_file = Path(analysis_dump_dir/'.bootstrap/battled_pairs_00001.csv')
 
 notie_winner = ['model_a', 'model_b']
 valid_battled_pairs = pd.read_csv(cleaned_battled_pairs_file)
@@ -53,7 +53,7 @@ for idx, row in valid_battled_pairs.iterrows():
     winrate_dict = compute_actual_winrate(awinb_counter, ab_battle_counter, ab_notie_battle_counter, sorted_model_pair[0], sorted_model_pair[1], num_battle)
     awinb_actual_winrates[sorted_model_pair[0]][sorted_model_pair[1]].append(winrate_dict)
 
-save_dir = r'battle_outcome_analysis/output/data/actual_winrate'
+save_dir = Path(battle_outcome_dir)/'output/data/actual_winrate'
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
 for model_a in awinb_actual_winrates:

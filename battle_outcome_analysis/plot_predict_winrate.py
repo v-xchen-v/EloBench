@@ -30,17 +30,19 @@ models = [ \
 ]
 models = sorted(models)
 
-save_dir = r'/elo_bench/battle_outcome_analysis/output/plot/predict_winrate'
+battle_outcome_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset'
+save_dir = Path(battle_outcome_dir)/'output/plot/predict_winrate'
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
-predict_winrate_pd = pd.read_csv(r'/elo_bench/battle_outcome_analysis/output/data/predict_winrate.csv')
+predict_winrate_pd = pd.read_csv(Path(battle_outcome_dir)/'output/data/predict_winrate.csv')
+
 for idx, model_a in enumerate(models):
     for model_b in models[idx+1:]:
         inclusive_cols = [model_b, 'num_battle', 'model_b'] # acutal is model_b column records modela
         winb_winrate = predict_winrate_pd[inclusive_cols]
         ab_winrate = winb_winrate[winb_winrate['model_b']==model_a]
         
-        actual_winrate_pd = pd.read_csv(rf'/elo_bench/battle_outcome_analysis/output/data/actual_winrate/actual_winrate_{model_a.replace("/", ".")}_{model_b.replace("/", ".")}.csv')
+        actual_winrate_pd = pd.read_csv(Path(battle_outcome_dir)/rf'output/data/actual_winrate/actual_winrate_{model_a.replace("/", ".")}_{model_b.replace("/", ".")}.csv')
         final_battle_num = actual_winrate_pd['num_battle'].max()
         awinb_actual_winrate = actual_winrate_pd[actual_winrate_pd['num_battle']==final_battle_num]['awinb_actual_winrate'].values[0]
         fig = px.line(ab_winrate, x='num_battle', y=model_b, title=f'{model_a} vs {model_b} predict winrate')
@@ -48,6 +50,6 @@ for idx, model_a in enumerate(models):
         # fig.show()
         # set y range to 0-1
         fig.update_yaxes(range=[0, 1])
-        fig.write_image(Path(save_dir)/f'predict_winrate_{model_a.replace("/", ".")}_{model_b.replace("/", ".")}.png')
+        fig.write_image(Path(save_dir)/f'predict_winrate_trend_{model_a.replace("/", ".")}_{model_b.replace("/", ".")}.png')
         pass
         

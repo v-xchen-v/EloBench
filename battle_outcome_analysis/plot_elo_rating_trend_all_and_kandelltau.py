@@ -8,14 +8,16 @@ import plotly.graph_objects as go
 import plotly.express as px
 from scipy import stats
 
-
-agg_df = pd.read_csv(r'/elo_bench/battle_outcome_analysis/output/data/elo_rank_rating_agg_df.csv')
-
+battle_outcome_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset'
+agg_df = pd.read_csv(Path(battle_outcome_dir)/'output/data/elo_rank_rating_agg_df.csv')
+save_dir = Path(battle_outcome_dir)/'output/plot/elo_rating'
+if not os.path.exists(save_dir):
+    os.makedirs(save_dir)
     
 # Plot 1: elo rating history
 
 fig = px.line(agg_df, x='num_battle', y='elo_rating_median', color='model', title='elo rank history')
-fig.write_image(f'/elo_bench/battle_outcome_analysis/output/plot/elo_rating/elo_rating_trend.png')
+fig.write_image(Path(save_dir)/'elo_rating_trend.png')
 
 # Plot 2: elo rating kendalltau
 def cal_rank_kendalltau(df: pd.DataFrame):
@@ -36,4 +38,4 @@ def cal_rank_kendalltau(df: pd.DataFrame):
 
 rank_kendalltau = cal_rank_kendalltau(agg_df)
 fig = px.line(rank_kendalltau, x='num_battle', y='elo_rating_kendalltau', title='rank kendalltau')
-fig.write_image(f'/elo_bench/battle_outcome_analysis/output/plot/elo_rating/elo_rating_kandelltau.png')
+fig.write_image(Path(save_dir)/'elo_rating_kandelltau.png')

@@ -31,7 +31,8 @@ models = [ \
 ]
 models = sorted(models)
 
-save_dir = r'battle_outcome_analysis/output/plot/actual_winrate'
+battle_outcome_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset'
+save_dir = Path(battle_outcome_dir)/r'output/plot/actual_winrate'
 if not os.path.exists(save_dir):
     os.makedirs(save_dir)
 for idx, model_a in enumerate(models):

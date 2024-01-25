@@ -1,0 +1,6 @@
+,model
+0,Xwin-LM/Xwin-LM-7B-V0.1
+1,HuggingFaceH4/zephyr-7b-beta
+2,mosaicml/mpt-30b-chat
+3,meta-llama/Llama-2-7b-chat-hf
+4,meta-llama/Llama-2-70b-chat-hf

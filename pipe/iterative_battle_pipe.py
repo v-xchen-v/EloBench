@@ -31,7 +31,25 @@ class IterativeBattlePipeline(BattlePipeline):
         # Then, iteratively arrange more battles, gen ans, do pairwise battle with judger until the no-tie battle count is reached
         self._iterative_to_n_no_tie(self.target_n_notie, None, save_per=saving_per)
     
-    def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, no_tie_target,num_need_add=None,  exclude_pairs=[[]], exclude_noans_questions=True):
+    def _select_pairs_with_lower_frequency(self, df_frequency_with_aborder, no_tie_target, models, num_need_add=None,  exclude_pairs=[[]], exclude_noans_questions=True):
+        # Add the models even not conducted 1 battles.
+        # not mention models in df_frequncy_with_aborder
+        no_intial_battle_a_models = list(set(models) - set(df_frequency_with_aborder.index))
+        no_intial_battle_b_models =  list(set(models) - set(df_frequency_with_aborder.columns))
+        for model in models:
+            if model not in df_frequency_with_aborder.index:
+                # add a index
+                df_frequency_with_aborder.loc[model] = pd.Series(0, index=df_frequency_with_aborder.columns)
+        for model in models:
+            if model not in df_frequency_with_aborder.columns:
+                # add a column
+                df_frequency_with_aborder[model] = pd.Series(0, index=df_frequency_with_aborder.index)
+
+        # setting not initial a model and b model corresponding cell to NaN
+        for no_intial_battle_a_model in no_intial_battle_a_models:
+            for no_intial_battle_b_model in no_intial_battle_b_models:
+                df_frequency_with_aborder.loc[no_intial_battle_a_model, no_intial_battle_b_model] = np.nan
+        
         # Create a Boolean DataFrame to mask exclude model pairs
         exclude_pair_mask_df = pd.DataFrame([[not (col_name in [x[0] for x in exclude_pairs] and index_name in [x[1] for x in exclude_pairs]) for col_name in df_frequency_with_aborder.columns] 
                         for index_name in df_frequency_with_aborder.index], 
@@ -41,7 +59,7 @@ class IterativeBattlePipeline(BattlePipeline):
         # Replace NaN values with zero (or a small value) before inversion
         # This gives NaN cells a zero probability of being selected
         freqency_masked_df = df_frequency_with_aborder.mask(
-            df_frequency_with_aborder.isna() 
+            (df_frequency_with_aborder.isna())
             | ((df_frequency_with_aborder+df_frequency_with_aborder.T) >= no_tie_target)) 
         masked_df = freqency_masked_df.where(exclude_pair_mask_df)
         iterate_to_no_tie_logger.debug(masked_df.reindex(columns=masked_df.index)
@@ -121,11 +139,11 @@ class IterativeBattlePipeline(BattlePipeline):
         
         return new_pairs, num_need_add, num_try_add    
     
-    def _get_new_iteration_battles(self, no_tie_with_ab_order, no_tie_target, exclude_pairs=[[]]):
+    def _get_new_iteration_battles(self, no_tie_with_ab_order, no_tie_target, models, exclude_pairs=[[]]):
         """arrange more battles on the no-tie battle count across multiple model pairs"""
 
         # no_more_iteration = False
-        new_pairs = self._select_pairs_with_lower_frequency(pd.DataFrame.from_dict(no_tie_with_ab_order, orient='index'), num_need_add=None,no_tie_target=no_tie_target, exclude_pairs=exclude_pairs)
+        new_pairs = self._select_pairs_with_lower_frequency(pd.DataFrame.from_dict(no_tie_with_ab_order, orient='index'), models=models, num_need_add=None,no_tie_target=no_tie_target,exclude_pairs=exclude_pairs)
         
         return new_pairs
         
@@ -153,7 +171,7 @@ class IterativeBattlePipeline(BattlePipeline):
                         exclude_pairs.append([model_1, model_2])
                     pass
                     
-            new_pairs, num_needadd_battles, num_tryadd_battles = self._get_new_iteration_battles(no_tie_with_aborder, no_tie_target=N, exclude_pairs=exclude_pairs)
+            new_pairs, num_needadd_battles, num_tryadd_battles = self._get_new_iteration_battles(no_tie_with_aborder, no_tie_target=N, exclude_pairs=exclude_pairs, models=self.model_collection.models)
             
             if num_needadd_battles == 0:
                 return True
