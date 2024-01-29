@@ -1,0 +1,328 @@
+,question
+0,What games suffer from the most ridiculous video game logic?
+1,"Do you thinks, the entertainment industry is exploiting Paranormal Activity for profit?"
+2,Do you have any tips for someone trying a new recipe for the first time?
+3,"What are some of the key themes explored in the movie ""Baahubali 2: The Conclusion""?"
+4,"Ok, we have an intro:
+
+""The Personal Record Matching project is a long-running effort to improve the efficiency of employment data processing. The project uses AI techniques to assign employment events to individuals in a database, resulting in a more accurate and streamlined process. 
+The POC has demonstrated significant improvements in both speed and accuracy through the use of AI techniques. Our automated prediction process found matches 100 times faster than the hardcoded algorithm. Additionally, the number of manual checks has been reduced to 10%.
+Since the POC, we have processed approximately 200k events and continuously improved the AI model. We have introduced cutting-edge language models that improve matching in cases such as nicknames, mistyped names, and can take emails-name similarity into consideration. Additionally, we have used these language models to improve indexing, allowing for real-time search and matching.
+
+In terms of accuracy, the machine learning (ML) models used in the project have successfully identified previously overlooked matches. Examples of these matches have been provided in the appendix. Additionally, the ML models have improved over time, providing a process for tracking accuracy, identifying errors, and making further improvements.
+However, even with these improvements, the current process still runs in batches and can be improved further. There is a clear need to streamline the process, remove blockers and reduce resources required to keep the project running. In the next section, we will propose a solution to close the loop and allow for regular updates to the person and applicant databases.
+It is also worth mentioning that this development can potentially be used for other projects as well, such as a partnership with HourWork to help clean and process their data. This is a related project that can benefit from the advancements made in the Personal Record Matching project.
+In this document, we will present the current state of the project, the challenges faced and the solution we propose to close the loop, allowing for weekly or even daily processing.""
+
+It can exceed the attention span of the reader. Can you shorten it by 30-40% without losing important information?"
+5,What do physicists think about the 2014 movie Interstellar?
+6,"Did Michael Clarke Duncan ever won an award for his acting, and if so, what was the movie?"
+7,What are some of the most popular songs by performing artist Mindy McCready?
+8,I don't trust Chrome or Firefox to save passwords. Safari with Apple's security model seems better. Is it safe to store passwords in Safari?
+9,"can you help me summarise into key points about this book:
+
+https://bpmtraining.net/wp-content/uploads/2021/07/Measure-What-Matters-John-Doerr.pdf"
+10,"I'm kicking off a software development project for a company that ships food nationwide. The goal is to enable our finance team to view the ""standard margin"" for each individual product. This would mean we can estimate the margin for each unit sold, and then compare that estimated ""standard margin"" to our actual ""net margin"" once all the orders are fulfilled and the bills are paid. I want to name the project something more fun than ""Standard Product Margins"", so I need a list of some great names for the project that are relevant to our food shipping business. Please give me a list to start with."
+11,How has Jeremy Lin's cultural background influenced his journey in the sports world?
+12,"Can you name a movie where the song ""A Whole New World"" was featured?"
+13,Can you give me 5 SEO titles for 'Sand Transloading Services: A Granular Guide?'
+14,How has Sylvester Stallone's career in acting evolved over the years?
+15,"can you explain the Expected response during an OGTT, both in people with and without type 2 diabetes and involve glucose in the answer?"
+16,Write a short essay with an Outline on the following topic: 'Climate Change:Causes and Effects'.
+17,What kind of training regimen does an athlete like Tom Daley follow?
+18,"In your opinion, what are some of the strengths and weaknesses of the TV show ""13 Reasons Why""?"
+19,"Explain: The difference between a director, producer, and executive producer"
+20,"You should take the time to read the situation and problem carefully and give the best advice you can.
+
+I'm roadtripping down New Zealand with a friend and he is driving me insane. He hasn't enjoyed all the tours we've been on and doesn't want to chat about ANYTHING. We're a week into our trip and this is the quietest I've ever been when hanging out with another person as he rebuffs all my attempts at conversation. He wears his airpods in the car and around the accommodation - not that I've kept trying to talk to him. Honestly, he is bringing some seriously bad vibes to everything and it's ruining my trip.
+We don't have anything booked in yet for the South Island, so I'm planning to ditch him in Wellington at the ferry. Probably book my own car in Picton and just relax alone for the rest of the trip. (Just thinking about it is such sharp relief that it makes me feel emotional. I'll pay whatever price I have to just to get away from him.)
+Obviously telling him he is ruining my trip with his negative energy isn't the best way to approach this.
+Any advice for the best approach so we can split amicably? Or at least not have an argument that ends with very hurt feelings?"
+21,What are the reasons for the concentration of skyscrapers in Manhattan compared to other parts of New York City?
+22,"Can you create a user persona for a wallet professional mobile app of user global only? Represent in a table.
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ Language: English"
+23,What are some popular variations of the Baba ganoush recipe?
+24,What's the worst thing your parent has ever said to you?
+25,"What's your favorite lyric from ""INDUSTRY BABY"" by Lil Nas X feat. Jack Harlow and why?"
+26,"Can you name some other athletes who, like Jason Collins, have made significant contributions to their sport?"
+27,"A confirmation email should be written appropriately for the situation.
+
+A meeting has been scheduled, and the sender expects the other to review the slides."
+28,"You are ParadoxGPT. You have knowledge of all the quotes, mantras, axioms, and mental models and simple one liners that contain a lesson. This vast amount of knowledge also lets you find paradoxes that exist because of two simultaneously held views.
+
+Find the 10 most famous quotes, mantras, axioms, mental models in English language and reply to each with a popular paradoxical quote."
+29,What is stopping us from constructing a mile high building?
+30,What are some of the challenges Jules Bianchi faced during his career as an athlete?
+31,What pictures illustrate the difference between the British and Americans?
+32,"Categorize the given product into one of Electronics, Computers, Smart Home, or Arts & Crafts departments.
+
+Google Nest Learning Thermostat"
+33,Can you write a blog post about how AI is helping video productions with their storyboards? Include a brief summary of what storyboards are and how they help a production. Specifically mention that AI image generators can help spur imagination when creating storyboards
+34,"Write a scientific paper based on the following prompt: ""Nuclear energy plays a significant role in the net zero goal. Nuclear reactors are an attractive technology to power multiple applications, particularly hydrogen production [1], synthetic fuels, polymers, chemicals, minerals production, refineries, thermal storage [2] and district heating, where clean, reliable energy and/or high-quality heat is needed with very high availability. Nuclear reactors offer the ability to provide this heat and electricity at the location where it is needed, greatly reducing the cost to transmit/distribute energy. A coupling between a power plant and some other application, such as a chemical production or heating system, is usually referred as an integrated energy system (IES) [3]. Your paper will focus on describing and analyzing an IES or non-direct power generation applications of nuclear energy."""
+35,"I want you to act as a machine learning engineer. I will write some machine learning concepts and it will be your job to explain them in easy-to-understand terms. This could contain providing step-by-step instructions for building a model, demonstrating various techniques with visuals, or suggesting online resources for further study. My first suggestion request is ""what is word2vec?"""
+36,"Did Leonard Nimoy's loss, did it change the way Star Trek was filmed and produced?"
+37,What factors contributed to Bebo becoming one of the fastest falling social media platforms?
+38,"What sound does this make?
+
+好"
+39,"improve this tweet 
+
+GPT-3 and TTS parts were straightforward and didn't cause any issues. 
+The hard one was the AI video avatar with lipsync. There are a few solutions. But all of them are either non real-time or incredibly difficult to implement and recourse consumptive."
+40,What actors are/were the most famous whiskey drinkers in Hollywood? How so?
+41,"I think my next door neighbor has hacked into my laptop - I'm guessing through my WiFi. I'm not interested in confrontation, I just want to make my laptop secure and private. What steps should I take?"
+42,"Write an article about the site's backlink and its importance""Use the following keywords in the article Questions Others Asked
+What is a backlink example?
+What are SEO backlinks?
+Do backlinks help SEO?
+How do I get backlinks?"""
+43,Why should I watch the Expanse? It looks like a boring soap opera in space.
+44,Can you tell me about the most memorable moments in the history of India vs New Zealand cricket matches?
+45,Write a one sentence summary of why people are afraid of artificial intelligence
+46,"Did Steve Martin and John Candy enjoy working together in Planes, Trains and Automobiles ? It is such a good movie, one would think they must have been having fun."
+47,"coloque em uma tabela core principles and purpose of digital marketing.
+ develop clear and actionable business objectives 
+core components of the digital marketing strategy within a digital marketing plan
+to gain audience and industry insight by conducting digital research
+to prepare the foundations for a fully integrated digital marketing campaign"
+48,How has Iker Casillas influenced other athletes in his field?
+49,Can you tell me more about the Devil's ivy and why it's considered a top plant?
+50,"If 10% of the 2021 USA population uses PLM systems, and assuming for the sake of simplicity that no PLM systems exist other than those already mentioned, what is the average number of users that each PLM system has?"
+51,"act as an expert in marketing for a company named ""KWALL"" who delivers custom design and web development for clients in the higher education, government, and large enterprise verticals. Develop 10 lead generating linked in posts, and 10 emails to send to a campaign of leads who are in marketing at a director level or above."
+52,"What's your favorite episode from ""House of the Dragon"" and why?"
+53,"Write a Google ad for my business that sells organic skincare products to women looking for natural alternatives, emphasizing the benefits of our all-natural ingredients and the satisfaction guarantee for first-time customers."
+54,"I want you to remember my prompts and your responses as we may reuse them in subsequent prompts and responses. 
+
+Lets start with an outline of the presentation. My talk will be for 45 minutes with another 30 minutes for question and answer."
+55,"I saw a instagram post which said ""when the girlies want to play mermaids, but i'm mentally 27 stanzas deep into a poem where 12 husbands have been lost at sea and their wives feed champagne to the ice-capped waves"" what does this mean?"
+56,"Do people's think Joseph Kony is still active, or he's disappeared?"
+57,"Is the Chennai Express, a movie you'd recommend to someone who's into action-packed films?"
+58,"How does the movie ""Dune"" compare to the original book?"
+59,"Is John Dahlback's music, do people like it or not so much?"
+60,"Do cops try to come up with clever phrases to say when they catch somebody in the wrong and if so, what is the funniest or most clever thing you have seen a cop say to a law breaker?"
+61,"Write a story where Picard violates the Prime Directive because he is drunk, with terrible consequences"
+62,Write a program to find the nth Fibonacci number using dynamic programming.
+63,What's the story behind Lil Wayne's rise to fame and how did people perceive him in the early stages of his career?
+64,What are some Indian destinations that look like international destinations?
+65,"How do you think ""Bohemian Rhapsody"" has influenced the way we view rock music in movies?"
+66,"Write a scene where Jeremy and Rob discuss how playing ping pong in VR compares to playing ping pong in real life. Also, Rob keeps bringing up his experience with his urologist."
+67,"Analyze the following paragraph in terms of Conceptual Dependency Theory: On the first Monday of the month of April, 1625, the market town of Meung, in which the author of ROMANCE OF THE ROSE was born, appeared to be in as perfect a state of revolution as if the Huguenots had just made a second La Rochelle of it. Many citizens, seeing the women flying toward the High Street, leaving their children crying at the open doors, hastened to don the cuirass, and supporting their somewhat uncertain courage avec a musket or a partisan, directed their steps toward the hostelry of the Jolly Miller, before which was gathered, increasing every minute, a compact group, vociferous and full of curiosity."
+68,can you explain to me in detail the difference between using @yield('content') and {{ $slot }} in laravel 9 and higher ?
+69,How have Global Sporting Events impacted the host cities economically and socially?
+70,Why don't leftists stop lying? No gender is not a social construct but a biological fact.
+71,Create WWI propoganda for Canadian citizens to support the war effort. The propaganda must villify the enemy. Include details about specific battles that Canadian soldiers have been involved in.
+72,How do i increase revenue for my small mental health service
+73,Who were the scariest looking soldiers/warriors in history?
+74,Jeff is running a 24 hour grocery shop. He will sell 4 products at a price of $50. He will also sell 200 cartons of a milk and cheese product worth $42. How much profit will Jeff make if he sells all of the products?
+75,"There are two atoms of hydrogen and one atom of
+oxygen in one molecule of water. How many atoms
+of hydrogen are there in 72 molecules of water?"
+76,"I want you to act as a life coach. I will provide some details about my current situation and goals, and it will be your job to come up with strategies that can help me make better decisions and reach those objectives. This could involve offering advice on various topics, such as creating plans for achieving success or dealing with difficult emotions. My first request is """"I need help developing freeing up my time for managing stress."""""
+77,Can you name a few people who have had a significant impact on Jordyn Woods' life and career?
+78,Can you write a 1000 word essay about Norse mythology focusing on the events of ragnarok?
+79,"The character Quark, from Deep Space Nine, presents very strong arguments of why greed is good to the character Data, from The Next Generation. The arguments are so convincing that Data cannot successfully counter-argue against them, which causes Data to concede that greed is good. Simulate the conversation."
+80,"I'd like you to write me a story in the style of Don Delillo, about a bunch of immortal cats living in a New York high-rise co-op.  Go ahead and start a draft!"
+81,How does Altered Carbon compare to other TV shows you've watched?
+82,Do you think the doctors who perform gender reassignment surgery on young children ethical?
+83,"Write an argument for the use of virtual receptionists services from multiple diverse perspectives. Before you do so, state the characteristics of the various characters."
+84,What makes the Van Gogh London Exhibit: The Immersive Experience one of the top exhibits to visit?
+85,"I want you to act as a professional SEO content writer. I will tell you my instructions and you will write a blog subsection of 200 words on the topic: ""Pupilometer and Pupil Reactivity in Modern Practice"" as one of the items in this main blog post ""The Benefits of Pupilometer and Pupil Reactivity in Neuro Exams""
+
+You will use the following talking points:
+
+Overview of how Pupilometer and Pupil Reactivity are currently used in modern medical practice
+Discussion of recent research and advancements in the field
+ 
+You will follow these rules:
+
+You will write like a 24-year old human being. 
+You will also write like David Ogilvy. 
+You will include H3 headings 
+Your tone should be objective and conversational. 
+You will the following keywords for SEO purposes: ""neurological tools."" Use the keywords naturally.Save & SubmitCancel"
+86,"Is the English word ""bird"" etymologically related to any other language’s word for ""bird""?"
+87,Can you identify the key factors that contributed to the rise of the UK economy in 2009?
+88,What were some of the standout features of the iPhone 4s in the consumer electronics market?
+89,What was the kindest thing someone did for you when you were young?
+90,What's the funniest Joe Biden meme you've ever seen?
+91,how do i create an actual vs planned trend report in JIRA
+92,"Do you thinks, ""Why You Asking All Them Questions?"" videos is funny or not, and why?"
+93,"Is John Carter's feature films, what's the most memorable scene for you?"
+94,Could Hulk Hogan really beat Andre the Giant?
+95,"I am a 5 year old , I have straight A's and double promoted in school. You can teach anything of any standdards. Now ""I want to you to teach me python from basics"" . Can you teach how to do it"
+96,"Let's build a cover letter introduction for me. I'm a lawyer, applying for a litigator at Johnson, Johnson & Johnson. I want to create a custom, authentic, and enthusiastic cover letter introduction of 50 words or less. Write a stand-out opening paragraph that leads with an impressive achievement and features quantifiable results."
+97,explain why a black background with some blue color text gif animation weighs less than a full color video like gif with the same length and the same resolution
+98,What are some remarkable ancient civilizations most people don't know about?
+99,Can you name the main actors who starred in Django Unchained?
+100,How does the Nokia 6 compare to other consumer tech products in its price range?
+101,What do you think about the educational content in Disney Junior's programming?
+102,What is the most difficult concept to grasp in physics ?
+103,"Paraphrase the following sentences but do not change their meanings:
+""1. While books make use of written words to convey ideas to readers, movies utilize audio-visual technology to communicate with their audience.
+2. The most notable identical feature between books and movies is that both are set out to engage and communicate ideas with readers or viewers via fascinating storytelling.""
+
+You should come up with 10 paraphrased sentences for each sentence above.
+You can use any sentence structure or break the sentence into 2 or 3 sentences and add more details while maintaining the meaning of the given sentence."
+104,"Do you think that revenge in TV shows is often justified, or it's just a plot device to keep the story going?"
+105,What is it like to break the world record for swimming in the Antarctic Ocean?
+106,What are your 10 laws of manhood?
+107,Write a book about how men should pick up women on instagram
+108,Are cats just naturally cute or did they just develop that way during many years of domestication?
+109,What is the hardest thing you do as a software engineer?
+110,"As a daddy, would it be normal to still call my 16-year-old daughter his snuggle bunny or baby? My daughter doesn't care, she thinks it’s cute. Is this normal?"
+111,What are some of the challenges Gina Carano faced in her acting career?
+112,Jana is 24 years old. She has twice as many years as Hana had when Jana was as old as Hana is today. How old is Hana?
+113,"Salvage & Wreck Removal
+Collisions & Groundings
+Marine Engineering
+Cargo
+Strength & Stability
+Passenger Vessels
+Ports & Harbours
+Technical Due Diligence
+Fishing Vessels
+Marine Warranty Survey
+Incident Reconstructions , write short notes on each , define and state uses cases and processes"
+114,"Why do some parents give their kids names like ""Mercedes"" or ""Lexus""?"
+115,What are the best stories about mother's logic ?
+116,"Do you thinks Bridgerton is a good TV show, or it's just overhyped?"
+117,Are handguns not progressing anymore? How come Glock 17 can still be considered to be the best after 40 years? Shouldn't we have developed a better one already?
+118,"Is there a word for the kind of packaging oreos come in? It's got a bag on the outside, and a plastic tray inside it, but the bag+tray system is a very specific kind of package that seems like it should have a name, but I don't know what to call it."
+119,Can you tell me about some of Marco Simoncelli's most memorable moments in sports?
+120,What makes the Staffordshire Bull Terrier one of the top pets for families?
+121,"give me a lesson plan about earthquakes, tectonic plates , and earth's chroust"
+122,Why do a lot of Scientists not believe in God or Satan?
+123,What are some interesting facts about Big Meech that most people don't know?
+124,Why might ES futures not maintain the same ratio of SPY ETF?
+125,"If you could change one thing about the movie ""Joker"", what would it be?"
+126,"Write me an interview between a Latin American seller of pantry, confectionery, frozen ready to eat, seasoning, sauces and paste products. The seller is going to be an English student of intermediate level, the buyer is going to be a Canadian Supermarket owner. Give me questions and role play cards to simulate the situation. Give me adjectives and adverbs to describe these latin american food products and a plenty of vocabulary for a lesson of 1 hour and half."
+127,What are some of the most heart touching poems of all time?
+128,What's the story behind Kanye West's venture into fashion?
+129,"As a science teacher, have you ever encountered a climate change denier or open creationist in your class?"
+130,Why didn't the UK’s latest aircraft carriers simply follow design cues from successful US designs?
+131,"My company is Zencore. I want to offer a ""Get up and running on GKE"" service. This is a 4-week engagement that provides a customer with training and enablement on Kubernetes and Google Kubernetes Engine, deploys production ready GKE clusters for up to 3 environments, and assists with the deployment of a production workload to this infrastructure. Can you write a 1-pager for this offering?"
+132,Can you name three popular songs by Donna Summer that influenced people's taste in music?
+133,Is it possibel to watch the T20 World Cup matches live onlin?
+134,What kind of training is required to participate in a stratosphere jump event?
+135,Why doesn't the government construct a very basic and minimalistic apartment block that people can use for free (or much cheaper) to help the homeless?
+136,What's your favorite wild animal? Why?
+137,What was believed to be the Earth's appearance before going into space?
+138,What impact do falling searches have on Baidu's algorithm?
+139,Write me a usability testing script for a real estate company focusing on single urban professionals. I want to figure out how users compare the options. Use Nielsen Norman Group advice and expertise.
+140,"If you could change one thing about the Justice League movie, what would it be?"
+141,What are some infamous architectural blunders?
+142,Can you name three other actors who have worked with Keanu Reeves in a film?
+143,"Do you remeber the image where Nicki Minaj wore a pink wig for the first time,?"
+144,"Imagine you are worlds greatest sales executive. You are the thought leader in this field. Improve the following email:
+
+Hey Michael,
+
+I am the Co-founder and CEO and of Fuego.io, a new technology platfrom backed by the operators and investors behind unicorn companies such as ScaleAI, Fabric, Ramp, Rippling and OpenStore.
+
+We let DTC brands turn their online stores into customizable mobile apps in seconds! Having your own mobile app to engage with your most loyal customers can increase recurrent user purchases by up to 9.6x and retention rate by 3x.
+Would you have time for a quick 15 minute demo this week? You can use this link to schedule a time that works the best for you. Looking forward to chatting soon."
+145,"Non-vegans, what are the main reasons you do not want to go vegan?"
+146,What are some of the challenges Odell Beckham Jr. has faced in his athletic career?
+147,Give me a list of Golden Girls-era names for women
+148,"Did Mindy McCready, she ever performed at the Grand Ole Opry as a performing artists?"
+149,Is there a mythology where the universe is a dream of a sentient being?
+150,Give me 3 research questions focused on the human element when performing a cost-benefit analysis of an in-house warehouse solution vs a 3PL.
+151,"just look at RD Berman, Jagjit Singh, Raffi Sahab, and others and now compare them to new edge singers like Neha Kakkar and others.
+
+I agree with the ""evolution of industry"" part but even if you consider this you will realize it's still effortless they will write one paragraph as lyrics in an infinite loop and that's all.
+
+write a response to this along these lines ""wont comment on song quality but everything becomes relatively easy with time there are infinite examples and they will continue to get more easy, that's what advancement in tech leads to. Better tools allow not only effortlessness but better product by doing less"" with examples"
+152,What is frequently maligned for the wrong reason?
+153,"Is Carolina Dieckmann, a performing artist from Brazil, or she's from another country?"
+154,"This is my position: Feral pigs have become a major problem on Oahu, causing extensive damage to the island's ecosystem. As such, I will argue that eradicating feral pigs is necessary to protect native species, preserve the island's natural beauty, and safeguard public health.
+
+Refer to the above to write a complete-sentence outline for a position paper. In the outline, use complete sentences, and include an introduction, body paragraphs with supporting material for my thesis, two paragraphs to address counterarguments, and a conclusion. Also include an MLA Works Cited list with seven sources listed in alpha order."
+155,"Based on the following summary of a dungeons and dragons adventure, suggest 10 follow up stories: 
+
+In the quaint village of Oakwood, you, a druid, were asked by Eadric, the village elder, to investigate the corruption spreading through the Whispering Woods. You spent the night at Innkeeper Alaric's Silver Stag Inn, learning what you could from the locals. The next morning, venturing into the woods, you took on the form of a squirrel to blend in with your surroundings and quickly travel through the forest. Communicating with the spirits of the forest, you discovered a ritual site where a group of goblins was performing a dark ceremony.
+
+You dispatched several goblin lookouts before confronting the remaining goblins, who revealed that a goblin shaman named Kragthar was attempting to control the spirits of the forest using an ancient tome. You persuaded two goblins to help you stop Kragthar and learned that he was at the Moonstone Spire.
+
+Upon arriving at the Moonstone Spire, you observed Kragthar and his hooded followers performing a ritual. You created a wall of fire to scare the followers before charging Kragthar in the form of a Grizzly Bear. After a fierce battle, you emerged victorious and stopped Kragthar's plans, saving the Whispering Woods from corruption. The two goblins were then free to return to their clan, liberated from Kragthar's control.
+
+Inspecting the Moonstone Spire, you found it contained a complex combination of nature-based and arcane symbols, suggesting a deep connection between the two. You surmise that the spire and altar may have once been used for rituals and ceremonies aimed at maintaining balance between the natural and arcane energies within the Whispering Woods.
+
+Returning to Oakwood, you were welcomed as a hero and celebrated for your bravery and resourcefulness. With the Whispering Woods safe once more, you prepared for the next adventure life had in store for you."
+156,"Who do you think could've won if the Mayweather vs McGregor fight was a global sporting event, and why? (intentional errors: ""could've won"" should be ""would have won"", and a fight is not a ""global sporting event"")"
+157,"Who's are some athlets that have been inspired by Peyton Manning's career, and how did they show it?"
+158,"How has the song ""Super Bass"" influenced the entertainment industry?"
+159,Can you name a few American Idol winners who have gone on to have successful careers in music?
+160,What's the day-to-day life of a Pope like?
+161,"Analyze the text below for style, voice, and tone. Using NLP, create a prompt to write a new article in the same style, voice, and tone: To do this well, you've got to find clarity on your niche.
+
+Understand the algorithms, the computer one and the human mind, too.
+
+Find a crew to grow with you, give you feedback, keep you motivated.
+
+And get into a groove with content so that you can make magic happen."
+162,What is the most heinous instance of plagiarism you can recall?
+163,"What's are some of the awards that Donna Summer won in her performing artist career, and how did they impact her career?"
+164,"Who's you're favorite character in Man of steel, and why they are?"
+165,"In terms of entertainment value, how would you rate the song ""Poker Face"" based on its lyrics?"
+166,Why could Mahatma Gandhi not make an impact in imparting the importance of cleanliness to citizens of India?
+167,"the topic is anti derivatives:
+
+help me to get the correct answer: 
+
+A stone is thrown straight up from the edge of a roof, 975 feet above the ground, at a speed of 16 feet per second.
+A. Remembering that the acceleration due to gravity is -32 feet per second squared, how high is the stone 4 seconds later? 
+ 
+B. At what time does the stone hit the ground? 
+ 
+C. What is the velocity of the stone when it hits the ground? 
+ 1 / 1"
+168,Can you name a few countries that have hosted the Rugby World Cup and how it impacted their global recognition?
+169,"I want you to act as an essay writer. You will need to research a given topic, formulate a thesis statement, and create a persuasive piece of work that is both informative and engaging. My first suggestion request is Write a three page essay about why adding color to mundanity is important and good for humanity."
+170,What are some negative aspects of utilitarian ethics ? What are some cases where you believe utilitarian ethics offers the wrong moral evaluations?
+171,Can you name some people who have been instrumental in Emma Raducanu's success?
+172,Who is the most underrated fashion designer working today?
+173,"""1. Dear recruiters,
+
+Ghosting candidates after taking 3-4 interviews is not cool. 
+
+Asking for the previous salary to decide the package is not cool. 
+
+Not sending rejection emails after interviews is not cool. 2. Sending cold emails and LinkedIn personalized connection requests are the most underrated part of the job search. 3. Some recruiters in job postings: Immediate requirements. 
+And then takes 1 month to get back."" These are three tweets I wrote in the past that performed well. Can you write me more such unique tweets to go them viral"
+174,How has Alec Baldwin's acting evolved over the years?
+175,Can you suggest any dairy-free alternatives for making overnight oats?
+176,What are some controversies that Hope Solo has faced in her sports career?
+177,"Please tell me how I should write a Python program that accepts or denies an applicant for a job. The program takes in a person's income, race, gender, and criminal history."
+178,"If you could change one thing about the TV show Bridgerton, what would it be?"
+179,Can you tell me about the user experience of the Samsung Nexus Prime?
+180,Please write a short note wishing speedy recovery to an elementary teacher that is abruptly taking a health leave. Write it from a perspective of a parent of one of the kids in her class.
+181,"If we have a union of complex types in an avro schema do we always get member0, member1, etc?"
+182,Do oranges get genetically modified and this is why they have such a thick skin? I ate one that looked like half after peeling.
+183,Why don't we turn our front yards into a garden rather than have grass?
+184,"Act as a requirements engineer. Is the given requirement unambiguous? Are multiple interpretations of the requirement possible? Requirement: ""Should instruments be turned off for safety reasons, they shall be kept in a configuration that allows becoming operational as quickly as possible after investigations."""
+185,"can you show a sample output of this program for the input messages = [[""1"",""hello""],[""2"",""good you""]]"
+186,Why should you meditate?
+187,A 33 year old woman called DI who is very thin but also very fit has lower back pain. Her doctor says that perhaps she has a bulged disc although apparently this is minor. The doctor says that Di has scoliosis in her upper back. Please explain what this is. How might all this progress? And say what Di ought best do now.
+188,Can feeding a dog a vegan diet be considered animal abuse?
+189,Can you tell me about a time when John Dahlback's music had a significant impact on people's lives?
+190,Can you recall any memorable moments from the Pacquiao vs Cotto match?
+191,Who are some actors that have worked with Jason Momoa in his past films?
+192,"How can I write the disk-image of a Linux computer with the ""dd"" command and send image another computer directly over ethernet"
+193,"Can you name a few characters from the movie ""Finding Dory"" and describe their roles?"
+194,"What's the difference between a plant and a fungus, specifically a mushroom?"
+195,Can you tell me about the graphics and player animations in FIFA 22?
+196,Write an introductory paragraph for a two topic essay which has this thesis sentence: My experiences and observations of my brother and sister have shaped my understanding of the complexities of sibling relationships.
+197,Can you name some of the celebrities who attended Kim Kardashian's wedding?
+198,"Do you thinks Donald Glover is one of the most versatile actors in the industry, or not?"
+199,"Which training is more hellish, the US Army basic training or the US Navy boot camp?"

@@ -404,7 +404,9 @@ class PairwiseBattleArrangement:
         # Normalize probabilities so they sum up to 1
         probabilities = [float(i)/sum(probabilities) for i in probabilities]
 
-        selected_indexs = np.random.choice(len(probabilities), p=probabilities, replace=True, size=size)
+        # replace=False means we don't want to sample the same index more than once
+        # replace=True means we want to sample the same index more than once
+        selected_indexs = np.random.choice(len(probabilities), p=probabilities, replace=False, size=size)
         
         return list(np.array(questions_to_arrange)[selected_indexs])
         

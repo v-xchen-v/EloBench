@@ -162,8 +162,8 @@ def battle_set_tabs(result_dir: Path, dataset_dir: Path):
             gr.Dataframe(arrangement_df, wrap=True)
 if __name__ == '__main__':
     with gr.Blocks() as demo:
-        dataset_dir = Path('data/google_quora_alpaca_sharegpt_chatlm_clean_20772')
-        result_dir = Path('results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset')
+        dataset_dir = Path('data/rwq_200')
+        result_dir = Path('results/rwq_200_winrate_vs_elo_on_nxn')
         battle_set_tabs(result_dir, dataset_dir)
             
     demo.launch()
