@@ -31,7 +31,7 @@ class GPTOnlineLM(LM):
         # for  q in questions:
         #     yield self.generate_answer(q, **kwargs)
             
-        # Here is the parallel logic and use it if it is faster
+        # Here is the parallel logic and use it for faster answering
         # Create a thread pool with {batch_size} worker threads
         with ThreadPoolExecutor(max_workers=self.batch_size) as executor:
             for batch_start in range(0, len(questions), self.batch_size):

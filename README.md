@@ -263,8 +263,9 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 
 ## Features
 1. *Model Integration*
-    - *LLM Interface*: Interface for integrating various LLMs, including open-source models and GPT-4, to ensure smooth interaction and response handling.
+    - *LLM Interface*: Interface for integrating various LLMs, including open-source local models and OpenAI chat online models, to ensure smooth interaction and response handling.
     - *Model Configuration*: Allow configuration setting for each model(e.g., token limits, temperature settings for GPT-4)
+    - *Batch Mode*: Support batch mode for partial local models and online chat model for faster question answerng.
 
 2. *Question Pool Management*
     - *Question Database*:  A diverse and extensive database of questions.
@@ -279,7 +280,7 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 4. Elo Rating System
     - Initial Rating Assignment: Assign initial Elo ratings to all participating models.
     - Rating Update Mechanism: Algorithm to update Elo ratings based on match outcomes, ensuring fair and accurate reflection of performance.
-    - Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
+    - TODO: Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
 
 5. Matchmaking and Competitions
     - Model Matchmaking: System to pair models for competitions based on their current Elo ratings.

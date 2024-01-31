@@ -12,8 +12,6 @@ from accelerate import find_executable_batch_size
 import torch.nn.functional as F
 from tqdm import tqdm
 
-# TODO: support batch mode
-# TODO: support give a model as input, and do not free the model for futher use
 # TODO: different decode
 class AutoCausalLM(LM):
     def __init__(self, model_name, use_model_parallel=False) -> None:
