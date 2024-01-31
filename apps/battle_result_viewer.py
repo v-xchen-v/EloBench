@@ -7,7 +7,7 @@ from pathlib import Path
 import pandas as pd
 
 from data import ARENA_K
-from elo_rating.rating_helper import get_elo_results_from_battles_data, get_bootstrap_medium_elo, get_bootstrap_result
+from elo_rating.rating_helper import get_players_rating_and_rank_from_battles_data, get_bootstrap_medium_elo, get_bootstrap_result
 
 from datamodel.elo_rating_history import EloRatingHistory, BattleOutcomes
 import numpy as np
@@ -177,7 +177,7 @@ def elo_leaderboard():
                     gr.Plot(predict_winrate_matrix_fig)
                     
         with gr.Tab("Elo rating (without bootstrap)"):
-            elo_result = get_elo_results_from_battles_data(winner_data_valid, K=ARENA_K)
+            elo_result = get_players_rating_and_rank_from_battles_data(winner_data_valid, K=ARENA_K)
             
             model_ordering= elo_result['model'].tolist()   
             

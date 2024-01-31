@@ -32,9 +32,9 @@ class LLMPlayer(Player):
     
     This class inherits from the `Player` class and adds additional functionality specific to large language models.
     """
-    def __init__(self, id: str, K: int = INITIAL_PLAYER_K, evolve_K: K_ADJUSTMENT_STRATEGY=K_ADJUSTMENT_STRATEGY.SOLID):
+    def __init__(self, id: str, initial_rating: float= INITIAL_LLMPLAYER_RATING, K: int = INITIAL_PLAYER_K, evolve_K: K_ADJUSTMENT_STRATEGY=K_ADJUSTMENT_STRATEGY.SOLID):
         self.id = id
-        super().__init__(INITIAL_LLMPLAYER_RATING, K)
+        super().__init__(initial_rating, K)
         self.evolve_K = evolve_K
             
     def __str__(self):
@@ -67,3 +67,27 @@ class LLMPlayer(Player):
             self.K = INITIAL_PLAYER_K//2
         else:
             self.K = INITIAL_PLAYER_K
+            
+    def update_rating_by_winner(self, another_player: Player, as_winner: bool):
+        """Update the rating of the player based on the result of a battle."""
+        # cache expected score of a and b before battle and updating rating.
+        expected_score_a = self.expected_score(another_player)
+        expected_score_b = another_player.expected_score(self)
+        
+        # get actual score of both sides by battle winner  
+        if as_winner:
+            actual_score_a = 1.0
+            actual_score_b = 0.0
+        else:
+            actual_score_a = 0.0
+            actual_score_b = 1.0      
+
+        # update rating of two sides
+        self.update_rating(expected_score_a, actual_score_a)
+        another_player.update_rating(expected_score_b, actual_score_b)
+        
+        self.num_battle += 1
+        another_player.num_battle += 1
+        
+        # self.update_K()
+        # another_player.update_K()

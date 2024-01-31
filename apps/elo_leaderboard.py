@@ -3,7 +3,7 @@ sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import gradio as gr
 from data import get_arena_battles_20230717_data, ARENA_K
-from elo_rating.rating_helper import get_elo_results_from_battles_data, get_bootstrap_medium_elo
+from elo_rating.rating_helper import get_players_rating_and_rank_from_battles_data, get_bootstrap_medium_elo
 import pandas as pd
 import plotly.express as px
 from collections import defaultdict
@@ -96,34 +96,6 @@ def compute_pairwise_count(battles, ordering):
     row_beats_col = row_beats_col_freq.loc[model_names, model_names]
     return row_beats_col
 
-
-# def compute_pairwise_win_fraction(battles):
-#     # Times each model wins as Model A
-#     a_win_ptbl = pd.pivot_table(
-#         battles[battles['winner'] == "model_a"],
-#         index="model_a", columns="model_b", aggfunc="size", fill_value=0)
-
-#     # Table counting times each model wins as Model B
-#     b_win_ptbl = pd.pivot_table(
-#         battles[battles['winner'] == "model_b"],
-#         index="model_a", columns="model_b", aggfunc="size", fill_value=0)
-
-#     # Table counting number of A-B pairs
-#     num_battles_ptbl = pd.pivot_table(battles,
-#         index="model_a", columns="model_b", aggfunc="size", fill_value=0)
-
-#     # Computing the proportion of wins for each model as A and as B
-#     # against all other models
-#     row_beats_col_freq = (
-#         (a_win_ptbl + b_win_ptbl.T) /
-#         (num_battles_ptbl + num_battles_ptbl.T)
-#     )
-
-#     # Arrange ordering according to proprition of wins
-#     prop_wins = row_beats_col_freq.mean(axis=1).sort_values(ascending=False)
-#     model_names = list(prop_wins.keys())
-#     row_beats_col = row_beats_col_freq.loc[model_names, model_names]
-#     return row_beats_col
 
 def compute_pairwise_win_fraction(battles):
     # Define a function to apply
@@ -259,7 +231,7 @@ def get_gpt4_judger_elo_on_arena(filepath=r'results/google_quora_alpaca_10629_te
     # new_column_names = {"gpt_winner": 'winner'}
     # data.rename(columns=new_column_names, inplace=True)
     if not use_bootstrap:
-        elo_result = get_elo_results_from_battles_data(data, K=ARENA_K)
+        elo_result = get_players_rating_and_rank_from_battles_data(data, K=ARENA_K)
     else:
         elo_result = get_bootstrap_medium_elo(data, ARENA_K)
     data_no_ties = data[data['winner'].str.contains('tie', na=False) == False]
@@ -276,35 +248,6 @@ def get_gpt4_judger_elo_on_arena(filepath=r'results/google_quora_alpaca_10629_te
 with gr.Blocks() as demo:
     gr.Markdown('🏆Elo Bench Leadboard')
     gr.Markdown('AI Dueling Arena with GPT-4 Adjudication')
-    
-    # result_data = None
-    
-    # # # dummy data from arena
-    # # # TODO: add real eval result here
-    # # arena_battles_data = get_arena_battles_20230717_data()
-    # # dummy_data = get_elo_results_from_battles_data(arena_battles_data, K=ARENA_K)
-    # # result_data = dummy_data
-    
-    # result_data, fig, fig2, fig3, no_tie_battle_count_fig, fig5 = get_gpt4_judger_elo_on_arena()
-    
-    # # Calculate an approximate height for the DataFrame output
-    # # You might need to adjust the multiplier based on your specific row height
-    # height_per_row = 40  # This is an approximate pixel height per row
-    # total_height = height_per_row * len(result_data) + 60  # Add some extra space for headers and padding
-
-
-    # gr.DataFrame(result_data, height=total_height)
-    
-    # with gr.Row():
-    #     gr.Plot(fig)
-    #     gr.Plot(fig2)
-        
-    # with gr.Row():
-    #     gr.Plot(no_tie_battle_count_fig)
-        
-    # with gr.Row():
-    #     gr.Plot(fig3)
-    #     gr.Plot(fig5)
     
 demo.launch()
     

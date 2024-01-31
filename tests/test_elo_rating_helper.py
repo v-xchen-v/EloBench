@@ -2,7 +2,7 @@ import unittest
 import logging
 import pandas as pd
 
-from elo_rating.rating_helper import get_players_elo_result, get_elo_results_from_battles_data
+from elo_rating.rating_helper import get_players_rating_and_rank, get_players_rating_and_rank_from_battles_data
 from elo_rating import LLMPlayer
 
 logging.basicConfig(level=logging.DEBUG)
@@ -17,7 +17,7 @@ class TestEloRatingHelper(unittest.TestCase):
         
         player3 = LLMPlayer("model_c")
         player3.rating = 1100
-        logging.info(get_players_elo_result([player1, player2, player3]))
+        logging.info(get_players_rating_and_rank([player1, player2, player3]))
         
     def test_get_elo_results_from_battles_data(self):
         battles = [
@@ -43,4 +43,4 @@ class TestEloRatingHelper(unittest.TestCase):
             }
         ]
 
-        logging.info(get_elo_results_from_battles_data(pd.DataFrame.from_dict(battles), K=4))
+        logging.info(get_players_rating_and_rank_from_battles_data(pd.DataFrame.from_dict(battles), K=4))

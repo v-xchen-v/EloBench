@@ -267,7 +267,8 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
     - *Model Configuration*: Allow configuration setting for each model(e.g., token limits, temperature settings for GPT-4)
 
 2. *Question Pool Management*
-    - *Question Database*:  A diverse and extensive database of questions, categorized by difficulty, type(factual, reasoning, etc), and topic
+    - *Question Database*:  A diverse and extensive database of questions.
+        - TODO: categorized by difficulty, type(factual, reasoning, etc), and topic
     - Randomized Question Selection: Mechanism for selection questions randomly to ensure a fair and unbais challenge for each model.
 
 3. *Answer Assessment*
@@ -276,36 +277,36 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
     - Automated Answer Judging: Using GPT-4 to evaluate answers with predefined metric for fairness and accuracy.
 
 4. Elo Rating System
-- Initial Rating Assignment: Assign initial Elo ratings to all participating models.
-- Rating Update Mechanism: Algorithm to update Elo ratings based on match outcomes, ensuring fair and accurate reflection of performance.
-- Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
+    - Initial Rating Assignment: Assign initial Elo ratings to all participating models.
+    - Rating Update Mechanism: Algorithm to update Elo ratings based on match outcomes, ensuring fair and accurate reflection of performance.
+    - Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
 
 5. Matchmaking and Competitions
-- Model Matchmaking: System to pair models for competitions based on their current Elo ratings.
-- Competition Scheduling: Regularly scheduled competitions or on-demand challenges.
-- Round-Robin or Tournament Structures: Options for different types of competition structures.
+    - Model Matchmaking: System to pair models for competitions based on their current Elo ratings.
+    - Competition Scheduling: Regularly scheduled competitions or on-demand challenges.
+    - Round-Robin or Tournament Structures: Options for different types of competition structures.
 
 6. Performance Tracking and Analytics
-- Historical Data Tracking: Store and track the performance history of each model.
-- Statistical Analysis Tools: Tools for analyzing performance trends, strengths, and weaknesses.
-- Leaderboards: Display current rankings and historical performance.
+    - Historical Data Tracking: Store and track the performance history of each model.
+    - Statistical Analysis Tools: Tools for analyzing performance trends, strengths, and weaknesses.
+    - Leaderboards: Display current rankings and historical performance.
 
 7. User Interface and Reporting
-- Dashboard: A user-friendly dashboard to view upcoming matches, live competitions, and Elo ratings.
-- Detailed Reporting: Generate detailed reports on match outcomes, individual model performance, and rating changes.
-- Data Visualization: Graphs and charts for visual representation of performance trends and ratings.
+    - Dashboard: A user-friendly dashboard to view upcoming matches, live competitions, and Elo ratings.
+    - Detailed Reporting: Generate detailed reports on match outcomes, individual model performance, and rating changes.
+    - Data Visualization: Graphs and charts for visual representation of performance trends and ratings.
 
 8. Feedback and Improvement Loop
-- Model Feedback Integration: Integrate feedback mechanisms for model improvement.
-- System Update Mechanism: Regular updates to the system based on feedback, new research, and model updates.
+    - Model Feedback Integration: Integrate feedback mechanisms for model improvement.
+    - System Update Mechanism: Regular updates to the system based on feedback, new research, and model updates.
 
 9. Security and Fair Use
-- Model Security: Ensure the security of models and their intellectual property.
-- Fair Use Compliance: Ensure that the usage of all models, especially GPT-4, is in compliance with licensing and usage terms.
+    - Model Security: Ensure the security of models and their intellectual property.
+    - Fair Use Compliance: Ensure that the usage of all models, especially GPT-4, is in compliance with licensing and usage terms.
 
 10. Documentation and Community Engagement
-- Comprehensive Documentation: Detailed documentation on how to use the system, methodologies used, and interpretation of results.
-- Community Forum: A platform for discussion, feedback, and community engagement around the Elo system and model performances.
+    - Comprehensive Documentation: Detailed documentation on how to use the system, methodologies used, and interpretation of results.
+    - Community Forum: A platform for discussion, feedback, and community engagement around the Elo system and model performances.
 
 These features collectively provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system would need to be flexible and scalable to accommodate new models and changing technologies in the AI field.
 

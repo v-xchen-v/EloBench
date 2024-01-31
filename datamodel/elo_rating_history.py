@@ -38,7 +38,7 @@ class EloRatingHistory:
                     if use_bootstrap:                     
                         historypoint_rating_df = rating_helper.get_bootstrap_medium_elo(historypoint_battles_df, K=4, BOOTSTRAP_ROUNDS=BOOTSTRAP_ROUNDS)
                     else:
-                        historypoint_rating_df = rating_helper.get_elo_results_from_battles_data(historypoint_battles_df, K=4)
+                        historypoint_rating_df = rating_helper.get_players_rating_and_rank_from_battles_data(historypoint_battles_df, K=4)
                     # elo_rating_history_logger.debug(historypoint_rating_df)
                     elo_rating_history.add_point(historypoint_rating_df, idx_battle+1)
         return elo_rating_history

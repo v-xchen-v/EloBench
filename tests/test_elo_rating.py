@@ -3,7 +3,7 @@ from data import get_arena_battles_20230717_data, get_arena_elo_res_20230717,ARE
 import pandas as pd
 import math
 import logging
-from elo_rating.rating_helper import get_elo_results_from_battles_data
+from elo_rating.rating_helper import get_players_rating_and_rank_from_battles_data
 
 logging.basicConfig(level=logging.INFO)
 
@@ -15,7 +15,7 @@ class TestEloRating(unittest.TestCase):
     
     # shared test logics
     def do_arena_battle(self, K):
-        return get_elo_results_from_battles_data(self.arena_battles_data, K)
+        return get_players_rating_and_rank_from_battles_data(self.arena_battles_data, K)
     
     def assertListAlmostEqual(self, list1, list2, places=7):
         self.assertEqual(len(list1), len(list2), "Lists are of different lengths.")

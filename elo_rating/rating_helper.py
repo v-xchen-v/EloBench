@@ -14,7 +14,7 @@ MODEL_A_HEADER = "model_a"
 MODEL_B_HEADER = "model_b"
 BATTLE_RES_HEADER = "winner"
 
-def get_players_elo_result(llm_players: list[LLMPlayer], rating_places=0) -> pd.DataFrame:
+def get_players_rating_and_rank(llm_players: list[LLMPlayer], rating_places=0) -> pd.DataFrame:
     """
     Get elo ranking and rating scores of players, after players completed battles.
 
@@ -23,7 +23,7 @@ def get_players_elo_result(llm_players: list[LLMPlayer], rating_places=0) -> pd.
     rating_places (int, optional): Number of decimal places to round the rating scores to. Defaults to 0.
 
     Returns:
-    pd.DataFrame: DataFrame containing the player IDs and their rounded elo rating scores, sorted in descending order.
+    pd.DataFrame: DataFrame containing the player IDs and their rounded elo rating scores, sorted in descending order. The players with same rating score should have the same rank.
     """
     df = pd.DataFrame([[x.id, np.round(x.rating, rating_places)] for x in llm_players], columns=[MODEL_HEADER, ELO_RATING_HEADER]).sort_values(ELO_RATING_HEADER, ascending=False)#.reset_index(drop=True)
 
@@ -36,12 +36,11 @@ def get_players_elo_result(llm_players: list[LLMPlayer], rating_places=0) -> pd.
         return rank
     
     # adding rank column, same elo rating will have same rank
-    # df['rank'] = df['elo_rating'].apply(lambda x: get_rank(x, df['elo_rating'].tolist()))
-    df['rank'] = df[ELO_RATING_HEADER].rank(method='dense', ascending=False).astype(int)
-    # df.index = df.index+1
+    df['rank'] = df['elo_rating'].apply(lambda x: get_rank(x, df['elo_rating'].tolist()))
+
     return df
 
-def get_elo_results_from_battles_data(battles_data: pd.DataFrame, K: int) -> pd.DataFrame:
+def get_players_rating_and_rank_from_battles_data(battles_data: pd.DataFrame, K: int) -> pd.DataFrame:
     """
     Get elo ranking and rating scores of players by the arranged order of battles.
 
@@ -69,7 +68,7 @@ def get_elo_results_from_battles_data(battles_data: pd.DataFrame, K: int) -> pd.
 
         PairwiseRatingEntity(model_a_player, model_b_player).battle(winner=battle_winner)
 
-    return get_players_elo_result(list(llm_players.values()))
+    return get_players_rating_and_rank(list(llm_players.values()))
 
 def get_elo_results_from_battles_data_each_rnd(battles_data: pd.DataFrame, K: int) -> pd.DataFrame:
     """
@@ -109,7 +108,7 @@ def get_elo_results_from_battles_data_each_rnd(battles_data: pd.DataFrame, K: in
         # end_time = time.time()
         # print(f"Time for segment 1: {end_time - start_time} seconds")
         # start_time = time.time()
-        elo_ratings_each_rnd[rd+1] = get_players_elo_result(llm_players.values())
+        elo_ratings_each_rnd[rd+1] = get_players_rating_and_rank(llm_players.values())
         # end_time = time.time()
         # print(f"Time for segment 2: {end_time - start_time} seconds")
         # start_time = time.time()
@@ -152,7 +151,7 @@ def get_bootstrap_medium_elo(battles, K=4, BOOTSTRAP_ROUNDS=1000, with_fullset=F
     DataFrame: The DataFrame containing the bootstrap medium Elo ratings for each model.
     """
     np.random.seed(42)
-    bootstrap_elo_lu = get_bootstrap_result(battles, get_elo_results_from_battles_data, K, BOOTSTRAP_ROUNDS)
+    bootstrap_elo_lu = get_bootstrap_result(battles, get_players_rating_and_rank_from_battles_data, K, BOOTSTRAP_ROUNDS)
     bootstrap_lu_median = bootstrap_elo_lu.median().reset_index().set_axis(["model", "elo_rating"], axis=1)
     bootstrap_lu_median["elo_rating"] = (bootstrap_lu_median["elo_rating"] + 0.5).astype(int)
     # print(bootstrap_lu_median)

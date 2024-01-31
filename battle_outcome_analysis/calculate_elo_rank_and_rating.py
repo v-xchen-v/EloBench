@@ -5,7 +5,7 @@ from datamodel import BattleOutcomes
 import pandas as pd
 import plotly.express as px
 from tqdm import tqdm
-from elo_rating.rating_helper import get_elo_results_from_battles_data, get_elo_results_from_battles_data_each_rnd
+from elo_rating.rating_helper import get_players_rating_and_rank_from_battles_data, get_elo_results_from_battles_data_each_rnd
 from scipy import stats
 import concurrent.futures
 

@@ -332,7 +332,7 @@ class DumpyPipeline:
         # if use_bootstrap:
         #     self.elo_ratings = rating_helper.get_bootstrap_medium_elo(df, K=4, BOOTSTRAP_ROUNDS=100)
         # else:
-        self.elo_ratings = rating_helper.get_elo_results_from_battles_data(df, K=4)
+        self.elo_ratings = rating_helper.get_players_rating_and_rank_from_battles_data(df, K=4)
         self.elo_ratings.to_csv(Path(self.save_dir) / 'elo_rating.csv')
         battle_pipeline_logger.info('Elo ratings generated.')
         
@@ -345,7 +345,7 @@ class DumpyPipeline:
                     if use_bootstrap:                     
                         historypoint_rating_df = rating_helper.get_bootstrap_medium_elo(historypoint_battles_df, K=4, BOOTSTRAP_ROUNDS=100)
                     else:
-                        historypoint_rating_df = rating_helper.get_elo_results_from_battles_data(historypoint_battles_df, K=4)
+                        historypoint_rating_df = rating_helper.get_players_rating_and_rank_from_battles_data(historypoint_battles_df, K=4)
                     # elo_rating_history_logger.debug(historypoint_rating_df)
                     self.elo_rating_history.add_point(historypoint_rating_df, idx_battle+1)
             self.elo_rating_history.to_csv(Path(self.save_dir) / 'elo_rating_history.csv')

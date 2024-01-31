@@ -9,7 +9,7 @@ from tqdm import tqdm
 import os
 from pathlib import Path
 import glob
-from elo_rating.rating_helper import get_elo_results_from_battles_data
+from elo_rating.rating_helper import get_players_rating_and_rank_from_battles_data
 
 @dataclass
 class BattleOutcome:
@@ -201,7 +201,7 @@ class BattleOutcomes:
         caring_winner = ['model_a', 'model_b', 'tie', 'tie(all bad)']
         battled_outcomes_df = battled_outcomes_df[battled_outcomes_df['winner'].isin(caring_winner)]
 
-        return get_elo_results_from_battles_data(battled_outcomes_df, K)
+        return get_players_rating_and_rank_from_battles_data(battled_outcomes_df, K)
     
 class BootstrapedBattleOutcomes:
     """
@@ -307,7 +307,7 @@ class BootstrapedBattleOutcomes:
         elo_dfs = []
         # for i, battle_outcomes_df in tqdm(enumerate(self._bootstraped_battlecomes_dfs), desc='calculating bootstrap elo ratings', total=len(self._bootstraped_battlecomes_dfs)):
         for i, battle_outcomes_df in enumerate(self._bootstraped_battlecomes_dfs):
-            elo_df = get_elo_results_from_battles_data(battle_outcomes_df, K)
+            elo_df = get_players_rating_and_rank_from_battles_data(battle_outcomes_df, K)
             # Adding a new column with the same value for all rows
             elo_df['round_bootstrap'] = i+1
             elo_dfs.append(elo_df)
