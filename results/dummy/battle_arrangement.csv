@@ -1,7 +1,0 @@
-,question,model_a,model_b
-0,Is Landon rainy?,meta-llama/Llama-2-7b-hf,huggyllama/llama-7b
-1,Is Landon rainy?,huggyllama/llama-7b,mosaicml/mpt-7b
-2,Is Landon rainy?,mosaicml/mpt-7b,meta-llama/Llama-2-7b-hf
-3,Give me a question about animal.,huggyllama/llama-7b,meta-llama/Llama-2-7b-hf
-4,Give me a question about animal.,huggyllama/llama-7b,mosaicml/mpt-7b
-5,Give me a question about animal.,mosaicml/mpt-7b,meta-llama/Llama-2-7b-hf

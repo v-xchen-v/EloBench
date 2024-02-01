@@ -1,0 +1,3 @@
+- test1 have more models than test2, and set no_tie = 100, so that it need more than 1 week, reduct the models to tested be able to batch generated  models, and iterate set no_tie to 10/20/30/40/... to get result before 12/22(Fri.)
+- with new judger prompt 1225
+- battle no-tie 100->150

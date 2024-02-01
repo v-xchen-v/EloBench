@@ -1,1 +1,0 @@
-purpose: gen all ans of question
