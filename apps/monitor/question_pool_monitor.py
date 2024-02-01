@@ -1,7 +1,7 @@
 """Used to view the questions in the dataset. If question source category is available, it will also show the distribution of the source categories."""
 
 import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import gradio as gr
 import pandas as pd

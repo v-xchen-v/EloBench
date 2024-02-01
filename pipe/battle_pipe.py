@@ -5,7 +5,7 @@ import pandas as pd
 from pathlib import Path
 from collections import defaultdict
 
-from pipe.dumpy_pipe import DumpyPipeline
+from pipe.dummy_pipe import DummyPipeline
 from datamodel import ArrangementStrategy
 from datamodel import LLMAnswer
 from datamodel import PairToBattle
@@ -20,7 +20,7 @@ from models import get_model
 from elo_rating.rating_evaluator import compute_predict_winrate, compute_acutal_winrate, evaluate_winrate, evaluate_rank_consistency
 from typing import List
 
-class BattlePipeline(DumpyPipeline):
+class BattlePipeline(DummyPipeline):
     def _gen_model_answers(self, model_name: str, questions: List[str], batch_mode):
         """Generate answers for each question with the given model"""
         lm = get_model(model_name)

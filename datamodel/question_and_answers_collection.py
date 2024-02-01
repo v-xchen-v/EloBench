@@ -6,6 +6,7 @@ import pandas as pd
 from datamodel.column_names import QUESTION_COLUMN_NAME
 import os
 import numpy as np
+from logger import info_logger
 
 class LLMAnswer:
     """
@@ -119,13 +120,21 @@ class QuestionAndAnswersCollection:
         
     @classmethod
     def read_csv(cls, save_path) -> QuestionAndAnswersCollection:
-        df = pd.read_csv(save_path, index_col=0, keep_default_na=False, na_values=['NaN'], engine='python')
-        # Convert DataFrame to dictionary
         result_dict = defaultdict(list)
-        for key, group in df.groupby(QUESTION_COLUMN_NAME):
-            # Drop the key column and convert the rest to a dictionary
-            list_of_columnname_to_cell = group.drop(QUESTION_COLUMN_NAME, axis=1).to_dict(orient='records')
-            result_dict[key] = [LLMAnswer(model=k, answer=v) for d in list_of_columnname_to_cell for k, v in list(d.items()) if not pd.isna(v)]
+        if os.path.exists(save_path):
+            info_logger.info(f'Loading question and answers collection from {save_path}')
+            df = pd.read_csv(save_path, index_col=0, keep_default_na=False, na_values=['NaN'], engine='python')
+            if len(df)>0:
+                # Convert DataFrame to dictionary
+                for key, group in df.groupby(QUESTION_COLUMN_NAME):
+                    # Drop the key column and convert the rest to a dictionary
+                    list_of_columnname_to_cell = group.drop(QUESTION_COLUMN_NAME, axis=1).to_dict(orient='records')
+                    result_dict[key] = [LLMAnswer(model=k, answer=v) for d in list_of_columnname_to_cell for k, v in list(d.items()) if not pd.isna(v)]
+        else:
+            # create an empty dataframe if q_and_as.csv not exists
+            df = pd.DataFrame(columns=[QUESTION_COLUMN_NAME])
+            df.to_csv(save_path)
+            info_logger.info(f'Creating an empty question and answers collection at {save_path}')
         q_and_as_collection = QuestionAndAnswersCollection(result_dict)
         q_and_as_collection.cache_filepath = save_path
         return q_and_as_collection

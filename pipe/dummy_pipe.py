@@ -24,7 +24,7 @@ from typing import Optional
 from concurrent.futures import ThreadPoolExecutor
 
 
-class DumpyPipeline:
+class DummyPipeline:
     """
     A class representing a pipeline for conducting battles between models.
 
@@ -367,7 +367,7 @@ class DumpyPipeline:
         return str(repr_info)
         
 if __name__ == '__main__':           
-    dummy_bp = DumpyPipeline(tempcache_dir='tempcache/dummy', save_dir='results/dummy', no_cache=False)
+    dummy_bp = DummyPipeline(tempcache_dir='tempcache/dummy', save_dir='results/dummy', no_cache=False)
     questions = ["Give me a question about animal.", "Is Landon rainy?", 'Is Austrilia always sunny?']
     dummy_bp.register_questions(questions)
     models = ['huggyllama/llama-7b', 'meta-llama/Llama-2-7b-hf', 'mosaicml/mpt-7b']

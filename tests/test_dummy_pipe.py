@@ -1,5 +1,5 @@
 import unittest
-from pipe.dumpy_pipe import DumpyPipeline
+from pipe.dummy_pipe import DummyPipeline
 from datamodel.question_collection import QuestionCollection
 from datamodel.model_collection import ModelCollection
 from datamodel import ArrangementStrategy
@@ -9,7 +9,7 @@ class TestDumpyPipeline(unittest.TestCase):
     def setUp(self):
         self.tempcache_dir = "tempcache/dummy"
         self.save_dir = "results/dummy"
-        self.pipeline = DumpyPipeline(self.tempcache_dir, self.save_dir)
+        self.pipeline = DummyPipeline(self.tempcache_dir, self.save_dir)
         self.questions = ["Give me a question about animal.", "Is Landon rainy?", 'Is Austrilia always sunny?']
         self.models = ['huggyllama/llama-7b', 'meta-llama/Llama-2-7b-hf', 'mosaicml/mpt-7b']
 

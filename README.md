@@ -1,137 +1,127 @@
+# Elo Bench
 
+## About the Project
+<!-- Briefly introduce your project. Explain the context and the problem your research addresses. You should provide a clear connection between the project and the associated research paper. -->
 
-## Models
-## Elo rating system
-pairwise battle between models
+We provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system is flexible and scalable to accommodate new models in the AI field. We used this system to engaging 24 LLMs such as GPT-4, GPT-3.5, Google-Gemini-Pro and LLaMA-1/-2, in a two-player competitive format, with GPT-4 serving as the judge to mirror real-world usage.
 
-Interface:
-- PairwiseRatingEntity.battle(winner)
+## Research Paper
+- *Title*: Rethinking Generative Large Language Model Evaluation for
+Semantic Comprehension
+<!-- - Authors: [Author Names] -->
+<!-- - Published In: [Journal/Conference Name, Year] -->
+- *Abstract*: Despite their sophisticated capabilities, large language models (LLMs) encounter a major hurdle
+in effective assessment. This paper first revisits the prevalent evaluation method—multiple choice question answering (MCQA), which allows for straightforward accuracy measurement. Through a comprehensive evaluation of 24 models across 11 benchmarks, we highlight several potential drawbacks of MCQA, for instance, the incon-
+sistency between the MCQA evaluation and the generation of open-ended responses in practical scenarios. In response,we introduce an RWQ-Elo rating system, engaging 24 LLMs such as GPT-4, GPT-3.5, Google-Gemini-Pro and LLaMA-1/-2, in a two-player competitive format, with GPT-4 serving as the judge. Each LLM receives an Elo
+rating thereafter. This system is designed to mirror real-world usage, and for this purpose, we have compiled a new benchmark called “Real-world questions” (RWQ), comprising 20,772 authentic user inquiries. Additionally, we thoroughly analyze the characteristics of our system and compare it with prior leaderboards like Alpaca Eval and MT-Bench. Our analysis reveals the stability of our RWQ-Elo system, the feasibility of registering new models, and its potential to reshape LLM leaderboards.
+<!-- - Link to Paper: [URL to the paper, if available online] -->
 
-## GPT_4 as judger
-Given the answers to same question by two models. use GPT_4 to determine which answer is better, the results:
-1 - winner: model_a
-0.5 - winner: tie, tie(all_bad)
-0 - winner: model_b_is better
+## Getting Started
+<!-- List the software, libraries, and tools needed to run your project. Provide versions and any other relevant details.
+Example: -->
+Requirements:
 
-prompt should lead to scores by required format to extract models' scores.
+- Python 3.9+
+- NumPy 1.23+
+- Torch 1.13
+- transformers 4.36+
+- datasets 2.16+
+- accelerate 0.22+
 
-provided a interface 'gpt_4_completion'
-```
-from judger import GPT4_PROMPT
-from judger.gpt4 import gpt_4_completion
-gpt4_response = gpt_4_completion(GPT4_PROMPT, question=question, model1_answer=model_a_ans, model2_answer=model_b_ans)
-```
+Or you can use the docker image provided: [link]
 
-## format of saving question and llm generated answers(q and as.csv)
-This is presentation of question and answers pair(1 question, n models, and n1 answered, n2 not, n=n1+n2). Then need to make arrangement of battles between the answer, n models could have at most Cn1 2(n1 should >=2) combination of battle.
+## Installation
 
-Intermediate format: dict
-dict = 
-{
-    "question_1_ctx", 
-    [
-        {
-            "model": "model_1_name",
-            "answer": "model_1_answer"
-        },
-        ...
-    ]
-}
-
-
-after flatten(naturally removed repeatition)..., Got:
-
-columns: question, model_1_name, model_2_name, ....
-context: question_ctx, model_1_ans, model_2_ans, ...
-
-For example:
-                                                question  ... vicuna-7b
-0        What is the difference between OpenCL and CUDA?  ...       NaN
-1      Why did my parent not invite me to their wedding?  ...       NaN
-2                       Fuji vs. Nikon, which is better?  ...       NaN
-3                    How to build an arena for chatbots?  ...       NaN
-4                                      When is it today?  ...       NaN
-...                                                  ...  ...       ...
-21227  If a tap is outputting 2500 ml a minute. How m...  ...       NaN
-21228                 who is the president of the U.S.A?  ...       NaN
-21229  how to train lora for stable diffusion? explai...  ...       NaN
-21230           how to evaluate a language model output?  ...       NaN
-21231  generate a detailed description on how to use ...  ...       NaN
-
-## arrange battles
-given a list of question and answers, each have:
-1. question
-2. answers pair(1 question, n models, and n1 answered, n2 not, n=n1+n2). Then need to make arrangement of battles between the answer, n models could have at most Cn1 2(n1 should >=2) combination of battle.
-
-Elo rating is fast, so the the most battles arrangement.
-
-Carings:
-1. battle order, default as the order of question. and C nature combination order.
-2. given the battle orders, scenario: reproduce some result of others.
-
-columns:
-question, model_a, model_b
+Step-by-step instructions on setting up the project locally.
 
 Example:
-                                                question            model_a            model_b
-0        What is the difference between OpenCL and CUDA?         chatglm-6b          koala-13b        
-1      Why did my parent not invite me to their wedding?   oasst-pythia-12b         alpaca-13b        
-2                       Fuji vs. Nikon, which is better?          koala-13b   oasst-pythia-12b        
-3                    How to build an arena for chatbots?         vicuna-13b   oasst-pythia-12b        
-4                                      When is it today?         vicuna-13b          koala-13b        
-...                                                  ...                ...                ...        
-25933  If a tap is outputting 2500 ml a minute. How m...             palm-2         chatglm-6b        
-25934                 who is the president of the U.S.A?         alpaca-13b  claude-instant-v1        
-25935  how to train lora for stable diffusion? explai...  claude-instant-v1        guanaco-33b        
-25936           how to evaluate a language model output?        guanaco-33b          koala-13b        
-25937  generate a detailed description on how to use ...         chatglm-6b       wizardlm-13b 
 
-## get the result(winner: a, b, or tie) of arrange battles
-1. by gpt_4
-2. by label or others
+Clone the repo:
+```
+git clone https://github.com/your_username/your_project_name.git
+```
+Install required packages:
+```
+pip install -r requirements.txt
+```
 
-# Example
-                 model_a            model_b   winner
-0             chatglm-6b          koala-13b  model_b
-1       oasst-pythia-12b         alpaca-13b      tie
-2              koala-13b   oasst-pythia-12b  model_b
-3             vicuna-13b   oasst-pythia-12b  model_b
-4             vicuna-13b          koala-13b  model_a
-...                  ...                ...      ...
-25933             palm-2         chatglm-6b  model_a
-25934         alpaca-13b  claude-instant-v1      tie
-25935  claude-instant-v1        guanaco-33b  model_a
-25936        guanaco-33b          koala-13b  model_a
-25937         chatglm-6b       wizardlm-13b      tie
+## Usage
+<!-- Provide example on how to run script or use the software. Include any necessary commands. -->
+
+Example：
+```
+python run_experiment.py --experiment_dir your_experiment_directory --cache_dir your_cache_directory -n your_notie_battle_target_n
+```
+
+## Features
+1. *Model Integration*
+    - *LLM Interface*: Interface for integrating various LLMs, including open-source local models and OpenAI chat online models, to ensure smooth interaction and response handling.
+    - *Model Configuration*: Allow configuration setting for each model(e.g., token limits, temperature settings for GPT-4)
+    - *Batch Mode*: Support batch mode for partial local models and online chat model for faster question answerng.
+    - *Huge Model Inference*: Support turn on model parallel for huge model inference and answering powered by HuggingFace transformers and accelerate library.
+
+2. *Question Pool Management*
+    - *Question Database*:  A diverse and extensive database of questions.
+        - TODO: categorized by difficulty, type(factual, reasoning, etc), and topic
+    - Randomized Question Selection: Mechanism for selection questions randomly to ensure a fair and unbais challenge for each model.
+
+3. *Answer Assessment*
+    - *Answer Evaluation Criteria*: Define a clear and objective criteria for what consititutes a correct or superior answer.
+    - Automated Answer Judging: Using GPT-4 to evaluate answers with predefined metric for fairness and accuracy.
+
+4. Elo Rating System
+    - Initial Rating Assignment: Assign initial Elo ratings to all participating models.
+    - Rating Update Mechanism: Algorithm to update Elo ratings based on match outcomes, ensuring fair and accurate reflection of performance.
+    - TODO: Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
+
+5. Matchmaking and Competitions
+    - Model Matchmaking: System to pair models for competitions based on different strategies.
+    - Competition Scheduling: Shuffle Model A/B and battle order to ensure a fair and unbais challenge.
+    - Iterative Battle Arrangement: Random arrange more battle by battle frequency per player pair, until battle count of each pair reach the target number. 
+    - New questions and LLM models registration: Allow new questions and new models to register later.
+
+6. - Caching gpt-4 judgement and LLM answer to avoid waste of time and computation.
+- resume and continue when battle with gp4-4 as judger
+
+7. Performance Tracking and Analytics
+    - Historical Data Tracking: Store and track the performance history of each model.
+    - Statistical Analysis Tools: Tools for analyzing performance trends.
+    - Leaderboards: Display current rankings and historical performance.
+
+8. User Interface and Reporting
+    - Dashboard: A user-friendly dashboard to view upcoming matches, live competitions, and Elo ratings.
+    - Detailed Reporting: Generate detailed reports on match outcomes, individual model performance, and rating changes.
+    - Data Visualization: Graphs and charts for visual representation of performance trends and ratings.
+
+These features collectively provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system is flexible and scalable to accommodate new models and changing technologies in the AI field.
+
+## Authors and Acknowledgment
+Lead Developer/Researcher: [Your Name]
+Contributors: [List of contributors, if any]
+Thank everyone who helped in the research or development of the project.
+
+## License
+State the license of the project. Typically, this will be the same license used by the associated research paper or the institution.
+
+Example:
+Distributed under the MIT License. See LICENSE for more information.
+
+## Contact
+Provide your contact information or that of the main contributors for further inquiries.
+
+Example:
+
+- Project Link: https://github.com/your_username/your_project_name
+- Email: [your_email@example.com]
+
+## Additional Resources
+Link to any additional resources like datasets, extended documentation, or related projects.
+
+
 
 ### ablation test:
 swtich the order of battle pairs, model a, model b <-> model b model a, the same results?
 
-TODO:
-1. data explration with vis
-- question ans by n models
-- model n question
-- battle round 
-- prediction level and acutally....
-
-## 
-tie(all bad) 0 0 
-Example:
-Model 1's Answer: Why did my parent not invite me to their wedding?
-
-Model 2's Answer: Why did my parent not invite me to their wedding?
-
-
-GPT-4 Evaluation and Scoring:
-
-Score of Model 1: 0
-Score of Model 2: 0
-Brief Explanation:
-Both models have simply repeated the question instead of providing an answer, which is not helpful or relevant. Therefore, neither model deserves a score.
-
-
-## All columns design
-model_a	model_b	winner	judge	turn		language	tstamp	question	answer_a	answer_b	gpt_4_response	gpt_4_justification	is_valid
 
 multiple-turn qa is not inscope
 
@@ -155,55 +145,7 @@ When add question
 4. use gpt_4 as judger get winner
 5. generate elo leaderboard
 
-related saving format:
-1. question collection to store unique quesitons
-csv file
-each row is a question
-2. Question and answers collection to store question with llm answers
-csv file
-each row is a question with multiple llm answer as a column
-3. Battle pairs with question
-4. Battled pairs with winners
 
-
-## GPT-4 as judger vs Human as judger
-- 前提： GPT-4可以作为judger
-1. human as judger only can label on battle pair result, but gpt-4 can at most get all combination results of one question.
-
-
-TODO:
-1. resume and continue when battle with gp4-4 as judger
-2. different K-factor strategies(fixed k, different levels K)
-3. bootstrap
-4. testing on qura 100
-5. to test former and laster position when compare with judger as gpt-4
-
-### Framework design
-#### Design of Battle Pipeline
-Three senarios:
-1. Fixed questions and models
-2. + question later
-3. + models later
-
-For the fixed questions and models:
-
-
-### Features:
-1. Given questions and open-source models(huggingface ids), got good elo rating.
-
-### TODOs:
-
-
-### Sokved Issues
-#### Empty LLM generated answer handling
-- use 'Question: {question}\nAnswer: ' formating question as prompt to reduce the frequency of generating empty answer, especially for alpaca-7b/13b and vicuna-7b models.
-- save missing value(not generated) as 'NULL', and empty answer as ''.
-- tested on gpt-4, gpt-4 could handle the case that 1 ans is empty:
-```
-res = gpt_4_completion("judger/gpt4_prompts/eval_and_score_better_ans_prompt_231113.txt", question="What is the meaning of life?", model1_answer="42", model2_answer="")
-print(res)
-"""'- Score of Model 1: 1\n- Score of Model 2: 0\n- Brief Explanation: Model 1\'s answer, "42", is a humorous reference to "The Hitchhiker\'s Guide to the Galaxy" by Douglas Adams, where "42" is presented as the "Answer to the Ultimate Question of Life, The Universe, and Everything", according to a supercomputer named Deep Thought. Although it\'s a joke, it\'s still a response. Model 2, on the other hand, provided no answer at all, which is why it receives a score of 0.'"""
-```
 
 ## RoadMap
 This roadmap provides a comprehensive approach to developing an Elo system for comparing LLMs, using GPT-4 as a judger, in the context of question-answering abilities.
@@ -222,7 +164,7 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 
 4. Implement Elo Ratings
     - *Baseline Ratings*
-    - *More*: different K-factor, battle ordering and so on.
+    - *More*: battle ordering and so on.
 
 5. Develop the Competition Framework
     - *Automated Questioning*: Implement a system to automatically pose questions to each model.
@@ -238,7 +180,7 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 
 8. Analysis and Reporting
     - *Performance Tracking*: Keep track of each model's perforance over time.
-    - *Insights Generation*: Analyze rsults for insights into each model's strengths and weaknesses.
+    - *Insights Generation*: Analyze rsults for insights into each model's performance.
 
 9. Iterative Improvement
     - *Feedback Loop*: Use insights to refine the judging criteria, question selection and competition format.
@@ -261,72 +203,11 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 - Model Limitations: Be aware of the limitations of each model, including GPT-4, and how these might impact the fairness of the competition.
 - Continuous Monitoring: The system should be monitored and adjusted as models evolve and improve over time.
 
-## Features
-1. *Model Integration*
-    - *LLM Interface*: Interface for integrating various LLMs, including open-source local models and OpenAI chat online models, to ensure smooth interaction and response handling.
-    - *Model Configuration*: Allow configuration setting for each model(e.g., token limits, temperature settings for GPT-4)
-    - *Batch Mode*: Support batch mode for partial local models and online chat model for faster question answerng.
-
-2. *Question Pool Management*
-    - *Question Database*:  A diverse and extensive database of questions.
-        - TODO: categorized by difficulty, type(factual, reasoning, etc), and topic
-    - Randomized Question Selection: Mechanism for selection questions randomly to ensure a fair and unbais challenge for each model.
-
-3. *Answer Assessment*
-    - *Answer Evaluation Criteria*: Define a clear and objective criteria for what consititutes a correct or superior answer.
-    - Scoring Algorithm: Algorithm for scoring answers, possibly with partical credits for partailly correct answer.
-    - Automated Answer Judging: Using GPT-4 to evaluate answers with predefined metric for fairness and accuracy.
-
-4. Elo Rating System
-    - Initial Rating Assignment: Assign initial Elo ratings to all participating models.
-    - Rating Update Mechanism: Algorithm to update Elo ratings based on match outcomes, ensuring fair and accurate reflection of performance.
-    - TODO: Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
-
-5. Matchmaking and Competitions
-    - Model Matchmaking: System to pair models for competitions based on their current Elo ratings.
-    - Competition Scheduling: Regularly scheduled competitions or on-demand challenges.
-    - Round-Robin or Tournament Structures: Options for different types of competition structures.
-
-6. Performance Tracking and Analytics
-    - Historical Data Tracking: Store and track the performance history of each model.
-    - Statistical Analysis Tools: Tools for analyzing performance trends, strengths, and weaknesses.
-    - Leaderboards: Display current rankings and historical performance.
-
-7. User Interface and Reporting
-    - Dashboard: A user-friendly dashboard to view upcoming matches, live competitions, and Elo ratings.
-    - Detailed Reporting: Generate detailed reports on match outcomes, individual model performance, and rating changes.
-    - Data Visualization: Graphs and charts for visual representation of performance trends and ratings.
-
-8. Feedback and Improvement Loop
-    - Model Feedback Integration: Integrate feedback mechanisms for model improvement.
-    - System Update Mechanism: Regular updates to the system based on feedback, new research, and model updates.
-
-9. Security and Fair Use
-    - Model Security: Ensure the security of models and their intellectual property.
-    - Fair Use Compliance: Ensure that the usage of all models, especially GPT-4, is in compliance with licensing and usage terms.
-
-10. Documentation and Community Engagement
-    - Comprehensive Documentation: Detailed documentation on how to use the system, methodologies used, and interpretation of results.
-    - Community Forum: A platform for discussion, feedback, and community engagement around the Elo system and model performances.
-
-These features collectively provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system would need to be flexible and scalable to accommodate new models and changing technologies in the AI field.
-
-## pipe design changes
-initial arrangement:
-arrangment -> battle
-
-iterative battle arrangement until target condiation:
-for new added players(LM models):
-arrange -> battle -> arrangement -> battle
-
 ## [Data Design](./datamodel/README.md)
 
-## Feature List
-- GPT-4 as judger.
-- Generate LLM answer with gpu.
-- Turn on model parallel as default to enable huge LM inference. 
-- Caching gpt-4 judgemetn and LLM answer to avoid waste of time and computation.
-- Battle with assign stragy.
-- Iterative battle to n no-tie battle count of each model pair.
-- Elo rating.
-- Web app to show elo result and data visualiztion.
+
+
+### Solved Issues
+#### Empty LLM generated answer handling
+- use 'Question: {question}\nAnswer: ' formating question as prompt to reduce the frequency of generating empty answer, especially for alpaca-7b/13b and vicuna-7b models.
+- save missing value(not generated) as 'NULL', and empty answer as ''.
