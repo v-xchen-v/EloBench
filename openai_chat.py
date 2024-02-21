@@ -5,14 +5,10 @@ import re
 import logging
 import time
 
-# openai.api_type = "azure"
-# openai.api_base = "https://slrt-east-us.openai.azure.com/"
-# openai.api_version = "2023-07-01-preview"
-# openai.api_key = "14edc332b32f486baf542a90ba521ab5" 
-
+# change the endpoint to the one closest to you and the api_key to your own
 client = AzureOpenAI(
   azure_endpoint="https://agi-west-us.openai.azure.com/", 
-  api_key="072d02309de9403b9c06eeec2629d15c",  
+  api_key=os.environ["OPENAI_API_KEY"],  
   api_version="2023-12-01-preview"
 )
 

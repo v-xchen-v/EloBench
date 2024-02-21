@@ -1,3 +1,7 @@
+"""Display the direct and simple battled result. If need more detail and deeper analysis result, refer to the analysis scripts and output files in the result directory."""
+
+# TODO: clean the code here
+
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 import plotly.express as px
@@ -6,7 +10,7 @@ import gradio as gr
 from pathlib import Path
 import pandas as pd
 
-from data import ARENA_K
+from data import K_FACTOR
 from elo_rating.rating_helper import get_players_rating_and_rank_from_battles_data, get_bootstrap_medium_elo, get_bootstrap_result
 
 from datamodel.elo_rating_history import EloRatingHistory, BattleOutcomes
@@ -137,7 +141,7 @@ def elo_leaderboard():
     with gr.Tab('Elo Leaderboard'):
         if USE_BOOTSTRAP_ON_ELO:
             with gr.Tab("Elo rating (bootstrap=100)"):
-                elo_result, elo_result_median_all = get_bootstrap_medium_elo(winner_data_valid, ARENA_K, with_fullset=True, BOOTSTRAP_ROUNDS=100)
+                elo_result, elo_result_median_all = get_bootstrap_medium_elo(winner_data_valid, K_FACTOR, with_fullset=True, BOOTSTRAP_ROUNDS=100)
                 
                 def visualize_bootstrap_scores(df, title):
                     bars = pd.DataFrame(dict(
@@ -177,7 +181,7 @@ def elo_leaderboard():
                     gr.Plot(predict_winrate_matrix_fig)
                     
         with gr.Tab("Elo rating (without bootstrap)"):
-            elo_result = get_players_rating_and_rank_from_battles_data(winner_data_valid, K=ARENA_K)
+            elo_result = get_players_rating_and_rank_from_battles_data(winner_data_valid, K=K_FACTOR)
             
             model_ordering= elo_result['model'].tolist()   
             

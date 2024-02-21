@@ -1,3 +1,5 @@
+"""Used to monitor answer generation. It will show the missing data in the answer dataframe, the empty answer data, and the average answer length for each model."""
+
 import gradio as gr
 import pandas as pd
 from pathlib import Path

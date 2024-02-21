@@ -4,6 +4,7 @@
 <!-- Briefly introduce your project. Explain the context and the problem your research addresses. You should provide a clear connection between the project and the associated research paper. -->
 
 We provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system is flexible and scalable to accommodate new models in the AI field. We used this system to engaging 24 LLMs such as GPT-4, GPT-3.5, Google-Gemini-Pro and LLaMA-1/-2, in a two-player competitive format, with GPT-4 serving as the judge to mirror real-world usage.
+And multiple-turn QA is not in scope.
 
 ## Research Paper
 - *Title*: Rethinking Generative Large Language Model Evaluation for
@@ -28,7 +29,7 @@ Requirements:
 - datasets 2.16+
 - accelerate 0.22+
 
-Or you can use the docker image provided: [link]
+<!-- Or you can use the docker image provided: [link] -->
 
 ## Installation
 
@@ -45,12 +46,18 @@ Install required packages:
 pip install -r requirements.txt
 ```
 
+
 ## Usage
 <!-- Provide example on how to run script or use the software. Include any necessary commands. -->
 
 Example：
 ```
 python run_experiment.py --experiment_dir your_experiment_directory --cache_dir your_cache_directory -n your_notie_battle_target_n
+```
+
+If you have OpenAI online model to eval, set the OpenAI API key before running.
+```
+export OPENAI_API_KEY=[your_own_api_key]
 ```
 
 ## Features
@@ -123,27 +130,9 @@ Link to any additional resources like datasets, extended documentation, or relat
 swtich the order of battle pairs, model a, model b <-> model b model a, the same results?
 
 
-multiple-turn qa is not inscope
 
-### Steps to set up a dataset and get elo score
-1. collect questions
-3. arrange pairwise battle
-2. generate answers of models by question
-4. use gpt_4 as judger get winner
-5. generate elo leaderboard
 
-When add model.
-1. arrange battle on questions
-2. generate answer of this model
-3. use gpt_4 as judger get winner
-4. generate elo leaderboard
 
-When add question
-1. add new question to collection
-2. arrange pairwise battle
-3. generate answers of models by question
-4. use gpt_4 as judger get winner
-5. generate elo leaderboard
 
 
 
@@ -204,8 +193,6 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 - Continuous Monitoring: The system should be monitored and adjusted as models evolve and improve over time.
 
 ## [Data Design](./datamodel/README.md)
-
-
 
 ### Solved Issues
 #### Empty LLM generated answer handling

@@ -4,7 +4,7 @@ import pandas as pd
 import os
 
 ARENA_BATTLE_20230717 = os.path.join(os.path.dirname(__file__),'clean_battle_20230717.json')
-ARENA_K=4
+K_FACTOR=4
 
 def get_arena_battles_20230717_data() -> pd.DataFrame:
     raw_data = pd.read_json(ARENA_BATTLE_20230717).sort_values(ascending=True, by=["tstamp"])

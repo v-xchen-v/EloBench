@@ -1,16 +1,14 @@
-"""Used to view the questions in the dataset. If question source category is available, it will also show the distribution of the source categories."""
+"""Used to monitor the battle set before conducting battles. It will show the question frequency, model frequency, and the battle count for each model and each combination of models to make sure we have a reasonable battle set."""
 
 import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
+sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 
 import gradio as gr
 import pandas as pd
 from pathlib import Path
 from datamodel import PairwiseBattleArrangement
 import plotly.express as px
-import io
 from matplotlib import pyplot as plt
-import cv2
 import numpy as np
 from collections import defaultdict
 
@@ -77,8 +75,8 @@ def visualize_battle_count(battles, title):
     return fig
 
 def battle_set_tabs(result_dir: Path, dataset_dir: Path):
-    with gr.Tab('Battle Set') as battle_set_tab:
-        with gr.Tab('Question') as battle_set_question_tab:
+    with gr.Tab('Battle Set'):
+        with gr.Tab('Question'):
             result_question_df = pd.read_csv(result_dir/'questions.csv')
             
             gr.Dataframe(result_question_df, wrap=True)

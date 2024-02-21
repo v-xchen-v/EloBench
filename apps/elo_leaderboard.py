@@ -1,8 +1,11 @@
+"""Display the Elo Leaderboard for the GPT-4 Judger on registered LLMs. And plots of the pairwise win rate matrix and pairwise battle count matrix.
+"""
+
 import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
 
 import gradio as gr
-from data import get_arena_battles_20230717_data, ARENA_K
+from data import K_FACTOR
 from elo_rating.rating_helper import get_players_rating_and_rank_from_battles_data, get_bootstrap_medium_elo
 import pandas as pd
 import plotly.express as px
@@ -220,7 +223,7 @@ def vis_predict_win_rate(win_rate):
                     "Model A: %{y}<br>Model B: %{x}<br>Win Rate: %{z}<extra></extra>")
     return fig
 
-def get_gpt4_judger_elo_on_arena(filepath=r'results/google_quora_alpaca_10629_test2/battle_records.csv', use_bootstrap=True):
+def get_gpt4_judger_elo_on_llms(filepath=r'/battled_pairs.csv', use_bootstrap=True):
     df = pd.read_csv(filepath)
     columns_to_inclusive = ['model_a', 'model_b', 'winner']
     data = df[columns_to_inclusive]
@@ -228,26 +231,47 @@ def get_gpt4_judger_elo_on_arena(filepath=r'results/google_quora_alpaca_10629_te
     # remove nan
     data = data[(data['winner'].isna()==False) & (data['winner']!='invalid')]
     
-    # new_column_names = {"gpt_winner": 'winner'}
-    # data.rename(columns=new_column_names, inplace=True)
     if not use_bootstrap:
-        elo_result = get_players_rating_and_rank_from_battles_data(data, K=ARENA_K)
+        elo_result = get_players_rating_and_rank_from_battles_data(data, K=K_FACTOR)
     else:
-        elo_result = get_bootstrap_medium_elo(data, ARENA_K)
+        elo_result = get_bootstrap_medium_elo(data, K_FACTOR, BOOTSTRAP_ROUNDS=100)
     data_no_ties = data[data['winner'].str.contains('tie', na=False) == False]
-    fig = visualize_pairwise_win_fraction(data_no_ties,
-      title = "Fraction of Model A Wins for All Non-tied A vs. B Battles")
-    fig2 = vis_predict_win_rate(predict_win_rate(elo_result))
+    actual_winrate_matrix_fig = visualize_pairwise_win_fraction(data_no_ties,
+      title = "Fraction of Model A Wins for All Non-tied A vs B Battles")
+    predict_winrate_matrix_fig = vis_predict_win_rate(predict_win_rate(elo_result))
     
-    model_ordering = elo_result['Model'].tolist()
-    no_tie_battle_count_fig = visualize_pairwise_count(data_no_ties, title =  "Count of Model A Battles for All Non-tied A vs. B Battles", ordering=model_ordering)
-    fig3 = visualize_pairwise_win_count(data_no_ties, title = "Count of Model A Wins for All Non-tied A vs. B Battles", ordering=model_ordering)
-    fig5 = visualize_pairwise_count(data, title =  "Count of Model A Battles for All A vs. B Battles", ordering=model_ordering)
-    return elo_result, fig, fig2, fig3, no_tie_battle_count_fig, fig5
+    model_ordering = elo_result['model'].tolist()
+    battle_count_fig = visualize_pairwise_count(data, title= "Count of Model A Battles for All A vs B Battles", ordering=model_ordering)
+    no_tie_battle_count_fig = visualize_pairwise_count(data_no_ties, title =  "Count of Model A Battles for All Non-tied A vs B Battles", ordering=model_ordering)
+    return elo_result, actual_winrate_matrix_fig, predict_winrate_matrix_fig, no_tie_battle_count_fig, battle_count_fig
 
 with gr.Blocks() as demo:
     gr.Markdown('🏆Elo Bench Leadboard')
-    gr.Markdown('AI Dueling Arena with GPT-4 Adjudication')
+    result_dir = r'results/google_quora_alpaca_sharegpt_chat1m_clean_20772_fullset_add_mistral_notie200'
+    ratings, actual_winrate_matrix_fig, predict_winrate_matrix_fig,no_tie_battle_count_fig, battle_count_fig = get_gpt4_judger_elo_on_llms(filepath=os.path.join(result_dir, 'battled_pairs.csv'), use_bootstrap=False)
+    
+    # display leaderboard with elo scores
+    gr.Dataframe(ratings)
+    
+    gr.Markdown('Pairwise Winrate Matrix')
+    # plot winrate matrix
+    with gr.Row():
+        with gr.Column():
+            gr.Markdown('Actual Pairwise Winrate Matrix')
+            gr.Plot(actual_winrate_matrix_fig)
+        with gr.Column():
+            gr.Markdown('Predicted Pairwise Winrate Matrix')
+            gr.Plot(predict_winrate_matrix_fig)
+            
+    gr.Markdown('Pairwise Battle Count Matrix')
+    # plot battle count matrix
+    with gr.Row():
+        with gr.Column():
+            gr.Markdown('No-Tie Pairwise Battle Count Matrix')
+            gr.Plot(no_tie_battle_count_fig)
+        with gr.Column():
+            gr.Markdown('Pairwise Battle Count Matrix')
+            gr.Plot(battle_count_fig)
     
 demo.launch()
     

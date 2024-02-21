@@ -1,5 +1,5 @@
 import unittest
-from data import get_arena_battles_20230717_data, get_arena_elo_res_20230717,ARENA_K
+from data import get_arena_battles_20230717_data, get_arena_elo_res_20230717,K_FACTOR
 import pandas as pd
 import math
 import logging
@@ -23,7 +23,7 @@ class TestEloRating(unittest.TestCase):
             self.assertAlmostEqual(a, b, places=places)
             
     def test_ismatch_witharenaoffical(self):
-        our_res = self.do_arena_battle(K=ARENA_K)
+        our_res = self.do_arena_battle(K=K_FACTOR)
         arena_res = pd.DataFrame.from_dict(get_arena_elo_res_20230717())
         logging.info(our_res['Model'].tolist())
         logging.info(arena_res['Model'].tolist())
