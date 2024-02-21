@@ -54,11 +54,25 @@ Example：
 ```
 python run_experiment.py --experiment_dir your_experiment_directory --cache_dir your_cache_directory -n your_notie_battle_target_n
 ```
+e.g.,
+```
+python run_experiment.py --experiment_dir /elo_bench/results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset --cache_dir /elo_bench/tempcache -n 500
+```
 
 If you have OpenAI online model to eval, set the OpenAI API key before running.
 ```
 export OPENAI_API_KEY=[your_own_api_key]
 ```
+
+Example:
+```
+python run_analysis.py -b your_experiment_directory -n bootstrap_round_num_you_want
+```
+e.g.,
+```
+python run_analysis.py -b /elo_bench/results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset -n 100
+```
+
 
 ## Features
 1. *Model Integration*
@@ -119,6 +133,7 @@ Provide your contact information or that of the main contributors for further in
 Example:
 
 - Project Link: https://github.com/your_username/your_project_name
+
 - Email: [your_email@example.com]
 
 ## Additional Resources
