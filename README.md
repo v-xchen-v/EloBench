@@ -37,7 +37,7 @@ Example:
 
 Clone the repo:
 ```
-git clone https://github.com/your_username/your_project_name.git
+git clone https://github.com/microsoft/EloBench.git
 ```
 Install required packages:
 ```
@@ -45,30 +45,72 @@ pip install -r requirements.txt
 ```
 
 
-## Usage
+## Basic Usage
 <!-- Provide example on how to run script or use the software. Include any necessary commands. -->
 
-Example：
-```
-python run_experiment.py --experiment_dir your_experiment_directory --cache_dir your_cache_directory -n your_notie_battle_target_n
-```
-e.g.,
-```
-python run_experiment.py --experiment_dir /elo_bench/results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset --cache_dir /elo_bench/tempcache -n 500
-```
+To conduct battles between models hosted on the HuggingFace Hub or OpenAI online service (e.g., huggyllama/llama-7b, HuggingFaceH4/zephyr-7b-beta, ...) on RWQ questiosn and get elo leaderboard, you can following the steps:
 
-If you have OpenAI online model to eval, set the OpenAI API key before running.
+1. Create a workspace folder to store the battle settings and results:
+    ```
+    cd /elo_bench
+    mkdir /results/experiment1
+    mkdir /tempcache
+    ```
+2. Register the models to evaluate:
+
+    Create a file named `models.csv` with a column `model`, each row is a model to register as a LLM player in ELO system.
+    
+    ```
+    ,model
+    1,lmsys/vicuna-7b-v1.5
+    2,meta-llama/Llama-2-7b-chat-hf
+    3,meta-llama/Llama-2-13b-chat-hf
+    4,chavinlo/alpaca-native
+    5,chavinlo/alpaca-13b
+    6,HuggingFaceH4/zephyr-7b-beta
+    7,huggyllama/llama-7b
+    ```
+3. Register the questions to evaluate:
+
+    The models will generate answers for this preset questions and pairwisely compare with GPT-4 as judger.
+    
+    Create a file named `questions.csv` with a column `question`, each row is a question will be randomly pick up to compare the registered models' QA ability.
+
+    ```
+    ,question
+    0,How does the scoring system in Wordle work?
+    1,Can you explain the popularity of Wordle and why it's so addictive?
+    2,What are some tips for beginners trying to master Wordle?
+    3,"Is their a way to cheat on Wordle, or is it all about your search skills?"
+    4,Can you tell me some interesting facts about Queen Elizabeth that most people don't know?
+    5,What are some of the major events that have occurred during Queen Elizabeth's reign?
+
+    ```
+4. Run evaluation by one-line command.
+    
+    Command format:
+    ```
+    python run_experiment.py --experiment_dir your_experiment_directory --cache_dir your_cache_directory -n your_notie_battle_target_n
+    ```
+    e.g.,
+    ```
+    python run_experiment.py --experiment_dir /elo_bench/results/experiment1 --cache_dir /elo_bench/tempcache -n 500
+    ```
+
+Noted: If you have OpenAI online model to eval, set the OpenAI API key before running.
 ```
 export OPENAI_API_KEY=[your_own_api_key]
 ```
 
-Example:
+To generate elo leaderboard on the battles result, run one-line command as following:
+
+Command Format:
 ```
 python run_analysis.py -b your_experiment_directory -n bootstrap_round_num_you_want
 ```
 e.g.,
 ```
-python run_analysis.py -b /elo_bench/results/google_quora_alpaca_sharegpt_chat1m_21962_test1_smallset -n 100
+python run_analysis.py -b /elo_bench/results/experiment1 -n 100
 ```
 
 
