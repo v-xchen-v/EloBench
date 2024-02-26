@@ -11,10 +11,8 @@ And multiple-turn QA is not in scope.
 Semantic Comprehension
 <!-- - Authors: [Author Names] -->
 <!-- - Published In: [Journal/Conference Name, Year] -->
-- *Abstract*: Despite their sophisticated capabilities, large language models (LLMs) encounter a major hurdle
-in effective assessment. This paper first revisits the prevalent evaluation method—multiple choice question answering (MCQA), which allows for straightforward accuracy measurement. Through a comprehensive evaluation of 24 models across 11 benchmarks, we highlight several potential drawbacks of MCQA, for instance, the incon-
-sistency between the MCQA evaluation and the generation of open-ended responses in practical scenarios. In response,we introduce an RWQ-Elo rating system, engaging 24 LLMs such as GPT-4, GPT-3.5, Google-Gemini-Pro and LLaMA-1/-2, in a two-player competitive format, with GPT-4 serving as the judge. Each LLM receives an Elo
-rating thereafter. This system is designed to mirror real-world usage, and for this purpose, we have compiled a new benchmark called “Real-world questions” (RWQ), comprising 20,772 authentic user inquiries. Additionally, we thoroughly analyze the characteristics of our system and compare it with prior leaderboards like Alpaca Eval and MT-Bench. Our analysis reveals the stability of our RWQ-Elo system, the feasibility of registering new models, and its potential to reshape LLM leaderboards.
+- *Abstract*: Despite their sophisticated capabilities, large language models (LLMs) encounter a major hurdle in effective assessment. This paper first revisits the prevalent evaluation method—multiple choice question answering (MCQA), which allows for straightforward accuracy measurement. Through a comprehensive evaluation of 24 models across 11 benchmarks, we highlight several potential drawbacks of MCQA, for instance, the inconsistency between the MCQA evaluation and the generation of open-ended responses in practical scenarios. In response, we introduce an RWQ-Elo rating system, engaging 24 LLMs such as GPT-4, GPT-3.5, Google-Gemini-Pro and LLaMA-1/-2, in a two-player competitive format, with GPT-4 serving as the judge. Each LLM receives an Elo rating thereafter. This system is designed to mirror real-world usage, and for this purpose, we have compiled a new benchmark called ``Real-world questions'' (RWQ), comprising 20,772 authentic user inquiries. Additionally, we thoroughly analyze the characteristics of our system and compare it with prior leaderboards like AlpacaEval and MT-Bench. Our analysis reveals the stability of our RWQ-Elo system, the feasibility of registering new models, and its potential to reshape LLM leaderboards.
+
 <!-- - Link to Paper: [URL to the paper, if available online] -->
 
 ## Getting Started
@@ -101,10 +99,11 @@ python run_analysis.py -b /elo_bench/results/google_quora_alpaca_sharegpt_chat1m
     - Iterative Battle Arrangement: Random arrange more battle by battle frequency per player pair, until battle count of each pair reach the target number. 
     - New questions and LLM models registration: Allow new questions and new models to register later.
 
-6. - Caching gpt-4 judgement and LLM answer to avoid waste of time and computation.
-- resume and continue when battle with gp4-4 as judger
+6. Caching
+    - Caching gpt-4 judgement and LLM answer to avoid waste of time and computation.
+    - resume and continue when battle with gp4-4 as judger
 
-7. Performance Tracking and Analytics
+<!-- 7. Performance Tracking and Analytics
     - Historical Data Tracking: Store and track the performance history of each model.
     - Statistical Analysis Tools: Tools for analyzing performance trends.
     - Leaderboards: Display current rankings and historical performance.
@@ -112,13 +111,15 @@ python run_analysis.py -b /elo_bench/results/google_quora_alpaca_sharegpt_chat1m
 8. User Interface and Reporting
     - Dashboard: A user-friendly dashboard to view upcoming matches, live competitions, and Elo ratings.
     - Detailed Reporting: Generate detailed reports on match outcomes, individual model performance, and rating changes.
-    - Data Visualization: Graphs and charts for visual representation of performance trends and ratings.
+    - Data Visualization: Graphs and charts for visual representation of performance trends and ratings. -->
 
 These features collectively provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system is flexible and scalable to accommodate new models and changing technologies in the AI field.
 
 ## Authors and Acknowledgment
 Lead Developer/Researcher: [Your Name]
+
 Contributors: [List of contributors, if any]
+
 Thank everyone who helped in the research or development of the project.
 
 ## License
@@ -137,19 +138,19 @@ Example:
 - Email: [your_email@example.com]
 
 ## Additional Resources
-Link to any additional resources like datasets, extended documentation, or related projects.
+<!-- Link to any additional resources like datasets, extended documentation, or related projects. -->
+
+### datasets
+
+RWQ-questions: [dataset_link](https://huggingface.co/datasets/rwq-elo/rwq-questions)
+
+RWQ-answers: [dataset_link](https://huggingface.co/datasets/rwq-elo/rwq-answers)
+
+RWQ-battle-records: [dataset_link](https://huggingface.co/datasets/rwq-elo/rwq-battle-records)
 
 
-
-### ablation test:
+<!-- ### ablation test:
 swtich the order of battle pairs, model a, model b <-> model b model a, the same results?
-
-
-
-
-
-
-
 
 ## RoadMap
 This roadmap provides a comprehensive approach to developing an Elo system for comparing LLMs, using GPT-4 as a judger, in the context of question-answering abilities.
@@ -200,9 +201,9 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 
 12. Legal and Ethical Considrations.
     - *Fair Use*: Ensure the use of GPT-4 and other models adheres to legal and ethical standards.
-    - *Bias and Fairness*: Regularly assess the system for any biases or unfair practices.
+    - *Bias and Fairness*: Regularly assess the system for any biases or unfair practices. -->
 
-## Considerations
+<!-- ## Considerations
 - Resource Intensive: Running multiple LLMs and GPT-4 for judging can be resource-intensive. Plan for the necessary computational resources.
 - Model Limitations: Be aware of the limitations of each model, including GPT-4, and how these might impact the fairness of the competition.
 - Continuous Monitoring: The system should be monitored and adjusted as models evolve and improve over time.
@@ -212,4 +213,4 @@ This roadmap provides a comprehensive approach to developing an Elo system for c
 ### Solved Issues
 #### Empty LLM generated answer handling
 - use 'Question: {question}\nAnswer: ' formating question as prompt to reduce the frequency of generating empty answer, especially for alpaca-7b/13b and vicuna-7b models.
-- save missing value(not generated) as 'NULL', and empty answer as ''.
+- save missing value(not generated) as 'NULL', and empty answer as ''. -->
