@@ -11,7 +11,7 @@ And multiple-turn QA is not in scope.
 Semantic Comprehension
 <!-- - Authors: [Author Names] -->
 <!-- - Published In: [Journal/Conference Name, Year] -->
-- *Abstract*: Despite their sophisticated capabilities, large language models (LLMs) encounter a major hurdle in effective assessment. This paper first revisits the prevalent evaluation method—multiple choice question answering (MCQA), which allows for straightforward accuracy measurement. Through a comprehensive evaluation of 24 models across 11 benchmarks, we highlight several potential drawbacks of MCQA, for instance, the inconsistency between the MCQA evaluation and the generation of open-ended responses in practical scenarios. In response, we introduce an RWQ-Elo rating system, engaging 24 LLMs such as GPT-4, GPT-3.5, Google-Gemini-Pro and LLaMA-1/-2, in a two-player competitive format, with GPT-4 serving as the judge. Each LLM receives an Elo rating thereafter. This system is designed to mirror real-world usage, and for this purpose, we have compiled a new benchmark called ``Real-world questions'' (RWQ), comprising 20,772 authentic user inquiries. Additionally, we thoroughly analyze the characteristics of our system and compare it with prior leaderboards like AlpacaEval and MT-Bench. Our analysis reveals the stability of our RWQ-Elo system, the feasibility of registering new models, and its potential to reshape LLM leaderboards.
+- *Abstract*: Despite their sophisticated capabilities, large language models (LLMs) encounter a major hurdle in effective assessment. This paper first revisits the prevalent evaluation method—multiple choice question answering (MCQA), which allows for straightforward accuracy measurement. Through a comprehensive evaluation of 24 models across 11 benchmarks, we highlight several potential drawbacks of MCQA, for instance, the inconsistency between the MCQA evaluation and the generation of open-ended responses in practical scenarios. In response, we introduce an RWQ-Elo rating system, engaging 24 LLMs such as GPT-4, GPT-3.5, Google-Gemini-Pro and LLaMA-1/-2, in a two-player competitive format, with GPT-4 serving as the judge. Each LLM receives an Elo rating thereafter. This system is designed to mirror real-world usage, and for this purpose, we have compiled a new benchmark called Real-world questions (RWQ), comprising 20,772 authentic user inquiries. Additionally, we thoroughly analyze the characteristics of our system and compare it with prior leaderboards like AlpacaEval and MT-Bench. Our analysis reveals the stability of our RWQ-Elo system, the feasibility of registering new models, and its potential to reshape LLM leaderboards.
 
 <!-- - Link to Paper: [URL to the paper, if available online] -->
 
@@ -48,7 +48,7 @@ pip install -r requirements.txt
 ## Basic Usage
 <!-- Provide example on how to run script or use the software. Include any necessary commands. -->
 
-To conduct battles between models hosted on the HuggingFace Hub or OpenAI online service (e.g., huggyllama/llama-7b, HuggingFaceH4/zephyr-7b-beta, ...) on RWQ questiosn and get elo leaderboard, you can following the steps:
+To conduct battles between models hosted on the HuggingFace Hub or Azure OpenAI Service (e.g., meta-llama/Llama-2-7b-chat-hf, HuggingFaceH4/zephyr-7b-beta, ...) on RWQ questiosn and get elo leaderboard, you can following the steps:
 
 1. Create a workspace folder to store the battle settings and results:
     ```
@@ -113,6 +113,38 @@ e.g.,
 python run_analysis.py -b /elo_bench/results/experiment1 -n 100
 ```
 
+## Model List
+The listed 24 LLMs evaluated in our work are divided as follows: Pre-existing Gemini Answers are imported into the answer pool, while the remainder are automatically generated using our framework.
+
+And integrate a new Hugging Face model into this evaluation framework without needing to write new code.
+> When evaluating the OpenAI online model e.g, gpt-3.5, gpt-4, you could config your endpoint, version as you need in openai_chat.py.
+
+| model |
+| --- |
+| gpt-4-turbo |
+| gpt-35-turbo |
+| lmsys/vicuna-7b-v1.5 |
+| lmsys/vicuna-13b-v1.5 |
+| lmsys/vicuna-33b-v1.3 |
+| meta-llama/Llama-2-7b-chat-hf |
+| meta-llama/Llama-2-13b-chat-hf |
+| meta-llama/Llama-2-70b-chat-hf |
+| chavinlo/alpaca-native |
+| chavinlo/alpaca-13b |
+| mosaicml/mpt-7b-chat |
+| mosaicml/mpt-30b-chat |
+| WizardLM/WizardLM-7B-V1.0 |
+| WizardLM/WizardLM-13B-V1.2 |
+| Xwin-LM/Xwin-LM-7B-V0.1 |
+| Xwin-LM/Xwin-LM-13B-V0.1 |
+| tiiuae/falcon-7b-instruct |
+| tiiuae/falcon-40b-instruct |
+| HuggingFaceH4/zephyr-7b-beta |
+| huggyllama/llama-7b |
+| huggyllama/llama-13b |
+| huggyllama/llama-30b |
+| gemini |
+| mistralai/Mixtral-8x7B-Instruct-v0.1 |
 
 ## Features
 1. *Model Integration*
@@ -123,7 +155,6 @@ python run_analysis.py -b /elo_bench/results/experiment1 -n 100
 
 2. *Question Pool Management*
     - *Question Database*:  A diverse and extensive database of questions.
-        - TODO: categorized by difficulty, type(factual, reasoning, etc), and topic
     - Randomized Question Selection: Mechanism for selection questions randomly to ensure a fair and unbais challenge for each model.
 
 3. *Answer Assessment*
@@ -133,7 +164,6 @@ python run_analysis.py -b /elo_bench/results/experiment1 -n 100
 4. Elo Rating System
     - Initial Rating Assignment: Assign initial Elo ratings to all participating models.
     - Rating Update Mechanism: Algorithm to update Elo ratings based on match outcomes, ensuring fair and accurate reflection of performance.
-    - TODO: Rating Decay/Inflation Adjustments: Mechanisms to counteract rating inflation or decay over time.
 
 5. Matchmaking and Competitions
     - Model Matchmaking: System to pair models for competitions based on different strategies.
@@ -157,27 +187,6 @@ python run_analysis.py -b /elo_bench/results/experiment1 -n 100
 
 These features collectively provide a robust framework for an Elo rating system tailored to evaluating question-answering capabilities of LLMs. The system is flexible and scalable to accommodate new models and changing technologies in the AI field.
 
-## Authors and Acknowledgment
-Lead Developer/Researcher: [Your Name]
-
-Contributors: [List of contributors, if any]
-
-Thank everyone who helped in the research or development of the project.
-
-## License
-State the license of the project. Typically, this will be the same license used by the associated research paper or the institution.
-
-Example:
-Distributed under the MIT License. See LICENSE for more information.
-
-## Contact
-Provide your contact information or that of the main contributors for further inquiries.
-
-Example:
-
-- Project Link: https://github.com/your_username/your_project_name
-
-- Email: [your_email@example.com]
 
 ## Additional Resources
 <!-- Link to any additional resources like datasets, extended documentation, or related projects. -->
